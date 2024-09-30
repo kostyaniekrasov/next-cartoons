@@ -1,0 +1,62 @@
+.inter-bold {
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 700;
+}
+
+.inter-semibold {
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 600;
+}
+
+.inter-regular {
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 400;
+}
+
+.h1 {
+  @extend .inter-bold;
+  font-size: 32px;
+  line-height: 130%;
+}
+
+.h2 {
+  @extend .inter-bold;
+
+  font-size: 24px;
+  line-height: 130%;
+}
+
+.h3 {
+  @extend .inter-semibold;
+
+  font-size: 21px;
+  line-height: 130%;
+}
+
+.main-text {
+  @extend .inter-regular;
+
+  font-size: 17px;
+  line-height: 140%;
+}
+
+.secondary-text {
+  @extend .inter-semibold;
+
+  font-size: 15px;
+  line-height: 140%;
+}
+
+.footnote {
+  @extend .inter-regular;
+
+  font-size: 13px;
+  line-height: 100%;
+}
+
+.caption {
+  @extend .inter-regular;
+
+  font-style: 12px;
+  line-height: 140%;
+}
