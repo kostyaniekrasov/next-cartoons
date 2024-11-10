@@ -5,6 +5,10 @@
 
 > A simple site with convenient functionality for viewing cartoons of various genres in Ukrainian dubbing. Cartoons are divided into several categories, namely cartoons, education, music, etc.
 
+### 🏠 [Homepage](https://toonjoy-lilac.vercel.app/all)
+
+### ✨ [Demo](https://toonjoy-lilac.vercel.app/all)
+
 ## Install
 
 ```sh
@@ -16,9 +20,6 @@ npm install
 ```sh
 npm run start
 ```
-
-markdown
-Копіювати код
 
 ## Dependencies
 
@@ -41,6 +42,6 @@ markdown
 
 ## Author
 
-👤 **Niekrasov Kostya**
+👤 **Kostya Niekrasov**
 
 - Github: [@kostyaniekrasov](https://github.com/kostyaniekrasov)
