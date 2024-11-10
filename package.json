@@ -1,0 +1,52 @@
+{
+  "name": "cartoons",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "clean": "rm -rf .next && rm -rf node_modules/.cache && rm -rf build",
+    "generate-barrels": "barrelsby -d ./src/utils -e index.ts"
+  },
+  "dependencies": {
+    "@emotion/cache": "^11.13.1",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^6.1.6",
+    "@mui/material": "^6.1.6",
+    "@mui/material-nextjs": "^6.1.1",
+    "@svgr/webpack": "^8.1.0",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "embla-carousel-react": "^8.3.1",
+    "firebase": "^10.14.1",
+    "next": "14.2.13",
+    "nookies": "^2.5.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.53.0",
+    "react-perfect-scrollbar": "^1.5.8",
+    "react-player": "^2.16.0",
+    "sass": "^1.79.3",
+    "sharp": "^0.33.5",
+    "uuid": "^11.0.2",
+    "zustand": "^5.0.0-rc.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18",
+    "@types/react-slick": "^0.23.13",
+    "barrelsby": "^2.8.1",
+    "eslint-config-next": "14.2.13",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.0"
+  },
+  "findUnusedExports": {
+    "exclude": [
+      "./.next/**/*",
+      "./node_modules/**/*",
+      "**/page.tsx"
+    ]
+  }
+}

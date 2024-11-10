@@ -1,0 +1,1 @@
+export { default as HouseIcon } from './House_01.svg';

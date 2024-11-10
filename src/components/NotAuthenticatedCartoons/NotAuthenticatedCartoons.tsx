@@ -1,0 +1,70 @@
+import { VideoCategory } from '@/types';
+import { Playlist } from '@/types/VideoData';
+import { Box } from '@mui/material';
+
+import { ToggleSliderToGrid } from '../ToggleSliderToGrid';
+
+interface Props {
+  playlists: Playlist[];
+  categories?: VideoCategory[];
+}
+
+const NotAuthenticatedCartoons = ({ playlists, categories }: Props) => {
+  const playlistsForLittleKids = playlists.map((playlist) => ({
+    ...playlist,
+    videos: playlist.videos.filter((video) => video.recommendedAge <= 5),
+  }));
+
+  const playlistsForBiggerKids = playlists
+    .map((playlist) => ({
+      ...playlist,
+      videos: playlist.videos.filter((video) => video.recommendedAge > 5),
+    }))
+    .filter((playlist) => playlist.videos.length > 0);
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: {
+          xs: '16px',
+          sm: '32px',
+        },
+      }}
+    >
+      <Box
+        sx={{
+          borderBottom: '1px solid',
+          borderColor: 'gray.200',
+          paddingBottom: {
+            xs: '16px',
+            sm: '30px',
+          },
+        }}
+      >
+        <ToggleSliderToGrid
+          title="Маленьким дітям"
+          playlists={playlistsForLittleKids}
+          categories={categories}
+        />
+      </Box>
+      {!!playlistsForBiggerKids.length && (
+        <Box
+          sx={{
+            borderBottom: '1px solid',
+            borderColor: 'gray.200',
+            paddingBottom: '30px',
+          }}
+        >
+          <ToggleSliderToGrid
+            title="Дітям старшого віку"
+            playlists={playlistsForBiggerKids}
+            categories={categories}
+          />
+        </Box>
+      )}
+    </Box>
+  );
+};
+export default NotAuthenticatedCartoons;

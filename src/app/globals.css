@@ -1,0 +1,11 @@
+html {
+  font-family: var(--font-inter);
+}
+
+:root {
+  font-family: var(--font-inter);
+}
+
+body {
+  min-width: 375px;
+}

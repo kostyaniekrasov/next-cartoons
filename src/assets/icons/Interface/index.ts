@@ -1,0 +1,9 @@
+export { default as BookmarkIcon } from './Bookmark.svg';
+export { default as CheckBigIcon } from './Check_Big.svg';
+export { default as CloseIcon } from './Close.svg';
+export { default as LogOutIcon } from './Log_Out.svg';
+export { default as SearchIcon } from './Search.svg';
+export { default as SettingsIcon } from './Settings.svg';
+export { default as Slider01Icon } from './Slider_01.svg';
+export { default as SearchInputIcon } from './SearchInput.svg';
+export { default as ClearIcon } from './Clear.svg';
