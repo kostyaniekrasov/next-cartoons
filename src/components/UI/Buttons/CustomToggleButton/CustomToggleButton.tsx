@@ -37,4 +37,4 @@ const CustomToggleButton = React.forwardRef<
 
 CustomToggleButton.displayName = 'CustomToggleButton';
 
-export default CustomToggleButton;
+export default React.memo(CustomToggleButton);

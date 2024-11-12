@@ -4,6 +4,7 @@ import { removePlaylistFromCW } from '@/lib/playlists/continueWatching';
 import { isPlaylistSaved } from '@/lib/playlists/isSavedVideo';
 import { addToWatchLater } from '@/lib/playlists/savedVideos';
 import useAuthStore from '@/store/useAuthStore';
+import { PlaylistsType } from '@/types';
 import { Playlist } from '@/types/VideoData';
 import { Menu, MenuItem, Typography } from '@mui/material';
 import { usePathname, useRouter } from 'next/navigation';
@@ -16,10 +17,9 @@ interface Props {
   playlist: Playlist;
   selectedVideoId: string;
   showAlert: (alertName: string) => void;
-  showRemove: boolean;
-  isSavedPage?: boolean;
   removeFromSaved?: (playlistId: string) => Promise<void>;
   slideClick: (playlistId: string, videoId: string) => void;
+  playlistsType: PlaylistsType;
 }
 
 const SliderMenu = ({
@@ -29,10 +29,9 @@ const SliderMenu = ({
   playlist,
   selectedVideoId,
   showAlert,
-  showRemove,
-  isSavedPage,
   removeFromSaved,
   slideClick,
+  playlistsType,
 }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -91,6 +90,9 @@ const SliderMenu = ({
     }
   }, [user, playlist.id]);
 
+  const showRemoveButton =
+    playlistsType === PlaylistsType.ByCategory ? false : true;
+
   return (
     <Menu
       id="menu-slider"
@@ -134,13 +136,17 @@ const SliderMenu = ({
       <MenuItem onClick={handleShareClick}>
         <Typography variant="secondaryText">Поділитися</Typography>
       </MenuItem>
-      <MenuItem onClick={handleAddToSaved} disabled={isSaved}>
-        <Typography variant="secondaryText">Зберегти</Typography>
-      </MenuItem>
-      {showRemove && (
+      {user && (
+        <MenuItem onClick={handleAddToSaved} disabled={isSaved}>
+          <Typography variant="secondaryText">Зберегти</Typography>
+        </MenuItem>
+      )}
+      {showRemoveButton && user && (
         <MenuItem
           onClick={
-            isSavedPage ? handleRemoveVideoFromWL : handleRemoveVideoFromCW
+            playlistsType === PlaylistsType.Saved
+              ? handleRemoveVideoFromWL
+              : handleRemoveVideoFromCW
           }
         >
           <Typography variant="secondaryText" color="error">

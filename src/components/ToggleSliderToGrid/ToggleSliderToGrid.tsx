@@ -2,7 +2,7 @@
 
 import { ChevronRightIcon } from '@/assets/icons';
 import { CartoonSlider, GridForList } from '@/components';
-import { ContinueWatching, VideoCategory } from '@/types';
+import { ContinueWatching, PlaylistsType, VideoCategory } from '@/types';
 import { Playlist } from '@/types/VideoData';
 import { Box, Collapse, IconButton, Typography } from '@mui/material';
 import { useCallback, useMemo, useState } from 'react';
@@ -13,6 +13,7 @@ interface Props {
   category?: VideoCategory;
   playlists: Playlist[];
   CWlinks?: ContinueWatching[];
+  playlistsType: PlaylistsType;
 }
 
 const ToggleSliderToGrid = ({
@@ -21,6 +22,7 @@ const ToggleSliderToGrid = ({
   CWlinks,
   title,
   categories,
+  playlistsType,
 }: Props) => {
   const [isGrid, setIsGrid] = useState(false);
 
@@ -113,6 +115,7 @@ const ToggleSliderToGrid = ({
           >
             {!isGrid && (
               <CartoonSlider
+                playlistsType={playlistsType}
                 categories={categories}
                 playlists={playlists}
                 continueWatchingList={CWlinks ?? []}

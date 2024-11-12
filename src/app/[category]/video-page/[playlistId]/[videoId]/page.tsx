@@ -15,7 +15,7 @@ import { fetchPlaylistById } from '@/lib/playlists/fetchPlaylistById';
 import { isPlaylistSaved } from '@/lib/playlists/isSavedVideo';
 import { addToWatchLater } from '@/lib/playlists/savedVideos';
 import useAuthStore from '@/store/useAuthStore';
-import { VideoCategory } from '@/types';
+import { PlaylistsType, VideoCategory } from '@/types';
 import { Playlist, VideoData } from '@/types/VideoData';
 import { getNextVideoInPlaylist } from '@/utils';
 import {
@@ -167,8 +167,6 @@ const VideoPage = ({
     checkIfSaved();
   }, [user, playlistId]);
 
-  // console.log('render video page');і
-
   return (
     <Box
       sx={{
@@ -274,6 +272,7 @@ const VideoPage = ({
               playlists={playlists}
               categories={categories}
               slideClick={handleSlideClick}
+              playlistsType={PlaylistsType.ByCategory}
             />
           </Box>
         </Box>

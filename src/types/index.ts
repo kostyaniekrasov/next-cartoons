@@ -10,5 +10,6 @@ export type {
 export { default as CategorySlider } from './CategorySlider';
 export type { default as ContinueWatching } from './ContinueWatching';
 export { default as FilterCategory } from './FilterCategory';
+export { default as PlaylistsType } from './PlaylistsType';
 export type { default as VideoCategory } from './VideoCategory';
 export type { default as User } from './User';

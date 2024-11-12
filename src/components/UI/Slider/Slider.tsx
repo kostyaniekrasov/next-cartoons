@@ -2,7 +2,7 @@
 
 import { MoreHorizontalIcon } from '@/assets/icons';
 import { SliderMenu, SliderNavigation } from '@/components';
-import { ContinueWatching, VideoCategory } from '@/types';
+import { ContinueWatching, PlaylistsType, VideoCategory } from '@/types';
 import { Playlist } from '@/types/VideoData';
 import { getCategoryName } from '@/utils';
 import {
@@ -23,10 +23,17 @@ interface Props {
   continueWatchingList?: ContinueWatching[];
   categories?: VideoCategory[];
   slideClick?: (playlistId: string, videoId: string) => void;
+  playlistsType: PlaylistsType;
 }
 
 const CartoonSlider = React.memo(
-  ({ playlists, continueWatchingList = [], categories, slideClick }: Props) => {
+  ({
+    playlists,
+    continueWatchingList = [],
+    categories,
+    slideClick,
+    playlistsType,
+  }: Props) => {
     const router = useRouter();
     const pathname = usePathname();
     const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -86,8 +93,6 @@ const CartoonSlider = React.memo(
         ),
       [playlists],
     );
-
-    // console.log('slider render');s
 
     return (
       <>
@@ -261,8 +266,8 @@ const CartoonSlider = React.memo(
               handleClose={handleClose}
               selectedVideoId={activeVideoId!}
               showAlert={handleShowAlert}
-              showRemove={!!continueWatchingList}
               slideClick={slideClick ? slideClick : handleSlideClick}
+              playlistsType={playlistsType}
             />
           )}
         </Box>

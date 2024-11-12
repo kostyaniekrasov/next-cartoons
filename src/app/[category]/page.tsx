@@ -4,7 +4,7 @@ import { getCategories } from '@/lib';
 import { getUserData } from '@/lib/api/getUserData';
 import { getClList } from '@/lib/playlists/continueWatching';
 import { fetchPlaylistsByCategory } from '@/lib/playlists/getSortedPlaylists';
-import { User } from '@/types';
+import { PlaylistsType, User } from '@/types';
 import { Playlist } from '@/types/VideoData';
 import { Box, Collapse, Container } from '@mui/material';
 
@@ -73,6 +73,7 @@ const CategoryPage = async ({ params }: { params: { category: string } }) => {
                 categories={categories}
                 category={currentCategory}
                 playlists={videosByAgeCategory}
+                playlistsType={PlaylistsType.ByCategory}
               />
             </Box>
           </Collapse>
@@ -90,6 +91,7 @@ const CategoryPage = async ({ params }: { params: { category: string } }) => {
                 title={'Продовжити перегляд'}
                 playlists={continueWatchingPlaylists}
                 CWlinks={continueWatchingLinks}
+                playlistsType={PlaylistsType.ContinueWatching}
               />
             </Box>
           )}

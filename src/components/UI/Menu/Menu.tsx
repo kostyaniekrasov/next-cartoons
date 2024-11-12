@@ -12,6 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import { usePathname, useRouter } from 'next/navigation';
+import React from 'react';
 
 import { ThemeSwitcher } from '..';
 
@@ -177,4 +178,4 @@ const MenuBlock = ({ anchorEl, open, handleClose, user }: Props) => {
   );
 };
 
-export default MenuBlock;
+export default React.memo(MenuBlock);

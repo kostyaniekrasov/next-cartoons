@@ -10,7 +10,6 @@ import {
   SearchInputIcon,
 } from '@/assets/icons';
 import {
-  AuthInitializer,
   CustomSearchField,
   CustomToggleButton,
   CustomTooltip,
@@ -33,11 +32,10 @@ import {
   Drawer,
   Fade,
   Grow,
+  Icon,
   IconButton,
   ToggleButtonGroup,
   Typography,
-  useMediaQuery,
-  useTheme,
 } from '@mui/material';
 import useEmblaCarousel from 'embla-carousel-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -61,7 +59,9 @@ const Header = ({ categories }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { user, loading } = useAuthStore();
+  const user = useAuthStore((state) => state.user);
+  const isInitialized = useAuthStore((state) => state.isInitialized);
+
   const [selectedFilter, setSelectedFilter] = useState(
     getCurrentFilter(pathname),
   );
@@ -75,9 +75,6 @@ const Header = ({ categories }: Props) => {
     align: 'start',
     containScroll: 'trimSnaps',
   });
-  const theme = useTheme();
-  const isSm = useMediaQuery(theme.breakpoints.up('sm'));
-  const isXs = useMediaQuery(theme.breakpoints.up('xs'));
 
   const modalSignIn = searchParams.get('signin');
   const modalSignUp = searchParams.get('signup');
@@ -166,8 +163,7 @@ const Header = ({ categories }: Props) => {
   );
 
   return (
-    <>
-      <AuthInitializer />
+    <Fade in={isInitialized}>
       <AppBar
         position="static"
         color="inherit"
@@ -176,296 +172,332 @@ const Header = ({ categories }: Props) => {
         }}
       >
         <CookieConsent />
-        <Fade in={!loading}>
-          <Container
-            maxWidth="2xl"
-            disableGutters
+        <Container
+          maxWidth="2xl"
+          disableGutters
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
+            borderBottom: '1px solid',
+            borderColor: 'grey.200',
+            paddingBottom: 2,
+            paddingTop: {
+              xs: '8px',
+              sm: '32px',
+            },
+            marginBottom: '16px',
+          }}
+        >
+          <Box
+            component="div"
             sx={{
               display: 'flex',
-              flexDirection: 'column',
-              gap: '16px',
-              borderBottom: '1px solid',
-              borderColor: 'grey.200',
-              paddingBottom: 2,
-              paddingTop: {
-                xs: '8px',
-                sm: '32px',
-              },
-              marginBottom: '16px',
+              justifyContent: 'space-between',
+              alignItems: 'center',
             }}
           >
-            <Box
-              component="div"
+            <IconButton
+              onClick={() => router.push('/')}
               sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
+                padding: 0,
+              }}
+            >
+              <Icon
+                sx={{
+                  width: '100%',
+                  height: '100%',
+
+                  display: {
+                    xs: 'none',
+                    sm: 'block',
+                  },
+                }}
+              >
+                <LogoDesktopIcon />
+              </Icon>
+
+              <Icon
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                  display: {
+                    xs: 'block',
+                    sm: 'none',
+                  },
+                }}
+              >
+                <LogoMobileIcon />
+              </Icon>
+            </IconButton>
+            {!!user?.showSearch && (
+              <CustomSearchField
+                id="search-bar"
+                sx={{
+                  position: 'relative',
+                  display: {
+                    xs: 'none',
+                    sm: 'block',
+                  },
+                }}
+                type="text"
+                value={value}
+                placeholder="Пошук"
+                variant="outlined"
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <Collapse
+                        in={isEmpty}
+                        timeout={200}
+                        orientation="horizontal"
+                      >
+                        <Box
+                          component="div"
+                          sx={{
+                            marginRight: 2,
+                            color: 'gray.600',
+                            display: 'flex',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <SearchInputIcon width={17} height={17} />
+                        </Box>
+                      </Collapse>
+                    ),
+                    endAdornment: (
+                      <Grow in={!isEmpty} timeout={200}>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1,
+                          }}
+                        >
+                          <IconButton
+                            onClick={handleClearSearch}
+                            sx={{
+                              color: 'gray.900',
+                            }}
+                          >
+                            <CloseIcon width={24} height={24} />
+                          </IconButton>
+                          <Button
+                            sx={{
+                              backgroundColor: 'accentPink.main',
+                              height: '48px',
+                              width: '72px',
+                              color: 'white',
+                              borderRadius: '9999px',
+                              transition: 'transform 300ms',
+                              '&:hover': {
+                                transform: 'scale(1.05)',
+                              },
+                            }}
+                            onClick={handleClickSearch}
+                          >
+                            <SearchIcon width={24} height={24} />
+                          </Button>
+                        </Box>
+                      </Grow>
+                    ),
+                  },
+                }}
+                onChange={handleSearch}
+                onKeyDown={handleKeyDown}
+              />
+            )}
+
+            {user ? (
+              <Box
+                sx={{
+                  display: {
+                    xs: 'none',
+                    sm: 'flex',
+                  },
+                  gap: 3,
+                }}
+              >
+                <CustomTooltip
+                  title="Збережені"
+                  placement="bottom"
+                  enterDelay={500}
+                  leaveDelay={200}
+                >
+                  <IconButton
+                    onClick={() => router.push('/saved')}
+                    sx={{
+                      border: '1px solid',
+                      borderColor: 'gray.200',
+                      color: 'accentPink.main',
+                      height: 56,
+                      width: 56,
+                    }}
+                  >
+                    <BookmarkIcon width={24} height={24} />
+                  </IconButton>
+                </CustomTooltip>
+
+                <CustomTooltip
+                  title="Меню"
+                  placement="bottom"
+                  enterDelay={500}
+                  leaveDelay={200}
+                >
+                  <IconButton
+                    onClick={handleClick}
+                    id="menu-button"
+                    aria-controls={open ? 'menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                    sx={{
+                      border: '1px solid',
+                      borderColor: 'gray.200',
+                      height: 56,
+                      padding: '4px 4px 4px 16px',
+                      borderRadius: '999px',
+                      color: 'accentPink.main',
+                      gap: 1,
+                    }}
+                  >
+                    <MenuDuoIcon />
+                    {memoizedAvatar}
+                  </IconButton>
+                </CustomTooltip>
+
+                <MenuBlock
+                  user={user}
+                  anchorEl={anchorEl}
+                  open={open}
+                  handleClose={handleClose}
+                />
+                <ProfileSettings
+                  open={
+                    modalSettings === 'profile' || modalSettings === 'settings'
+                  }
+                />
+              </Box>
+            ) : (
+              <SignInButton
+                onClick={openSignInModal}
+                sx={{
+                  display: {
+                    xs: 'none',
+                    sm: 'block',
+                  },
+                }}
+              >
+                <Typography variant="mainTextMedium" color="accentPink">
+                  Увійти
+                </Typography>
+              </SignInButton>
+            )}
+            <SignInModal open={modalSignIn === 'true'} />
+            <SignUpModal open={modalSignUp === 'true'} />
+            <ResetPasswordModal open={modalResetPassword === 'true'} />
+            <Box
+              sx={{
+                display: {
+                  xs: 'flex',
+                  sm: 'none',
+                },
                 alignItems: 'center',
+                gap: '20px',
               }}
             >
               <IconButton
-                onClick={() => router.push('/')}
                 sx={{
+                  color: 'gray.900',
                   padding: 0,
                 }}
               >
-                {isSm ? <LogoDesktopIcon /> : <LogoMobileIcon />}
+                <SearchIcon width={24} height={24} />
               </IconButton>
-              {isSm && !!user?.showSearch && (
-                <CustomSearchField
-                  id="search-bar"
-                  sx={{
-                    position: 'relative',
-                  }}
-                  type="text"
-                  value={value}
-                  placeholder="Пошук"
-                  variant="outlined"
-                  slotProps={{
-                    input: {
-                      startAdornment: (
-                        <Collapse
-                          in={isEmpty}
-                          timeout={200}
-                          orientation="horizontal"
-                        >
-                          <Box
-                            component="div"
-                            sx={{
-                              marginRight: 2,
-                              color: 'gray.600',
-                              display: 'flex',
-                              alignItems: 'center',
-                            }}
-                          >
-                            <SearchInputIcon width={17} height={17} />
-                          </Box>
-                        </Collapse>
-                      ),
-                      endAdornment: (
-                        <Grow in={!isEmpty} timeout={200}>
-                          <Box
-                            sx={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: 1,
-                            }}
-                          >
-                            <IconButton
-                              onClick={handleClearSearch}
-                              sx={{
-                                color: 'gray.900',
-                              }}
-                            >
-                              <CloseIcon width={24} height={24} />
-                            </IconButton>
-                            <Button
-                              sx={{
-                                backgroundColor: 'accentPink.main',
-                                height: '48px',
-                                width: '72px',
-                                color: 'white',
-                                borderRadius: '9999px',
-                                transition: 'transform 300ms',
-                                '&:hover': {
-                                  transform: 'scale(1.05)',
-                                },
-                              }}
-                              onClick={handleClickSearch}
-                            >
-                              <SearchIcon width={24} height={24} />
-                            </Button>
-                          </Box>
-                        </Grow>
-                      ),
-                    },
-                  }}
-                  onChange={handleSearch}
-                  onKeyDown={handleKeyDown}
+              <IconButton
+                onClick={handleOpenMobileMenu}
+                sx={{
+                  color: 'gray.900',
+                  padding: 0,
+                }}
+              >
+                <MenuDuoIcon width={24} height={24} />
+              </IconButton>
+              <Drawer
+                anchor="right"
+                open={isOpenMobileMenu}
+                onClose={handleOpenMobileMenu}
+                sx={{
+                  '& .MuiDrawer-paper': {
+                    width: '100%',
+                    height: '100%',
+                    bgcolor: 'background.default',
+                  },
+                }}
+              >
+                <MobileMenu
+                  onClose={handleOpenMobileMenu}
+                  openSignIn={openSignInModal}
+                  user={user}
                 />
-              )}
-
-              {!!user && isSm ? (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    gap: 3,
-                  }}
-                >
-                  <CustomTooltip
-                    title="Збережені"
-                    placement="bottom"
-                    enterDelay={500}
-                    leaveDelay={200}
-                  >
-                    <IconButton
-                      onClick={() => router.push('/saved')}
-                      sx={{
-                        border: '1px solid',
-                        borderColor: 'gray.200',
-                        color: 'accentPink.main',
-                        height: 56,
-                        width: 56,
-                      }}
-                    >
-                      <BookmarkIcon width={24} height={24} />
-                    </IconButton>
-                  </CustomTooltip>
-
-                  <CustomTooltip
-                    title="Меню"
-                    placement="bottom"
-                    enterDelay={500}
-                    leaveDelay={200}
-                  >
-                    <IconButton
-                      onClick={handleClick}
-                      id="menu-button"
-                      aria-controls={open ? 'menu' : undefined}
-                      aria-haspopup="true"
-                      aria-expanded={open ? 'true' : undefined}
-                      sx={{
-                        border: '1px solid',
-                        borderColor: 'gray.200',
-                        height: 56,
-                        padding: '4px 4px 4px 16px',
-                        borderRadius: '999px',
-                        color: 'accentPink.main',
-                        gap: 1,
-                      }}
-                    >
-                      <MenuDuoIcon />
-                      {memoizedAvatar}
-                    </IconButton>
-                  </CustomTooltip>
-
-                  <MenuBlock
-                    user={user}
-                    anchorEl={anchorEl}
-                    open={open}
-                    handleClose={handleClose}
-                  />
-                  <ProfileSettings
-                    open={
-                      modalSettings === 'profile' ||
-                      modalSettings === 'settings'
-                    }
-                  />
-                </Box>
-              ) : (
-                isSm && (
-                  <SignInButton onClick={openSignInModal}>
-                    <Typography variant="mainTextMedium" color="accentPink">
-                      Увійти
-                    </Typography>
-                  </SignInButton>
-                )
-              )}
-              <SignInModal open={modalSignIn === 'true'} />
-              <SignUpModal open={modalSignUp === 'true'} />
-              <ResetPasswordModal open={modalResetPassword === 'true'} />
-              {isXs && !isSm && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '20px',
-                  }}
-                >
-                  <IconButton
-                    sx={{
-                      color: 'gray.900',
-                      padding: 0,
-                    }}
-                  >
-                    <SearchIcon width={24} height={24} />
-                  </IconButton>
-                  <IconButton
-                    onClick={handleOpenMobileMenu}
-                    sx={{
-                      color: 'gray.900',
-                      padding: 0,
-                    }}
-                  >
-                    <MenuDuoIcon width={24} height={24} />
-                  </IconButton>
-                  <Drawer
-                    anchor="right"
-                    open={isOpenMobileMenu}
-                    onClose={handleOpenMobileMenu}
-                    sx={{
-                      '& .MuiDrawer-paper': {
-                        width: '100%',
-                        height: '100%',
-                        bgcolor: 'background.default',
-                      },
-                    }}
-                  >
-                    <MobileMenu
-                      onClose={handleOpenMobileMenu}
-                      openSignIn={openSignInModal}
-                      user={user}
-                    />
-                  </Drawer>
-                </Box>
-              )}
+              </Drawer>
             </Box>
+          </Box>
 
-            <ToggleButtonGroup
-              value={selectedFilter}
-              exclusive
-              onChange={handleFilterChange}
-              aria-label="filter"
+          <ToggleButtonGroup
+            value={selectedFilter}
+            exclusive
+            onChange={handleFilterChange}
+            aria-label="filter"
+            sx={{
+              mr: {
+                xs: '-16px',
+                sm: 0,
+              },
+            }}
+          >
+            <Box
+              ref={emblaRef}
               sx={{
-                mr: {
-                  xs: '-16px',
-                  sm: 0,
-                },
+                overflow: 'hidden',
+                width: '100%',
               }}
             >
               <Box
-                ref={emblaRef}
                 sx={{
-                  overflow: 'hidden',
-                  width: '100%',
+                  display: 'flex',
+                  gap: {
+                    xs: '4px',
+                    sm: '8px',
+                  },
                 }}
               >
-                <Box
-                  sx={{
-                    display: 'flex',
-                    gap: {
-                      xs: '4px',
-                      sm: '8px',
-                    },
-                  }}
-                >
-                  {categories?.map((category) => (
-                    <CustomToggleButton
-                      value={category.name}
-                      key={category.name.toUpperCase()}
-                      sx={{ flex: '0 0 auto', width: 'auto' }}
+                {categories?.map((category) => (
+                  <CustomToggleButton
+                    value={category.name}
+                    key={category.name.toUpperCase()}
+                    sx={{ flex: '0 0 auto', width: 'auto' }}
+                  >
+                    <Typography
+                      variant="mainText"
+                      sx={{
+                        width: 'max-content',
+                        fontSize: {
+                          xs: '12px',
+                          sm: '17px',
+                        },
+                      }}
                     >
-                      <Typography
-                        variant="mainText"
-                        sx={{
-                          width: 'max-content',
-                          fontSize: {
-                            xs: '12px',
-                            sm: '17px',
-                          },
-                        }}
-                      >
-                        {category.title}
-                      </Typography>
-                    </CustomToggleButton>
-                  ))}
-                </Box>
+                      {category.title}
+                    </Typography>
+                  </CustomToggleButton>
+                ))}
               </Box>
-            </ToggleButtonGroup>
-          </Container>
-        </Fade>
+            </Box>
+          </ToggleButtonGroup>
+        </Container>
       </AppBar>
-    </>
+    </Fade>
   );
 };
 
-export default Header;
+export default React.memo(Header);

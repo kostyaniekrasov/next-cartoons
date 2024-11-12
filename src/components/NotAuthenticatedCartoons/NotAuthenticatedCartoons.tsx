@@ -1,4 +1,4 @@
-import { VideoCategory } from '@/types';
+import { PlaylistsType, VideoCategory } from '@/types';
 import { Playlist } from '@/types/VideoData';
 import { Box } from '@mui/material';
 
@@ -47,6 +47,7 @@ const NotAuthenticatedCartoons = ({ playlists, categories }: Props) => {
           title="Маленьким дітям"
           playlists={playlistsForLittleKids}
           categories={categories}
+          playlistsType={PlaylistsType.ByCategory}
         />
       </Box>
       {!!playlistsForBiggerKids.length && (
@@ -61,6 +62,7 @@ const NotAuthenticatedCartoons = ({ playlists, categories }: Props) => {
             title="Дітям старшого віку"
             playlists={playlistsForBiggerKids}
             categories={categories}
+            playlistsType={PlaylistsType.ByCategory}
           />
         </Box>
       )}

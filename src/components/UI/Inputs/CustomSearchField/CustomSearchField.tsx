@@ -49,4 +49,4 @@ const CustomSearch = React.forwardRef<HTMLInputElement, TextFieldProps>(
 
 CustomSearch.displayName = 'CustomSearch';
 
-export default CustomSearch;
+export default React.memo(CustomSearch);

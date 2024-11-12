@@ -1,3 +1,4 @@
+import { Header } from '@/components';
 import whyDidYouRender from '@welldone-software/why-did-you-render';
 import React from 'react';
 
@@ -11,7 +12,7 @@ whyDidYouRender(React, {
   trackHooks: true,
   logOwnerReasons: true,
   collapseGroups: true,
-  include: [/./], // Включаємо всі компоненти для відстеження.
+  include: [/Header$/], // Включаємо всі компоненти для відстеження.
 
   // Це для тестування, видаліть, якщо не хочете реєструвати різні значення.
   logOnDifferentValues: true,

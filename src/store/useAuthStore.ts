@@ -13,14 +13,15 @@ import {
 import { doc, getDoc } from 'firebase/firestore';
 import nookies from 'nookies';
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 interface AuthState {
   user: User | null;
   loading: boolean;
+  isInitialized: boolean; // Додаємо стан для відстеження ініціалізації
   error: string | null;
   loginWithEmailAndPassword: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  setLoading: (loading: boolean) => void;
   setUser: (user: User | null) => void;
   updateUserProfile: (
     data: Partial<UpdateUserData>,
@@ -30,26 +31,37 @@ interface AuthState {
     currentPassword: string,
     newPassword: string,
   ) => Promise<void>;
+  startLoading: () => void;
+  stopLoading: () => void;
+  setInitialized: (initialized: boolean) => void; // Додаємо функцію для встановлення ініціалізації
 }
 
-const useAuthStore = create<AuthState>((set, get) => ({
-  user: null,
-  loading: true,
-  error: null,
+const useAuthStore = create<AuthState>()(
+  persist(
+    (set, get) => ({
+      user: null,
+      loading: true,
+      isInitialized: false, // Початковий стан ініціалізації
+      error: null,
 
-  setLoading: (loading) => set(() => ({ loading })),
-  setUser: (user) => {
-    set(() => ({ user }));
-    get().setLoading(false);
-  },
+      startLoading: () => set(() => ({ loading: true })),
+      stopLoading: () => set(() => ({ loading: false })),
+      setUser: (user) => {
+        set(() => ({ user }));
+        set(() => ({ isInitialized: true })); // Встановлюємо `isInitialized` після встановлення користувача
+      },
+      setInitialized: (initialized) =>
+        set(() => ({ isInitialized: initialized })),
 
-  loginWithEmailAndPassword: (email, password) => {
-    return new Promise<void>((resolve, reject) => {
-      const auth = getAuth();
-      get().setLoading(true);
-
-      signInWithEmailAndPassword(auth, email, password)
-        .then(async (userCredential) => {
+      loginWithEmailAndPassword: async (email, password) => {
+        const auth = getAuth();
+        get().startLoading();
+        try {
+          const userCredential = await signInWithEmailAndPassword(
+            auth,
+            email,
+            password,
+          );
           const user = userCredential.user;
 
           if (!user.emailVerified) {
@@ -61,83 +73,84 @@ const useAuthStore = create<AuthState>((set, get) => ({
             get().setUser(loggedInUser);
             saveUserCookie(loggedInUser);
           }
-          resolve();
-        })
-        .catch((err) => {
-          handleLoginError(err, reject, set);
-        })
-        .finally(() => get().setLoading(false));
-    });
-  },
+          get().setInitialized(true); // Встановлюємо `isInitialized` у true після успішного логіну
+        } catch (err) {
+          handleLoginError(err, set);
+        } finally {
+          get().stopLoading();
+        }
+      },
 
-  logout: async () => {
-    const auth = getAuth();
-    try {
-      get().setLoading(true);
-      await signOut(auth);
-      get().setUser(null);
-      nookies.destroy(null, 'user_info');
-    } catch (err) {
-      set(() => ({
-        error: err instanceof Error ? err.message : 'Something went wrong',
-      }));
-    } finally {
-      get().setLoading(false);
-    }
-  },
+      logout: async () => {
+        const auth = getAuth();
+        get().startLoading();
+        try {
+          await signOut(auth);
+          get().setUser(null);
+          nookies.destroy(null, 'user_info');
+          get().setInitialized(true); // Встановлюємо `isInitialized` у true після виходу
+        } catch (err) {
+          setError(err, set);
+        } finally {
+          get().stopLoading();
+        }
+      },
 
-  updateUserProfile: async (data, selectedAvatar) => {
-    const currentUser = get().user;
-    if (!currentUser) return;
+      updateUserProfile: async (data, selectedAvatar) => {
+        const currentUser = get().user;
+        if (!currentUser) return;
 
-    const updatedData: UpdateUserData = { ...data };
-    if (selectedAvatar) {
-      updatedData.avatar = selectedAvatar;
-    }
+        const updatedData: UpdateUserData = { ...data };
+        if (selectedAvatar) {
+          updatedData.avatar = selectedAvatar;
+        }
 
-    try {
-      get().setLoading(true);
-      const updatedUser = { ...currentUser, ...updatedData };
-      console.log('Updating user:', updatedUser);
+        get().startLoading();
+        try {
+          const updatedUser = { ...currentUser, ...updatedData };
+          await updateUserData(currentUser.id, updatedData);
+          get().setUser(updatedUser);
+          saveUserCookie(updatedUser);
+        } catch (error) {
+          setError(error, set);
+        } finally {
+          get().stopLoading();
+        }
+      },
 
-      await updateUserData(currentUser.id, updatedData);
-      get().setUser(updatedUser);
-      saveUserCookie(updatedUser);
-    } catch (error) {
-      console.error('Error updating user profile:', error);
-      setError(error, set);
-    } finally {
-      get().setLoading(false);
-    }
-  },
+      changePassword: async (currentPassword, newPassword) => {
+        const auth = getAuth();
+        const currentUser = auth.currentUser;
+        if (!currentUser || !currentPassword || !newPassword) {
+          setError(new Error('Invalid data provided'), set);
+          return;
+        }
 
-  changePassword: async (currentPassword, newPassword) => {
-    const auth = getAuth();
-    const currentUser = auth.currentUser;
-    if (!currentUser || !currentPassword || !newPassword) {
-      setError(new Error('Invalid data provided'), set);
-      return;
-    }
+        get().startLoading();
+        try {
+          const credential = EmailAuthProvider.credential(
+            currentUser.email ?? '',
+            currentPassword,
+          );
 
-    try {
-      const credential = EmailAuthProvider.credential(
-        currentUser.email ?? '',
-        currentPassword,
-      );
-      get().setLoading(true);
+          await reauthenticateWithCredential(currentUser, credential);
+          await updatePassword(currentUser, newPassword);
+          set(() => ({ error: null }));
+        } catch (err) {
+          setError(err, set);
+        } finally {
+          get().stopLoading();
+        }
+      },
+    }),
+    {
+      name: 'auth-storage', // Назва ключа в localStorage
+      partialize: (state) => ({ user: state.user }), // Зберігаємо тільки `user` в localStorage
+    },
+  ),
+);
 
-      await reauthenticateWithCredential(currentUser, credential);
-      await updatePassword(currentUser, newPassword);
-      set(() => ({ error: null }));
-    } catch (err) {
-      setError(err, set);
-      console.error('Failed to change password:', err);
-    } finally {
-      get().setLoading(false);
-    }
-  },
-}));
-
+// Helper function to get user data from Firebase
 const getUserDataFromFirebase = async (uid: string): Promise<User | null> => {
   const userDocRef = doc(db, 'users', uid);
   const userDocSnap = await getDoc(userDocRef);
@@ -159,37 +172,29 @@ const getUserDataFromFirebase = async (uid: string): Promise<User | null> => {
   };
 };
 
+// Helper function to save user data in a cookie
 const saveUserCookie = (user: User) => {
-  const cookieUser = {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    age: user.age,
-    biggerKid: user.biggerKid,
-    littleChild: user.littleChild,
-    role: user.role,
-    avatar: user.avatar || '',
-    showSearch: user.showSearch,
-  };
-
-  nookies.set(null, 'user_info', JSON.stringify(cookieUser), {
-    maxAge: 2 * 24 * 60 * 60,
-    path: '/',
-    sameSite: 'None',
-    secure: true,
-  });
+  const cookieUser = nookies.get(null).user_info;
+  if (JSON.stringify(cookieUser) !== JSON.stringify(user)) {
+    nookies.set(null, 'user_info', JSON.stringify(user), {
+      maxAge: 2 * 24 * 60 * 60,
+      path: '/',
+      sameSite: 'None',
+      secure: true,
+    });
+  }
 };
 
+// Handle login errors
 const handleLoginError = (
   error: unknown,
-  reject: (reason?: unknown) => void,
   set: typeof useAuthStore.setState,
 ) => {
   const errorMessage = handleAuthError(error);
   set(() => ({ error: errorMessage }));
-  reject(new Error(errorMessage));
 };
 
+// General error handler
 const setError = (error: unknown, set: typeof useAuthStore.setState) => {
   set(() => ({
     error: error instanceof Error ? error.message : 'Something went wrong',

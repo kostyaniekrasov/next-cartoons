@@ -81,7 +81,6 @@ const SavedVideos = () => {
         </Typography>
         <GridForList
           playlists={watchLaterPlaylists}
-          isSavedPage
           removeFromSaved={handleRemoveFromSaved}
         />
       </>

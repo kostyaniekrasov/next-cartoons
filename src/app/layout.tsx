@@ -1,3 +1,4 @@
+import { AuthInitializer } from '@/components';
 import Header from '@/components/Header/Header';
 import { getCategories } from '@/lib';
 import { ThemeModeProvider } from '@/theme/ThemeContext';
@@ -8,6 +9,7 @@ import { Inter } from 'next/font/google';
 import React, { Suspense } from 'react';
 
 import './globals.css';
+
 export const metadata: Metadata = {
   title: 'ukrainian cartoon',
   description:
@@ -28,7 +30,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const categories = await getCategories();
-
 
   return (
     <html lang="en" className={`${inter.variable}`}>
@@ -51,7 +52,8 @@ export default async function RootLayout({
                 </Box>
               }
             >
-              <Header categories={categories} />
+              <AuthInitializer />
+              {categories && <Header categories={categories} />}
               {children}
             </Suspense>
           </ThemeModeProvider>
