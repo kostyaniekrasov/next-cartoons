@@ -114,6 +114,7 @@ const TabProfile = ({ value, handleClose, index }: Props) => {
           </IconButton>
         </Box>
         <Avatar
+          alt="Avatar"
           src={selectedAvatar ? selectedAvatar.url : user?.avatar?.url}
           sx={{
             alignSelf: 'center',

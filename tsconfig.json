@@ -30,7 +30,8 @@
     ".next/types/**/*.ts",
     "src/types/**/*.ts",
     "src/db/mongodb.js",
-    "src/db/seedDatabase.js"
+    "src/db/seedDatabase.js",
+    "src/scripts/why-did-you-render/index.js"
   ],
   "exclude": ["node_modules"]
 }

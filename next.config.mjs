@@ -1,14 +1,16 @@
+import injectWhyDidYouRender from './src/scripts/why-did-you-render/index.js';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  webpack(config) {
+  webpack(config, context) {
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack'],
     });
+    injectWhyDidYouRender(config, context);
     return config;
   },
   reactStrictMode: true,
-
   images: {
     remotePatterns: [
       {

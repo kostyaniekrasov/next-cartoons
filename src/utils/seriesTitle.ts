@@ -1,9 +1,21 @@
+import replaceStrings from './replaceStrings';
+
 const seriesTitle = (title: string, playlistTitle: string) => {
-  return title
-    .replaceAll(`${playlistTitle}`, '') // Видаляємо назву плейлиста
-    .replace(/\./g, '') // Видаляємо всі крапки
+  let newTitle = replaceStrings(title, playlistTitle);
+
+  // if (!newTitle.length) {
+  //   newTitle.replaceAll(playlistTitle, '');
+  // }
+
+  newTitle = newTitle
+    .replace(/\./g, '')
     .replace(/\|.*/, '')
-    .trim();
+    .toLowerCase()
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+
+  return newTitle;
 };
 
 export default seriesTitle;

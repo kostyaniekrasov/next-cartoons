@@ -9,3 +9,4 @@ export { default as handleAuthError } from './handleAuthError';
 export { default as getNextVideoInPlaylist } from './getNextVideo';
 export { default as useIsLargeScreen } from './useIsLargeScreen';
 export { default as useIsMobileScreen } from './useIsMobileScreen';
+export { default as replaceStrings } from './replaceStrings';

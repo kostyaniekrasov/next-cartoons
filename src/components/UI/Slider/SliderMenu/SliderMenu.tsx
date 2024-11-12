@@ -19,6 +19,7 @@ interface Props {
   showRemove: boolean;
   isSavedPage?: boolean;
   removeFromSaved?: (playlistId: string) => Promise<void>;
+  slideClick: (playlistId: string, videoId: string) => void;
 }
 
 const SliderMenu = ({
@@ -31,6 +32,7 @@ const SliderMenu = ({
   showRemove,
   isSavedPage,
   removeFromSaved,
+  slideClick,
 }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -47,10 +49,6 @@ const SliderMenu = ({
         setIsSaved(true);
       }
     }
-  };
-
-  const handleSlideClick = (playlistId: string, videoId: string) => {
-    router.push(`${pathname}/video-page/${playlistId}/${videoId}`);
   };
 
   const handleShareClick = () => {
@@ -130,7 +128,7 @@ const SliderMenu = ({
         },
       }}
     >
-      <MenuItem onClick={() => handleSlideClick(playlist.id, selectedVideoId)}>
+      <MenuItem onClick={() => slideClick(playlist.id, selectedVideoId)}>
         <Typography variant="secondaryText">Перейти до перегляду</Typography>
       </MenuItem>
       <MenuItem onClick={handleShareClick}>

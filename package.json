@@ -20,6 +20,7 @@
     "@mui/material-nextjs": "^6.1.1",
     "@svgr/webpack": "^8.1.0",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@welldone-software/why-did-you-render": "^8.0.3",
     "embla-carousel-react": "^8.3.1",
     "firebase": "^10.14.1",
     "next": "14.2.13",
@@ -37,6 +38,7 @@
   "devDependencies": {
     "@types/react": "^18",
     "@types/react-slick": "^0.23.13",
+    "@types/webpack": "^5.28.5",
     "barrelsby": "^2.8.1",
     "eslint-config-next": "14.2.13",
     "prettier": "^3.3.3",

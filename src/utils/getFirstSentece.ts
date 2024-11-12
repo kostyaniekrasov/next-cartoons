@@ -1,4 +1,6 @@
-function getFirstParagraph(text: string): string {
+import replaceStrings from './replaceStrings';
+
+function getFirstParagraph(text: string, playlistTitle: string): string {
   const paragraphs = text.split(/\n\s*\n/);
   let firstParagraph = paragraphs[0].trim();
 
@@ -6,6 +8,8 @@ function getFirstParagraph(text: string): string {
   if (index !== -1) {
     firstParagraph = firstParagraph.slice(0, index).trim();
   }
+
+  firstParagraph = replaceStrings(firstParagraph, playlistTitle);
 
   return firstParagraph;
 }

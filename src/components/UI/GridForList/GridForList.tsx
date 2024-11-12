@@ -236,6 +236,7 @@ const GridForList = ({
                     showRemove={!!continueWatchingList || !!isSavedPage}
                     removeFromSaved={removeFromSaved}
                     isSavedPage={isSavedPage}
+                    slideClick={handleSlideClick}
                   />
                 )}
               </Box>

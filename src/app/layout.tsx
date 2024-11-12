@@ -5,10 +5,9 @@ import { Box, CircularProgress, CssBaseline } from '@mui/material';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { Suspense } from 'react';
+import React, { Suspense } from 'react';
 
 import './globals.css';
-
 export const metadata: Metadata = {
   title: 'ukrainian cartoon',
   description:
@@ -29,6 +28,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const categories = await getCategories();
+
+
   return (
     <html lang="en" className={`${inter.variable}`}>
       <body className={`antialiased`}>

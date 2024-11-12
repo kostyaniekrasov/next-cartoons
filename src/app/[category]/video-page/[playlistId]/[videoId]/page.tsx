@@ -27,7 +27,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 const VideoPage = ({
   params,
@@ -49,35 +49,49 @@ const VideoPage = ({
   const pathname = usePathname();
   const theme = useTheme();
   const isMobileScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  // const isDesktopScreen = useMediaQuery(theme.breakpoints.up('lg'));
-  // const { isDesktopScreen, isMobileScreen } = useIsLargeScreen();
-  const nextVideo = getNextVideoInPlaylist(playlist, currentVideo);
+  const nextVideo = useMemo(
+    () => getNextVideoInPlaylist(playlist, currentVideo),
+    [playlist, currentVideo],
+  );
   const initialized = useRef(false);
   const videoRef = useRef<HTMLDivElement>(null);
   const [videoHeight, setVideoHeight] = useState<number | null>(null);
 
-  const handleAddToSaved = async () => {
+  const handleAddToSaved = useCallback(async () => {
     if (playlist && user) {
       await addToWatchLater(user.id, playlist);
       setIsSaved(true);
     }
-  };
+  }, [playlist, user]);
 
-  const handleChangeVideo = (video: VideoData) => {
-    setCurrentVideo(video);
-    const newUrl = `/${category}/video-page/${playlistId}/${video.id}`;
-    window.history.replaceState(null, '', newUrl);
-  };
+  const handleSlideClick = useCallback(
+    (playlistId: string, videoId: string) => {
+      router.push(`/${category}/video-page/${playlistId}/${videoId}`);
+    },
+    [router, category],
+  );
 
-  const openSignInModal = () => {
+  const handleChangeVideo = useCallback(
+    (video: VideoData) => {
+      setCurrentVideo(video);
+      const newUrl = `/${category}/video-page/${playlistId}/${video.id}`;
+      window.history.replaceState(null, '', newUrl);
+    },
+    [category, playlistId],
+  );
+
+  const openSignInModal = useCallback(() => {
     router.push(`${pathname}?signin=true`);
-  };
+  }, [router, pathname]);
 
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
-  };
+  const toggleDrawer = useCallback(
+    (newOpen: boolean) => () => {
+      setOpen(newOpen);
+    },
+    [],
+  );
 
-  const playNextVideo = () => {
+  const playNextVideo = useCallback(() => {
     if (!playlist || !currentVideo) return;
     const currentIndex = playlist.videos.findIndex(
       (video) => video.id === currentVideo.id,
@@ -85,7 +99,7 @@ const VideoPage = ({
     if (currentIndex !== -1 && currentIndex < playlist.videos.length - 1) {
       setCurrentVideo(playlist.videos[currentIndex + 1]);
     }
-  };
+  }, [playlist, currentVideo]);
 
   const playlistTitle = playlist?.title;
 
@@ -109,7 +123,13 @@ const VideoPage = ({
           : foundPlaylist.videos[0];
         setCurrentVideo(initialVideo || foundPlaylist.videos[0]);
       }
+    };
 
+    fetchData();
+  }, [playlistId, videoId]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
       if (!categories.length) {
         const fetchedCategories = await getCategories();
         if (fetchedCategories) {
@@ -120,27 +140,34 @@ const VideoPage = ({
           if (foundCategory) setCurrentCategory(foundCategory);
         }
       }
+    };
 
+    fetchCategories();
+  }, [categories.length, category]);
+
+  useEffect(() => {
+    const fetchPlaylists = async () => {
       if (!playlists.length) {
         const fetchedPlaylists = await fetchPlaylistsByCategory(category);
         setPlaylists(fetchedPlaylists || []);
       }
+    };
 
+    fetchPlaylists();
+  }, [playlists.length, category]);
+
+  useEffect(() => {
+    const checkIfSaved = async () => {
       if (user) {
         const saved = await isPlaylistSaved(user.id, playlistId);
         setIsSaved(saved);
       }
     };
 
-    fetchData();
-  }, [
-    categories.length,
-    category,
-    playlistId,
-    playlists.length,
-    user,
-    videoId,
-  ]);
+    checkIfSaved();
+  }, [user, playlistId]);
+
+  // console.log('render video page');і
 
   return (
     <Box
@@ -169,16 +196,9 @@ const VideoPage = ({
               flexDirection: { xs: 'column', sm: 'row' },
               gap: '24px',
               justifyContent: { '3xl': 'center' },
-              borderBottom: {
-                xs: 'none',
-                sm: '1px solid',
-              },
-              borderBottomColor: {
-                sm: 'gray.200',
-              },
-              paddingBottom: {
-                sm: '18px',
-              },
+              borderBottom: { xs: 'none', sm: '1px solid' },
+              borderBottomColor: { sm: 'gray.200' },
+              paddingBottom: { sm: '18px' },
             }}
           >
             <VideoBlock
@@ -213,17 +233,14 @@ const VideoPage = ({
             <VerticalSlider
               playlists={playlists}
               categories={categories}
-              category={category}
+              slideClick={handleSlideClick}
             />
           ) : (
             <VerticalSliderSkeleton />
           )}
           <Box
             sx={{
-              display: {
-                xs: 'none',
-                sm: 'flex',
-              },
+              display: { xs: 'none', sm: 'flex' },
               flexDirection: 'column',
               alignItems: 'baseline',
               width: '100%',
@@ -253,7 +270,11 @@ const VideoPage = ({
               <ChevronRightIcon />
             </IconButton>
 
-            <CartoonSlider playlists={playlists} categories={categories} />
+            <CartoonSlider
+              playlists={playlists}
+              categories={categories}
+              slideClick={handleSlideClick}
+            />
           </Box>
         </Box>
 

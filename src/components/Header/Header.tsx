@@ -41,12 +41,17 @@ import {
 } from '@mui/material';
 import useEmblaCarousel from 'embla-carousel-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { ChangeEvent, useEffect, useState } from 'react';
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 import { ResetPasswordModal } from '../Auth/ResetPasswordModal';
 import ProfileSettings from '../ProfileSettings/ProfileSettings';
 import { CookieConsent } from '../UI/CookieConsent';
-import './Header.scss';
 
 interface Props {
   categories: VideoCategory[] | undefined;
@@ -60,10 +65,6 @@ const Header = ({ categories }: Props) => {
   const [selectedFilter, setSelectedFilter] = useState(
     getCurrentFilter(pathname),
   );
-  const modalSignIn = searchParams.get('signin');
-  const modalSignUp = searchParams.get('signup');
-  const modalResetPassword = searchParams.get('reset-password');
-  const modalSettings = searchParams.get('settings');
   const [value, setValue] = useState('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isEmpty, setIsEmpty] = useState(true);
@@ -78,66 +79,91 @@ const Header = ({ categories }: Props) => {
   const isSm = useMediaQuery(theme.breakpoints.up('sm'));
   const isXs = useMediaQuery(theme.breakpoints.up('xs'));
 
+  const modalSignIn = searchParams.get('signin');
+  const modalSignUp = searchParams.get('signup');
+  const modalResetPassword = searchParams.get('reset-password');
+  const modalSettings = searchParams.get('settings');
+
   const open = Boolean(anchorEl);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      setAnchorEl(event.currentTarget);
+    },
+    [],
+  );
+
+  const handleClose = useCallback(() => {
     setAnchorEl(null);
-  };
+  }, []);
 
-  const openSignInModal = () => {
+  const openSignInModal = useCallback(() => {
     router.push(`${pathname}?signin=true`);
-  };
+  }, [router, pathname]);
 
-  const handleOpenMobileMenu = () => {
+  const handleOpenMobileMenu = useCallback(() => {
     setIsOpenMobileMenu((prevState) => !prevState);
-  };
-  const handleFilterChange = (
-    event: React.MouseEvent<HTMLElement>,
-    newFilter: string,
-  ) => {
-    if (newFilter !== null) {
-      setSelectedFilter(newFilter);
-      router.push(`/${newFilter}`);
-    }
-  };
+  }, []);
 
-  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
-    const val = event.target.value;
-    setValue(val);
+  const handleFilterChange = useCallback(
+    (event: React.MouseEvent<HTMLElement>, newFilter: string) => {
+      if (newFilter !== null) {
+        setSelectedFilter(newFilter);
+        router.push(`/${newFilter}`);
+      }
+    },
+    [router],
+  );
 
-    if (val.trim() === '') {
-      router.push('/all');
-    }
-    setIsEmpty(!val.trim());
-  };
+  const handleSearch = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const val = event.target.value;
+      setValue(val);
 
-  const handleClearSearch = () => {
+      if (val.trim() === '') {
+        router.push('/all');
+      }
+      setIsEmpty(!val.trim());
+    },
+    [router],
+  );
+
+  const handleClearSearch = useCallback(() => {
     setValue('');
     setIsEmpty(true);
-  };
+  }, []);
 
-  const handleClickSearch = () => {
+  const handleClickSearch = useCallback(() => {
     router.push(`/search?query=${value}`);
-  };
+  }, [router, value]);
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      router.push(`/search?query=${value}`);
-    }
-  };
-
-  useEffect(() => {
-    if (!user) {
-      setAnchorEl(null);
-    }
-  }, [user]);
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter') {
+        router.push(`/search?query=${value}`);
+      }
+    },
+    [router, value],
+  );
 
   useEffect(() => {
     setSelectedFilter(getCurrentFilter(pathname));
   }, [pathname]);
+
+  const memoizedAvatar = useMemo(
+    () => (
+      <Avatar
+        alt="Avatar"
+        src={user?.avatar ? user.avatar.url : ''}
+        sx={{
+          width: '48px',
+          height: '48px',
+          backgroundColor: 'gray.100',
+        }}
+      />
+    ),
+    [user?.avatar],
+  );
 
   return (
     <>
@@ -176,25 +202,14 @@ const Header = ({ categories }: Props) => {
                 alignItems: 'center',
               }}
             >
-              {isSm ? (
-                <IconButton
-                  onClick={() => router.push('/')}
-                  sx={{
-                    padding: 0,
-                  }}
-                >
-                  <LogoDesktopIcon />
-                </IconButton>
-              ) : (
-                <IconButton
-                  onClick={() => router.push('/')}
-                  sx={{
-                    padding: 0,
-                  }}
-                >
-                  <LogoMobileIcon />
-                </IconButton>
-              )}
+              <IconButton
+                onClick={() => router.push('/')}
+                sx={{
+                  padding: 0,
+                }}
+              >
+                {isSm ? <LogoDesktopIcon /> : <LogoMobileIcon />}
+              </IconButton>
               {isSm && !!user?.showSearch && (
                 <CustomSearchField
                   id="search-bar"
@@ -255,12 +270,9 @@ const Header = ({ categories }: Props) => {
                                   transform: 'scale(1.05)',
                                 },
                               }}
+                              onClick={handleClickSearch}
                             >
-                              <SearchIcon
-                                width={24}
-                                height={24}
-                                onClick={handleClickSearch}
-                              />
+                              <SearchIcon width={24} height={24} />
                             </Button>
                           </Box>
                         </Grow>
@@ -322,15 +334,7 @@ const Header = ({ categories }: Props) => {
                       }}
                     >
                       <MenuDuoIcon />
-
-                      <Avatar
-                        src={user.avatar ? user.avatar.url : ''}
-                        sx={{
-                          width: '48px',
-                          height: '48px',
-                          bachgroundColor: 'gray.100',
-                        }}
-                      />
+                      {memoizedAvatar}
                     </IconButton>
                   </CustomTooltip>
 
