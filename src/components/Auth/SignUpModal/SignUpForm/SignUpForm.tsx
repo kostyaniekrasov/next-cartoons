@@ -52,7 +52,7 @@ function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
     register,
     setValue,
     handleSubmit,
-    formState: { isValid, errors, isSubmitting, isSubmitted },
+    formState: { isValid, errors, isSubmitting },
     watch,
     getValues,
   } = useForm<AuthFormData>({
@@ -275,13 +275,9 @@ function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
             fullWidth
             label="Підтвердити пароль"
             type="password"
-            error={!!errors.confirmPassword || (!passwordsMatch && isSubmitted)}
+            error={!!errors.confirmPassword || !passwordsMatch}
             helperText={
-              <Collapse
-                in={!passwordsMatch && isSubmitted}
-                timeout={200}
-                unmountOnExit
-              >
+              <Collapse in={!passwordsMatch} timeout={200} unmountOnExit>
                 <Box
                   sx={{
                     display: 'flex',
