@@ -52,10 +52,12 @@ function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
     register,
     setValue,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitted },
+    formState: { isValid, errors, isSubmitting, isSubmitted },
     watch,
     getValues,
-  } = useForm<AuthFormData>();
+  } = useForm<AuthFormData>({
+    mode: 'onChange',
+  });
 
   const watchEmail = watch('email');
   const watchPassword = watch('password');
@@ -276,7 +278,7 @@ function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
             error={!!errors.confirmPassword || (!passwordsMatch && isSubmitted)}
             helperText={
               <Collapse
-                in={!!errors.password && isSubmitted}
+                in={!passwordsMatch && isSubmitted}
                 timeout={200}
                 unmountOnExit
               >
@@ -368,6 +370,7 @@ function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
             }
             {...register('name', {
               required: 'Ім’я обов’язкове',
+              maxLength: { value: 30, message: 'Максимум 30 символів' },
             })}
             slotProps={{
               input: {
@@ -492,7 +495,7 @@ function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
         <ModalButton
           type="submit"
           fullWidth
-          disabled={isSubmitting || inputsIsEmpty}
+          disabled={isSubmitting || inputsIsEmpty || !isValid}
           sx={{
             borderRadius: '12px',
           }}

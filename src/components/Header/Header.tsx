@@ -235,10 +235,6 @@ const Header = ({ categories }: Props) => {
                 id="search-bar"
                 sx={{
                   position: 'relative',
-                  display: {
-                    xs: 'none',
-                    sm: 'block',
-                  },
                 }}
                 type="text"
                 value={value}

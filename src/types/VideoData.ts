@@ -1,4 +1,5 @@
 interface VideoData {
+  createdAt: string;
   id: string;
   category: string;
   name: string;
@@ -67,6 +68,7 @@ interface Playlist {
   category: string;
   title: string;
   videos: VideoData[];
+  createdAt: string;
 }
 
 interface VideoUrlFromDB {
@@ -75,6 +77,7 @@ interface VideoUrlFromDB {
   category: string;
   name: string;
   recommendedAge: number;
+  createdAt: string;
 }
 
 export type { VideoData, VideoSnippet, PlaylistItem, Playlist, VideoUrlFromDB };

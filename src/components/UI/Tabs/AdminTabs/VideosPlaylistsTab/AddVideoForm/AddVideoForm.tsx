@@ -56,7 +56,7 @@ const AddVideoForm = ({ categories, defaultCategory }: Props) => {
       };
       const docRef = await addDocumentToCollection(newDocument);
 
-      alert(`Документ успішно додано з ID: ${docRef.id}`);
+      alert(`Документ успішно додано : ${docRef}`);
 
       reset();
     } catch (error) {

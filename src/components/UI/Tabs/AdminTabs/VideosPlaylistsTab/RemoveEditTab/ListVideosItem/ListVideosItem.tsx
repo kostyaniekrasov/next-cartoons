@@ -18,7 +18,6 @@ import {
   MenuItem,
   Typography,
 } from '@mui/material';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -27,7 +26,7 @@ interface Props {
   isVideo?: boolean;
   removeFunction: (url: string) => void;
   categories: VideoCategory[];
-  videoUpdate: (video: VideoUrlFromDB) => void;
+  videoUpdate: (video: VideoUrlFromDB, playlistId: string) => void;
 }
 
 const ListVideosItem = ({
@@ -45,8 +44,6 @@ const ListVideosItem = ({
   const handleEdit = () => {
     setIsEdit((prevState) => !prevState);
   };
-
-  const router = useRouter();
 
   const handleDelete = async (id: string, name: string) => {
     if (isVideo) {
@@ -71,13 +68,23 @@ const ListVideosItem = ({
       } else {
         await updatePlaylistsArray(video.id, data);
       }
-      videoUpdate(data);
+      console.log('Before update:', video);
+      videoUpdate(data, video.id);
+      console.log(data.id);
+      console.log('After update:', data);
       setIsEdit(false);
-      router.refresh();
     } catch (e) {
       console.error('Відбулись помилки при оновленні масиву', e);
     }
   };
+
+  const formattedDate = new Date(video.createdAt).toLocaleDateString('uk-UA', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 
   return (
     <Collapse in={visible} timeout={300} unmountOnExit>
@@ -91,6 +98,9 @@ const ListVideosItem = ({
           </Box>
           <Box sx={{ width: '10%' }}>
             <ListItemText primary={video.recommendedAge} />
+          </Box>
+          <Box sx={{ width: '10%' }}>
+            <ListItemText primary={formattedDate} />
           </Box>
           <Box
             sx={{ width: '40%', overflow: 'hidden', textOverflow: 'ellipsis' }}
@@ -191,6 +201,59 @@ const ListVideosItem = ({
                   </MenuItem>
                 ))}
             </CustomInput>
+          </Box>
+          <Box sx={{ width: '10%' }}>
+            <CustomInput
+              fullWidth
+              title="createdAt"
+              type="datetime-local"
+              defaultValue={
+                !isNaN(new Date(video.createdAt).getTime())
+                  ? new Date(video.createdAt).toISOString().slice(0, 16)
+                  : ''
+              }
+              slotProps={{
+                select: {
+                  MenuProps: {
+                    PaperProps: {
+                      sx: {
+                        bgcolor: 'white',
+                        borderRadius: 2,
+                        padding: 1,
+                        '& .MuiMenuItem-root': {
+                          borderRadius: 2,
+                          marginBottom: 1,
+
+                          padding: '8px 16px',
+                          color: 'gray.800',
+                          '&:hover': {
+                            bgcolor: 'accentPink.main',
+                          },
+                          '&.Mui-selected': {
+                            bgcolor: 'accentPink.main',
+                            color: 'white',
+                            '&:hover': {
+                              bgcolor: 'accentPink.main',
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              }}
+              {...register('createdAt', {
+                required: 'createdAt обов’язкове',
+                validate: {
+                  validDate: (value) => {
+                    const date = new Date(value);
+                    return !isNaN(date.getTime()) || 'Невірний формат дати';
+                  },
+                },
+              })}
+              error={!!formState.errors.createdAt}
+              helperText={formState.errors.createdAt?.message}
+            />
           </Box>
           <Box sx={{ width: '10%' }}>
             <CustomInput

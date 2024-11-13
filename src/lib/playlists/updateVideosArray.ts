@@ -31,6 +31,10 @@ const updateVideosArray = async (id: string, newData: VideoUrlFromDB) => {
     const currentData = currentDataSnap.data() as VideoUrlFromDB;
     const updates: Partial<VideoUrlFromDB> = {};
 
+    if (newData.createdAt && newData.createdAt !== currentData.createdAt) {
+      updates.createdAt = newData.createdAt;
+    }
+
     if (newData.name && newData.name !== currentData.name) {
       updates.name = newData.name;
     }

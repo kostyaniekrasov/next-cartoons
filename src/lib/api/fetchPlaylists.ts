@@ -13,6 +13,7 @@ async function fetchPlaylist(
   category: string,
   name: string,
   recommendedAge: number,
+  createdAt: string,
 ): Promise<PlaylistItem[]> {
   const playlistId = extractIds.extractPlaylistId(VideoUrlFromDB);
   const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=20&key=${YOUTUBE_API_KEY}`;
@@ -48,6 +49,7 @@ async function fetchPlaylist(
       category,
       name,
       recommendedAge,
+      createdAt,
       contentDetails: {
         duration: videosData.items[index]?.contentDetails?.duration || 'N/A',
       },

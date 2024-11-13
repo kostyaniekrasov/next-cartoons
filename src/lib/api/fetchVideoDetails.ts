@@ -7,6 +7,7 @@ async function fetchVideoDetails(
   category: string,
   name: string,
   recommendedAge: number,
+  createdAt: string,
 ) {
   const videoId = extractIds.extractVideoId(VideoUrlFromDB);
   const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet,statistics,contentDetails&key=${YOUTUBE_API_KEY}`;
@@ -23,6 +24,7 @@ async function fetchVideoDetails(
     category,
     name,
     recommendedAge,
+    createdAt,
     snippet: video.snippet,
     contentDetails: {
       duration: video.contentDetails.duration,

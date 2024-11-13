@@ -20,6 +20,7 @@ const getYouTubeData = async (
         video.category,
         video.name,
         video.recommendedAge,
+        video.createdAt,
       ),
     );
 
@@ -29,6 +30,7 @@ const getYouTubeData = async (
       playlist.category,
       playlist.name,
       playlist.recommendedAge,
+      playlist.createdAt,
     );
 
     return playlistVideos
@@ -37,6 +39,7 @@ const getYouTubeData = async (
         id: video.snippet.resourceId.videoId,
         category: video.category,
         name: video.name,
+        createdAt: playlist.createdAt,
         snippet: {
           ...video.snippet,
           thumbnails: {

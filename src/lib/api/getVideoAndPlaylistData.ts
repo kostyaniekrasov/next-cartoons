@@ -14,6 +14,7 @@ const fetchDataFromCollection = async (
       category: data.category,
       name: data.name,
       recommendedAge: data.recommendedAge,
+      createdAt: data.createdAt ?? new Date().toISOString(),
     } as VideoUrlFromDB;
   });
 };

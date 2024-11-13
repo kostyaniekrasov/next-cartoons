@@ -32,20 +32,28 @@ const RemoveEditTab = ({ categories }: Props) => {
     setPlaylists((prevState) => prevState.filter((v) => v.id !== id));
   };
 
-  const handleVideoUpdate = (updatedVideo: VideoUrlFromDB) => {
+  const handleVideoUpdate = (
+    updatedVideo: VideoUrlFromDB,
+    playlistId: string,
+  ) => {
     setVideos((prevState) =>
       prevState.map((video) =>
-        video.url === updatedVideo.url ? updatedVideo : video,
+        video.id === playlistId ? updatedVideo : video,
       ),
     );
+    console.log(updatedVideo);
   };
 
-  const handlePlaylistUpdate = (updatedPlaylist: VideoUrlFromDB) => {
+  const handlePlaylistUpdate = (
+    updatedPlaylist: VideoUrlFromDB,
+    playlistId: string,
+  ) => {
     setPlaylists((prevState) =>
       prevState.map((playlist) =>
-        playlist.id === updatedPlaylist.id ? updatedPlaylist : playlist,
+        playlist.id === playlistId ? updatedPlaylist : playlist,
       ),
     );
+    console.log(updatedPlaylist);
   };
 
   useEffect(() => {
@@ -117,6 +125,9 @@ const RemoveEditTab = ({ categories }: Props) => {
           <Box sx={{ width: '10%' }}>
             <ListItemText primary="Age" />
           </Box>
+          <Box sx={{ width: '10%' }}>
+            <ListItemText primary="CreatedAt" />
+          </Box>
           <Box
             sx={{ width: '40%', textOverflow: 'ellipsis', overflow: 'hidden' }}
           >
@@ -164,6 +175,9 @@ const RemoveEditTab = ({ categories }: Props) => {
           <Box sx={{ width: '10%' }}>
             <ListItemText primary="Age" />
           </Box>
+          <Box sx={{ width: '10%' }}>
+            <ListItemText primary="CreatedAt" />
+          </Box>
           <Box
             sx={{ width: '40%', textOverflow: 'ellipsis', overflow: 'hidden' }}
           >
@@ -187,11 +201,11 @@ const RemoveEditTab = ({ categories }: Props) => {
           }}
         >
           {!!videos.length &&
-            videos.map((playlist) => (
+            videos.map((video) => (
               <ListVideosItem
                 categories={categories}
-                key={playlist.url}
-                video={playlist}
+                key={video.url}
+                video={video}
                 removeFunction={handleVideoRemove}
                 videoUpdate={handleVideoUpdate}
                 isVideo

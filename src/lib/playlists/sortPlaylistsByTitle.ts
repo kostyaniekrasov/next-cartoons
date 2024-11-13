@@ -17,7 +17,13 @@ function getMostFrequentCategory(videos: VideoData[]): string {
 
 function sortPlaylistsByTitle(
   videos: VideoData[],
-): { id: string; title: string; category: string; videos: VideoData[] }[] {
+): {
+  id: string;
+  title: string;
+  category: string;
+  videos: VideoData[];
+  createdAt: string;
+}[] {
   const playlists: { [key: string]: VideoData[] } = {};
 
   videos.forEach((video) => {
@@ -39,6 +45,7 @@ function sortPlaylistsByTitle(
       title: playlistName,
       category: playlistCategory,
       videos: playlistVideos,
+      createdAt: playlistVideos[0].createdAt || new Date().toISOString(),
       id: id,
     };
   });
