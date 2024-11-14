@@ -188,10 +188,26 @@ const GridForList = ({
                   variant="mainTextSemibold"
                   color="gray.900"
                   textTransform={'capitalize'}
+                  sx={{
+                    fontSize: {
+                      xs: '15px',
+                      sm: '17px',
+                    },
+                  }}
                 >
                   {playlist.title.toLowerCase()}
                 </Typography>
-                <Typography variant="mainText" color="gray.700" component="p">
+                <Typography
+                  variant="mainText"
+                  color="gray.700"
+                  component="p"
+                  sx={{
+                    fontSize: {
+                      xs: '13px',
+                      sm: '17px',
+                    },
+                  }}
+                >
                   {categories &&
                     getCategoryName(categories, firstVideo.category)}
                 </Typography>
