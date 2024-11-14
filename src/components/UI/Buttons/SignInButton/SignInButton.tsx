@@ -8,6 +8,7 @@ const SignInButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
         sx={{
+          ...props.sx,
           fontFamily: 'var(--font-inter), sans-serif',
           fontSize: '17px',
           fontWeight: '500',

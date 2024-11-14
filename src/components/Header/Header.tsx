@@ -22,6 +22,7 @@ import {
 import useAuthStore from '@/store/useAuthStore';
 import { VideoCategory } from '@/types';
 import { getCurrentFilter } from '@/utils';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import {
   AppBar,
   Avatar,
@@ -30,12 +31,14 @@ import {
   Collapse,
   Container,
   Drawer,
+  Fab,
   Fade,
   Grow,
   Icon,
   IconButton,
   ToggleButtonGroup,
   Typography,
+  Zoom,
 } from '@mui/material';
 import useEmblaCarousel from 'embla-carousel-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -69,6 +72,8 @@ const Header = ({ categories }: Props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isEmpty, setIsEmpty] = useState(true);
   const [isOpenMobileMenu, setIsOpenMobileMenu] = useState(false);
+  const [showButton, setShowButton] = useState(false);
+
   const [emblaRef] = useEmblaCarousel({
     loop: false,
     slidesToScroll: 1,
@@ -142,6 +147,19 @@ const Header = ({ categories }: Props) => {
     },
     [router, value],
   );
+
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowButton(window.scrollY > window.innerHeight);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     setSelectedFilter(getCurrentFilter(pathname));
@@ -235,6 +253,10 @@ const Header = ({ categories }: Props) => {
                 id="search-bar"
                 sx={{
                   position: 'relative',
+                  display: {
+                    xs: 'none',
+                    sm: 'flex',
+                  },
                 }}
                 type="text"
                 value={value}
@@ -379,7 +401,7 @@ const Header = ({ categories }: Props) => {
                 sx={{
                   display: {
                     xs: 'none',
-                    sm: 'block',
+                    sm: 'flex',
                   },
                 }}
               >
@@ -491,6 +513,29 @@ const Header = ({ categories }: Props) => {
             </Box>
           </ToggleButtonGroup>
         </Container>
+        <Zoom in={showButton}>
+          <Fab
+            onClick={handleScrollToTop}
+            sx={{
+              position: 'fixed',
+              bottom: 16,
+              right: 16,
+              zIndex: 1000,
+              backgroundColor: 'accentPink.main',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                backgroundColor: 'accentPink.dark',
+              },
+            }}
+            aria-label="Scroll back to top"
+          >
+            <KeyboardArrowUpIcon
+              sx={{
+                color: 'white',
+              }}
+            />
+          </Fab>
+        </Zoom>
       </AppBar>
     </Fade>
   );

@@ -39,6 +39,7 @@ export const lightPalette = {
   },
   accentPink: {
     main: '#ff2d55',
+    dark: '#e0264b',
   },
 };
 
@@ -83,5 +84,6 @@ export const darkPalette = {
   },
   accentPink: {
     main: '#ff2d55',
+    dark: '#e0264b',
   },
 };

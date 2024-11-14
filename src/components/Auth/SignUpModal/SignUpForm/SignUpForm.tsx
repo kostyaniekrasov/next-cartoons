@@ -52,7 +52,7 @@ function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
     register,
     setValue,
     handleSubmit,
-    formState: { isValid, errors, isSubmitting },
+    formState: { isValid, errors, isSubmitting, isSubmitted },
     watch,
     getValues,
   } = useForm<AuthFormData>({
@@ -145,10 +145,10 @@ function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
             fullWidth
             label="Електронна пошта"
             type="text"
-            error={!!errors.email || !!emailErrorMessage}
+            error={(!!errors.email || !!emailErrorMessage) && isSubmitted}
             helperText={
               <Collapse
-                in={!!errors.email || !!emailErrorMessage}
+                in={(!!errors.email || !!emailErrorMessage) && isSubmitted}
                 timeout={200}
                 unmountOnExit
               >
@@ -212,9 +212,13 @@ function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
             fullWidth
             label="Пароль"
             type="password"
-            error={!!errors.password}
+            error={!!errors.password && isSubmitted}
             helperText={
-              <Collapse in={!!errors.password} timeout={200} unmountOnExit>
+              <Collapse
+                in={!!errors.password && isSubmitted}
+                timeout={200}
+                unmountOnExit
+              >
                 <Box
                   sx={{
                     display: 'flex',
@@ -275,9 +279,13 @@ function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
             fullWidth
             label="Підтвердити пароль"
             type="password"
-            error={!!errors.confirmPassword || !passwordsMatch}
+            error={(!!errors.confirmPassword || !passwordsMatch) && isSubmitted}
             helperText={
-              <Collapse in={!passwordsMatch} timeout={200} unmountOnExit>
+              <Collapse
+                in={!passwordsMatch && isSubmitted}
+                timeout={200}
+                unmountOnExit
+              >
                 <Box
                   sx={{
                     display: 'flex',
@@ -340,9 +348,13 @@ function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
             fullWidth
             label="Ім'я"
             type="text"
-            error={!!errors.name}
+            error={!!errors.name && isSubmitted}
             helperText={
-              <Collapse in={!!errors.name} timeout={200} unmountOnExit>
+              <Collapse
+                in={!!errors.name && isSubmitted}
+                timeout={200}
+                unmountOnExit
+              >
                 <Box
                   sx={{
                     display: 'flex',
@@ -491,7 +503,7 @@ function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
         <ModalButton
           type="submit"
           fullWidth
-          disabled={isSubmitting || inputsIsEmpty || !isValid}
+          disabled={isSubmitting || inputsIsEmpty || (!isValid && isSubmitted)}
           sx={{
             borderRadius: '12px',
           }}

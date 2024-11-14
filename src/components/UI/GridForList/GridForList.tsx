@@ -74,7 +74,12 @@ const GridForList = ({
 
   return (
     <>
-      <Grid2 container spacing={4} columnSpacing={3}>
+      <Grid2
+        container
+        spacing={4}
+        columnSpacing={3}
+        columns={{ xs: 4, sm: 8, md: 12 }}
+      >
         {playlists.map((playlist) => {
           if (!playlist.videos || playlist.videos.length === 0) {
             return null;
@@ -90,7 +95,7 @@ const GridForList = ({
           const firstVideo = playlist.videos[0];
 
           return (
-            <Grid2 size={{ xs: 2, sm: 6, md: 3 }} key={playlist.id}>
+            <Grid2 size={{ xs: 4, sm: 6, md: 3 }} key={playlist.id}>
               <Box>
                 <Box>
                   <Box
@@ -99,7 +104,7 @@ const GridForList = ({
                       borderRadius: '12px',
                       boxSizing: 'border-box',
                       width: {
-                        xs: '255px',
+                        xs: '100%',
                         sm: '318px',
                         '3xl': '416px',
                       },
@@ -179,7 +184,11 @@ const GridForList = ({
                     </Collapse>
                   </Box>
                 </Box>
-                <Typography variant="mainTextSemibold" color="gray.900">
+                <Typography
+                  variant="mainTextSemibold"
+                  color="gray.900"
+                  textTransform={'capitalize'}
+                >
                   {playlist.title.toLowerCase()}
                 </Typography>
                 <Typography variant="mainText" color="gray.700" component="p">
@@ -192,7 +201,6 @@ const GridForList = ({
         })}
       </Grid2>
 
-      {/* Глобальний SliderMenu */}
       {open && activePlaylist && activeVideoId && (
         <SliderMenu
           playlist={activePlaylist}

@@ -8,11 +8,9 @@ const CustomSearch = React.forwardRef<HTMLInputElement, TextFieldProps>(
         ref={ref}
         {...props}
         sx={{
+          ...props.sx,
           color: 'gray.600',
-          display: {
-            xs: 'none',
-            sm: 'flex',
-          },
+
           width: {
             xl: '432px',
             '3xl': '592px',
