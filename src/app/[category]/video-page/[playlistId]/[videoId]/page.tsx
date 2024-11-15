@@ -191,7 +191,7 @@ const VideoPage = ({
             ref={videoRef}
             sx={{
               display: 'flex',
-              flexDirection: { xs: 'column', sm: 'row' },
+              flexDirection: { xs: 'column', lg: 'row' },
               gap: '24px',
               justifyContent: { '3xl': 'center' },
               borderBottom: { xs: 'none', sm: '1px solid' },

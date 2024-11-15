@@ -1,10 +1,22 @@
 'use client';
 
 import { ChevronRightIcon } from '@/assets/icons';
-import { CartoonSlider, GridForList } from '@/components';
+import { CartoonSlider, GridForList, SelectFilterArrow } from '@/components';
 import { ContinueWatching, PlaylistsType, VideoCategory } from '@/types';
 import { Playlist } from '@/types/VideoData';
-import { Box, Collapse, IconButton, Typography } from '@mui/material';
+import {
+  Box,
+  Collapse,
+  Divider,
+  Fade,
+  IconButton,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Typography,
+  outlinedInputClasses,
+  selectClasses,
+} from '@mui/material';
 import { useCallback, useMemo, useState } from 'react';
 
 interface Props {
@@ -25,6 +37,8 @@ const ToggleSliderToGrid = ({
   playlistsType,
 }: Props) => {
   const [isGrid, setIsGrid] = useState(false);
+  const [filterOrder, setFilterOrder] = useState('updatedTime');
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleToggle = useCallback(() => {
     setIsGrid((prev) => !prev);
@@ -61,6 +75,53 @@ const ToggleSliderToGrid = ({
     [isGrid],
   );
 
+  const handleChangeFilrerOrder = (e: SelectChangeEvent<string>) => {
+    setFilterOrder(e.target.value);
+  };
+
+  const handleToggleSelect = (state: boolean) => {
+    setIsOpen(state);
+  };
+
+  const iconComponent = () => <SelectFilterArrow open={isOpen} />;
+
+  const sortedPlaylists = [...playlists].sort((playlistA, playlistB) => {
+    if (filterOrder === 'updatedTime') {
+      const dateA = new Date(playlistA.createdAt);
+      const dateB = new Date(playlistB.createdAt);
+      return dateB.getTime() - dateA.getTime();
+    }
+
+    if (filterOrder === 'viewCount') {
+      const averageViewsA =
+        playlistA.videos.reduce(
+          (sum, video) => sum + (Number(video.statistics.viewCount) || 0),
+          0,
+        ) / playlistA.videos.length || 0;
+      const averageViewsB =
+        playlistB.videos.reduce(
+          (sum, video) => sum + (Number(video.statistics.viewCount) || 0),
+          0,
+        ) / playlistB.videos.length || 0;
+
+      if (averageViewsB !== averageViewsA) {
+        return averageViewsB - averageViewsA;
+      }
+
+      const totalViewsA = playlistA.videos.reduce(
+        (sum, video) => sum + (Number(video.statistics.viewCount) || 0),
+        0,
+      );
+      const totalViewsB = playlistB.videos.reduce(
+        (sum, video) => sum + (Number(video.statistics.viewCount) || 0),
+        0,
+      );
+
+      return totalViewsB - totalViewsA;
+    }
+    return 0;
+  });
+
   return (
     <>
       <Box
@@ -68,33 +129,119 @@ const ToggleSliderToGrid = ({
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'baseline',
-          width: 'max-content',
           marginBottom: '16px',
+          width: '100%',
         }}
       >
-        <IconButton onClick={handleToggle} sx={iconButtonStyles}>
-          {title && (
-            <Typography
-              variant="categoryTitle"
-              color="gray.900"
-              sx={titleStyles}
-            >
-              {title}
-            </Typography>
+        <Box
+          sx={{
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
+          <IconButton onClick={handleToggle} sx={iconButtonStyles}>
+            {title && (
+              <Typography
+                variant="categoryTitle"
+                color="gray.900"
+                sx={titleStyles}
+              >
+                {title}
+              </Typography>
+            )}
+            {category && (
+              <Typography
+                variant="categoryTitle"
+                color="gray.900"
+                sx={titleStyles}
+              >
+                {category.title}
+              </Typography>
+            )}
+            <Box sx={chevronStyles}>
+              <ChevronRightIcon />
+            </Box>
+          </IconButton>
+          {playlistsType === PlaylistsType.ByCategory && (
+            <Fade in={isGrid}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  gap: '8px',
+                  height: '100%',
+                }}
+              >
+                <Box>
+                  <Typography
+                    variant="footnote"
+                    color="gray.600"
+                    component={'p'}
+                  >
+                    Показано
+                  </Typography>
+                  <Typography
+                    variant="secondaryText"
+                    color="gray.900"
+                    component={'p'}
+                  >{`${playlists.length} відео`}</Typography>
+                </Box>
+
+                <Divider
+                  orientation="vertical"
+                  sx={{
+                    height: 'auto',
+                    width: '1px',
+                    backgroundColor: 'gray.200',
+                  }}
+                />
+
+                <Select
+                  value={filterOrder}
+                  onChange={handleChangeFilrerOrder}
+                  IconComponent={iconComponent}
+                  onOpen={() => handleToggleSelect(true)}
+                  onClose={() => handleToggleSelect(false)}
+                  sx={{
+                    width: '235px',
+                    borderRadius: '12px',
+                    [`& .${selectClasses.select}`]: {
+                      fontFamily: 'var(--font-inter), sans-serif',
+
+                      color: 'gray.900',
+                      padding: '8px 4px 8px 16px',
+                      paddingRight: '4px !important',
+                    },
+                    [`& .${outlinedInputClasses.notchedOutline}`]: {
+                      borderColor: 'gray.200',
+                      borderWidth: '2px',
+                    },
+                    '&:hover': {
+                      [`& .${outlinedInputClasses.notchedOutline}`]: {
+                        borderColor: 'gray.400',
+                      },
+                    },
+                    [`& .${outlinedInputClasses.root}`]: {
+                      fontFamily: 'var(--font-inter), sans-serif',
+
+                      padding: '0px',
+                      fontSize: '17px',
+                      fontWeight: '400',
+                      lineHeight: '140%',
+                      color: 'gray.600',
+                    },
+                    '& .MuiInputBase-input': {
+                      paddingRight: 0,
+                    },
+                  }}
+                >
+                  <MenuItem value={'updatedTime'}>Останні оновлення</MenuItem>
+                  <MenuItem value={'viewCount'}>Найбільше переглядів</MenuItem>
+                </Select>
+              </Box>
+            </Fade>
           )}
-          {category && (
-            <Typography
-              variant="categoryTitle"
-              color="gray.900"
-              sx={titleStyles}
-            >
-              {category.title}
-            </Typography>
-          )}
-          <Box sx={chevronStyles}>
-            <ChevronRightIcon />
-          </Box>
-        </IconButton>
+        </Box>
         {category && (
           <Typography variant="secondaryText" color="gray.600">
             {category.description}
@@ -127,7 +274,11 @@ const ToggleSliderToGrid = ({
             {isGrid && (
               <GridForList
                 categories={categories}
-                playlists={playlists}
+                playlists={
+                  playlistsType === PlaylistsType.ByCategory
+                    ? sortedPlaylists
+                    : playlists
+                }
                 continueWatchingList={CWlinks ?? []}
               />
             )}

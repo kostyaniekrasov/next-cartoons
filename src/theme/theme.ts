@@ -24,7 +24,6 @@ export const lightTheme = createTheme({
     MuiContainer: {
       styleOverrides: {
         root: {
-          // minWidth: '375px',
           paddingLeft: '16px',
           paddingRight: '16px',
           width: '100%',
@@ -52,7 +51,6 @@ export const lightTheme = createTheme({
   },
 });
 
-// Темна тема
 export const darkTheme = createTheme({
   cssVariables: true,
   palette: {
@@ -74,7 +72,6 @@ export const darkTheme = createTheme({
     MuiContainer: {
       styleOverrides: {
         root: {
-          // minWidth: '375px',
           paddingLeft: '16px',
           paddingRight: '16px',
 

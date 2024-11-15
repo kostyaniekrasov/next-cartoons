@@ -49,7 +49,7 @@ const SliderNavigation = ({ emblaApi, imageHeight }: Props) => {
         right: 0,
         display: {
           xs: 'none',
-          sm: 'block',
+          lg: 'block',
         },
       }}
     >

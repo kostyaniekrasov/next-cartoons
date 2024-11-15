@@ -8,6 +8,7 @@ const CustomInput = React.forwardRef<HTMLInputElement, TextFieldProps>(
         ref={ref}
         {...props}
         sx={{
+          ...props.sx,
           color: 'gray.600',
           fontFamily: 'var(--font-inter), sans-serif',
           '& .MuiOutlinedInput-root': {

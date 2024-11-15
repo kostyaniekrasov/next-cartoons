@@ -11,11 +11,6 @@ const CustomSearch = React.forwardRef<HTMLInputElement, TextFieldProps>(
           ...props.sx,
           color: 'gray.600',
 
-          width: {
-            xl: '432px',
-            '3xl': '592px',
-          },
-
           '& .MuiOutlinedInput-root': {
             color: 'gray.600',
             padding: '0 4px 0 16px',

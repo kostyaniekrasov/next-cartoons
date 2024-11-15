@@ -202,7 +202,7 @@ const Header = ({ categories }: Props) => {
             paddingBottom: 2,
             paddingTop: {
               xs: '8px',
-              sm: '32px',
+              lg: '32px',
             },
             marginBottom: '16px',
           }}
@@ -228,7 +228,7 @@ const Header = ({ categories }: Props) => {
 
                   display: {
                     xs: 'none',
-                    sm: 'block',
+                    lg: 'block',
                   },
                 }}
               >
@@ -241,7 +241,7 @@ const Header = ({ categories }: Props) => {
                   height: '100%',
                   display: {
                     xs: 'block',
-                    sm: 'none',
+                    lg: 'none',
                   },
                 }}
               >
@@ -256,6 +256,11 @@ const Header = ({ categories }: Props) => {
                   display: {
                     xs: 'none',
                     sm: 'flex',
+                  },
+                  width: {
+                    sm: '332px',
+                    xl: '432px',
+                    '3xl': '592px',
                   },
                 }}
                 type="text"
