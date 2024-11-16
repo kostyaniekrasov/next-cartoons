@@ -286,7 +286,7 @@ const CartoonSlider = React.memo(
               handleClose={handleClose}
               selectedVideoId={activeVideoId!}
               showAlert={handleShowAlert}
-              slideClick={slideClick ? slideClick : handleSlideClick}
+              slideClick={slideClick ?? handleSlideClick}
               playlistsType={playlistsType}
             />
           )}

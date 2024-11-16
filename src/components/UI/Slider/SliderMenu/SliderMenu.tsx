@@ -89,9 +89,7 @@ const SliderMenu = ({
         });
     }
   }, [user, playlist.id]);
-
-  const showRemoveButton =
-    playlistsType === PlaylistsType.ByCategory ? false : true;
+  const showRemoveButton = playlistsType !== PlaylistsType.ByCategory;
 
   return (
     <Menu

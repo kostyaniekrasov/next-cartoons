@@ -23,6 +23,7 @@
     "@welldone-software/why-did-you-render": "^8.0.3",
     "embla-carousel-react": "^8.3.1",
     "firebase": "^10.14.1",
+    "framer-motion": "^11.11.17",
     "next": "14.2.13",
     "nookies": "^2.5.2",
     "react": "^18.3.1",

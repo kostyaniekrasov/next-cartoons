@@ -6,7 +6,6 @@ import { ContinueWatching, PlaylistsType, VideoCategory } from '@/types';
 import { Playlist } from '@/types/VideoData';
 import {
   Box,
-  Collapse,
   Divider,
   Fade,
   IconButton,
@@ -17,6 +16,7 @@ import {
   outlinedInputClasses,
   selectClasses,
 } from '@mui/material';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useMemo, useState } from 'react';
 
 interface Props {
@@ -172,7 +172,14 @@ const ToggleSliderToGrid = ({
                   height: '100%',
                 }}
               >
-                <Box>
+                <Box
+                  sx={{
+                    display: {
+                      xs: 'none',
+                      sm: 'block',
+                    },
+                  }}
+                >
                   <Typography
                     variant="footnote"
                     color="gray.600"
@@ -184,7 +191,7 @@ const ToggleSliderToGrid = ({
                     variant="secondaryText"
                     color="gray.900"
                     component={'p'}
-                  >{`${playlists.length} відео`}</Typography>
+                  >{`${playlists.length}`}</Typography>
                 </Box>
 
                 <Divider
@@ -193,6 +200,10 @@ const ToggleSliderToGrid = ({
                     height: 'auto',
                     width: '1px',
                     backgroundColor: 'gray.200',
+                    display: {
+                      xs: 'none',
+                      sm: 'block',
+                    },
                   }}
                 />
 
@@ -234,6 +245,36 @@ const ToggleSliderToGrid = ({
                       paddingRight: 0,
                     },
                   }}
+                  MenuProps={{
+                    sx: {
+                      '& .MuiPaper-root': {
+                        mt: 1,
+                        borderRadius: '12px',
+                      },
+                      '& .MuiList-root': {
+                        padding: 1,
+                      },
+                      '& .MuiMenuItem-root': {
+                        borderRadius: '12px',
+                        '&:not(:last-child)': {
+                          marginBottom: 1,
+                        },
+
+                        color: 'gray.800',
+                        '&:hover': {
+                          bgcolor: 'accentPink.main',
+                          color: 'white',
+                        },
+                        '&.Mui-selected': {
+                          bgcolor: 'accentPink.main',
+                          color: 'white',
+                          '&:hover': {
+                            bgcolor: 'accentPink.main',
+                          },
+                        },
+                      },
+                    },
+                  }}
                 >
                   <MenuItem value={'updatedTime'}>Останні оновлення</MenuItem>
                   <MenuItem value={'viewCount'}>Найбільше переглядів</MenuItem>
@@ -250,28 +291,30 @@ const ToggleSliderToGrid = ({
       </Box>
 
       {!!playlists.length && (
-        <>
-          <Collapse
-            in={!isGrid}
-            sx={{
-              marginRight: {
-                xs: '-16px',
-                sm: 0,
-              },
-            }}
-          >
-            {!isGrid && (
+        <AnimatePresence mode="wait">
+          {!isGrid ? (
+            <motion.div
+              key="slider"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+            >
               <CartoonSlider
                 playlistsType={playlistsType}
                 categories={categories}
                 playlists={playlists}
                 continueWatchingList={CWlinks ?? []}
               />
-            )}
-          </Collapse>
-
-          <Collapse in={isGrid} unmountOnExit>
-            {isGrid && (
+            </motion.div>
+          ) : (
+            <motion.div
+              key="grid"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+            >
               <GridForList
                 categories={categories}
                 playlists={
@@ -281,9 +324,9 @@ const ToggleSliderToGrid = ({
                 }
                 continueWatchingList={CWlinks ?? []}
               />
-            )}
-          </Collapse>
-        </>
+            </motion.div>
+          )}
+        </AnimatePresence>
       )}
       {!playlists.length && (
         <Typography variant="h3">
