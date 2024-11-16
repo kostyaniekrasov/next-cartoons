@@ -1,7 +1,9 @@
 'use client';
 
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
+
+import { SignInButton } from '../Buttons';
 
 const isCookieConsentGiven = () => {
   if (typeof window !== 'undefined') {
@@ -46,17 +48,22 @@ const CookieConsent = () => {
         position: 'fixed',
         display: 'flex',
         flexDirection: 'column',
-        bottom: 0,
-        right: 0,
-        width: '320px',
-        backgroundColor: 'accentPink.main',
-        padding: '20px',
-        boxShadow: '0 -2px 5px rgba(0,0,0,0.1)',
-        gap: 2,
+        bottom: 10,
+        right: 10,
+        width: '375px',
+        backgroundColor: 'white',
+        padding: '16px',
+        border: '1px solid',
+        borderColor: 'gray.200',
+        borderRadius: '12px',
+        boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
         zIndex: 22,
       }}
     >
-      <Typography variant="mainText" color="white">
+      <Typography variant="mainTextBold" mb={'8px'}>
+        Цей сайт використовує cookies
+      </Typography>
+      <Typography variant="mainText" color="gray.900" mb={'12px'}>
         Використовуючи наш сайт, ви погоджуєтесь зі зберіганням cookie для
         покращення вашого досвіду.
       </Typography>
@@ -66,9 +73,16 @@ const CookieConsent = () => {
           justifyContent: 'center',
         }}
       >
-        <Button variant="contained" color="success" onClick={handleConsent}>
-          OK
-        </Button>
+        <SignInButton
+          onClick={handleConsent}
+          sx={{
+            width: '150px',
+          }}
+        >
+          <Typography variant="button" color="accentPink">
+            OK
+          </Typography>
+        </SignInButton>
       </Box>
     </Box>
   );
