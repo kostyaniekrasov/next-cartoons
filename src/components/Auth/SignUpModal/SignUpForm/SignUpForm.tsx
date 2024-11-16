@@ -144,8 +144,9 @@ function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
           <CustomInput
             fullWidth
             label="Електронна пошта"
-            type="text"
+            type="email"
             error={(!!errors.email || !!emailErrorMessage) && isSubmitted}
+            enterKeyHint="next"
             helperText={
               <Collapse
                 in={(!!errors.email || !!emailErrorMessage) && isSubmitted}
@@ -213,6 +214,7 @@ function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
             label="Пароль"
             type="password"
             error={!!errors.password && isSubmitted}
+            enterKeyHint="next"
             helperText={
               <Collapse
                 in={!!errors.password && isSubmitted}
@@ -280,6 +282,7 @@ function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
             label="Підтвердити пароль"
             type="password"
             error={(!!errors.confirmPassword || !passwordsMatch) && isSubmitted}
+            enterKeyHint="next"
             helperText={
               <Collapse
                 in={!passwordsMatch && isSubmitted}
@@ -349,6 +352,7 @@ function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
             label="Ім'я"
             type="text"
             error={!!errors.name && isSubmitted}
+            enterKeyHint="next"
             helperText={
               <Collapse
                 in={!!errors.name && isSubmitted}

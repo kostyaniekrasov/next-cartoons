@@ -73,7 +73,6 @@ function SignInForm({ onClose, showSignUp }: Readonly<Props>) {
         display: 'flex',
         flexDirection: 'column',
         mx: 'auto',
-        // gap: '16px',
       }}
     >
       <Box
@@ -84,8 +83,9 @@ function SignInForm({ onClose, showSignUp }: Readonly<Props>) {
         <CustomInput
           fullWidth
           label="Електронна пошта"
-          type="text"
+          type="email"
           error={!!errors.email}
+          enterKeyHint="next"
           helperText={
             <Collapse in={!!errors.email} timeout={200} unmountOnExit>
               <Box
