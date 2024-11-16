@@ -256,6 +256,7 @@ const ToggleSliderToGrid = ({
                       },
                       '& .MuiMenuItem-root': {
                         borderRadius: '12px',
+                        minHeight: '38px',
                         '&:not(:last-child)': {
                           marginBottom: 1,
                         },
