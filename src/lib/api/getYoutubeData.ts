@@ -8,12 +8,24 @@ const getYouTubeData = async (
   videosUrls: VideoUrlFromDB[],
   playlistsUrls: VideoUrlFromDB[],
 ) => {
-  const existingVideoIds = await getExistingVideoIds();
+  const existingVideoData = await getExistingVideoIds();
+
   const videoFetchData = videosUrls
-    .filter(
-      (video) =>
-        !existingVideoIds.includes(extractIds.extractVideoId(video.url)),
-    )
+    .filter((video) => {
+      const existingVideo = existingVideoData.find(
+        (v) => v.id === extractIds.extractVideoId(video.url),
+      );
+
+      if (!existingVideo) {
+        return true;
+      }
+
+      return (
+        existingVideo.category !== video.category ||
+        existingVideo.name !== video.name ||
+        existingVideo.createdAt !== video.createdAt
+      );
+    })
     .map((video) =>
       fetchVideoDetails(
         video.url,
@@ -34,7 +46,19 @@ const getYouTubeData = async (
     );
 
     return playlistVideos
-      .filter((video: PlaylistItem) => !existingVideoIds.includes(video.id))
+      .filter((video: PlaylistItem) => {
+        const existingVideo = existingVideoData.find((v) => v.id === video.id);
+
+        if (!existingVideo) {
+          return true;
+        }
+
+        return (
+          existingVideo.category !== video.category ||
+          existingVideo.name !== video.name ||
+          existingVideo.createdAt !== playlist.createdAt
+        );
+      })
       .map((video: PlaylistItem) => ({
         id: video.snippet.resourceId.videoId,
         category: video.category,
@@ -59,6 +83,7 @@ const getYouTubeData = async (
 
   const videos = await Promise.all(videoFetchData);
   const playlists = await Promise.all(playlistFetchData);
+
   const allVideos = [...videos, ...playlists.flat()];
 
   return { videos: allVideos };

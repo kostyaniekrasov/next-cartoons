@@ -49,7 +49,6 @@ const AuthInitializer = () => {
   useEffect(() => {
     const initializeAuth = async () => {
       if (user) {
-        console.log('User found in Zustand store');
         setInitialized(true);
         return;
       }
@@ -59,7 +58,6 @@ const AuthInitializer = () => {
 
       if (cookieUser) {
         setUser(JSON.parse(cookieUser));
-        console.log('User found in cookies');
         setInitialized(true);
 
         return;
@@ -68,7 +66,7 @@ const AuthInitializer = () => {
       startLoading();
 
       const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-        if (!firebaseUser || !firebaseUser.emailVerified) {
+        if (!firebaseUser?.emailVerified) {
           await signOut(auth);
           setUser(null);
           destroyUserCookie();
@@ -100,7 +98,7 @@ const AuthInitializer = () => {
 
     initializeAuth();
     stopLoading();
-  }, [user, setUser, startLoading, stopLoading]);
+  }, [user, setUser, setInitialized, startLoading, stopLoading]);
 
   return null;
 };

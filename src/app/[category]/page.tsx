@@ -12,14 +12,16 @@ const filterVideosByAge = (
   playlists: Playlist[],
   userAge: number | undefined,
 ) =>
-  playlists.map((playlist) => ({
-    ...playlist,
-    videos: playlist.videos.filter((video) =>
-      userAge !== undefined && userAge <= 5
-        ? video.recommendedAge <= 5
-        : video.recommendedAge > 5,
-    ),
-  }));
+  playlists
+    .map((playlist) => ({
+      ...playlist,
+      videos: playlist.videos.filter((video) =>
+        userAge !== undefined && userAge <= 5
+          ? video.recommendedAge <= 5
+          : video.recommendedAge > 5,
+      ),
+    }))
+    .filter((playlist) => playlist.videos.length > 0);
 
 const CategoryPage = async ({ params }: { params: { category: string } }) => {
   const { category } = params;

@@ -122,6 +122,8 @@ const ToggleSliderToGrid = ({
     return 0;
   });
 
+  console.log(playlists);
+
   return (
     <>
       <Box
