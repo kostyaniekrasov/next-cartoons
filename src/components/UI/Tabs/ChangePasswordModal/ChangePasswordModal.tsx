@@ -1,6 +1,6 @@
 'use client';
 
-import { ClearIcon, CloseIcon, WarningIcon } from '@/assets/icons';
+import { CloseIcon } from '@/assets/icons';
 import useAuthStore from '@/store/useAuthStore';
 import {
   Box,
@@ -15,7 +15,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { WarningAlert } from '../../Alerts';
 import { ModalButton } from '../../Buttons';
-import { CustomInput } from '../../Inputs';
+import { PasswordInput } from '../../Inputs';
 
 interface ModalData {
   currentPassword: string;
@@ -136,191 +136,43 @@ const ChangePasswordModal = ({ open, closeModal, showAlert }: Props) => {
             </IconButton>
           </Box>
 
-          <CustomInput
-            {...register('currentPassword', {
+          <PasswordInput
+            label="Поточний пароль"
+            error={!!errors.currentPassword}
+            errorMessage={errors.currentPassword?.message}
+            watchPassword={!!watch('currentPassword')}
+            register={register('currentPassword', {
               required: 'Поточний пароль обов’язковий',
             })}
-            fullWidth
-            label="Поточний пароль"
-            type="password"
-            error={!!errors.currentPassword}
-            helperText={
-              <Collapse
-                in={!!errors.currentPassword}
-                timeout={200}
-                unmountOnExit
-              >
-                <Box
-                  sx={{
-                    display: 'flex',
-                    gap: '4px',
-                    alignItems: 'center',
-                    color: 'warning.main',
-                    paddingTop: '8px',
-                  }}
-                >
-                  <WarningIcon width={14} height={14} />
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      color: 'warning.main',
-                    }}
-                  >
-                    {errors.currentPassword?.message}
-                  </Typography>
-                </Box>
-              </Collapse>
-            }
-            slotProps={{
-              input: {
-                endAdornment: (
-                  <Collapse
-                    in={!!watchCurrentPassword}
-                    orientation="horizontal"
-                    timeout={200}
-                    sx={{
-                      width: '24px',
-                      height: '24px',
-                    }}
-                  >
-                    <IconButton
-                      sx={{
-                        backgroundColor: 'gray.100',
-                        color: 'gray.900',
-                        padding: '4px',
-                      }}
-                      onClick={() => setValue('currentPassword', '')}
-                    >
-                      <ClearIcon />
-                    </IconButton>
-                  </Collapse>
-                ),
-              },
-            }}
+            clearPassword={() => setValue('currentPassword', '')}
           />
 
-          <CustomInput
-            {...register('newPassword', {
+          <PasswordInput
+            label="Новий пароль"
+            error={!!errors.newPassword}
+            errorMessage={errors.newPassword?.message}
+            watchPassword={!!watch('currentPassword')}
+            register={register('newPassword', {
               required: 'Новий пароль обов’язковий',
               minLength: {
                 value: 8,
                 message: 'Пароль має містити мінімум 8 символів',
               },
             })}
-            fullWidth
-            label="Новий пароль"
-            type="password"
-            error={!!errors.newPassword}
-            helperText={
-              <Collapse in={!!errors.newPassword} timeout={200} unmountOnExit>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    gap: '4px',
-                    alignItems: 'center',
-                    color: 'warning.main',
-                    paddingTop: '8px',
-                  }}
-                >
-                  <WarningIcon width={14} height={14} />
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      color: 'warning.main',
-                    }}
-                  >
-                    {errors.newPassword?.message}
-                  </Typography>
-                </Box>
-              </Collapse>
-            }
-            slotProps={{
-              input: {
-                endAdornment: (
-                  <Collapse
-                    in={!!watchNewPassword}
-                    orientation="horizontal"
-                    timeout={200}
-                    sx={{
-                      width: '24px',
-                      height: '24px',
-                    }}
-                  >
-                    <IconButton
-                      sx={{
-                        backgroundColor: 'gray.100',
-                        color: 'gray.900',
-                        padding: '4px',
-                      }}
-                      onClick={() => setValue('newPassword', '')}
-                    >
-                      <ClearIcon />
-                    </IconButton>
-                  </Collapse>
-                ),
-              },
-            }}
+            clearPassword={() => setValue('newPassword', '')}
           />
 
-          <CustomInput
-            fullWidth
+          <PasswordInput
             label="Підтвердити пароль"
-            type="password"
             error={!!errors.confirmNewPassword || !passwordsMatch}
-            helperText={
-              <Collapse in={!passwordsMatch} timeout={200} unmountOnExit>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    gap: '4px',
-                    alignItems: 'center',
-                    color: 'warning.main',
-                    paddingTop: '8px',
-                  }}
-                >
-                  <WarningIcon width={14} height={14} />
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      color: 'warning.main',
-                    }}
-                  >
-                    Паролі не збігаються
-                  </Typography>
-                </Box>
-              </Collapse>
-            }
-            {...register('confirmNewPassword', {
+            errorMessage={errors.confirmNewPassword?.message}
+            watchPassword={!!watch('currentPassword')}
+            register={register('confirmNewPassword', {
               required: 'Підтвердження пароля обов’язкове',
               validate: (value) =>
                 value === getValues('newPassword') || 'Паролі не збігаються',
             })}
-            slotProps={{
-              input: {
-                endAdornment: (
-                  <Collapse
-                    in={!!watchConfirmPassword}
-                    orientation="horizontal"
-                    timeout={200}
-                    sx={{
-                      width: '24px',
-                      height: '24px',
-                    }}
-                  >
-                    <IconButton
-                      sx={{
-                        backgroundColor: 'gray.100',
-                        color: 'gray.900',
-                        padding: '4px',
-                      }}
-                      onClick={() => setValue('confirmNewPassword', '')}
-                    >
-                      <ClearIcon />
-                    </IconButton>
-                  </Collapse>
-                ),
-              },
-            }}
+            clearPassword={() => setValue('confirmNewPassword', '')}
           />
 
           <ModalButton

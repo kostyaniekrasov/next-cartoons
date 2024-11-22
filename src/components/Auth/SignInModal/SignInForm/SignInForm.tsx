@@ -15,7 +15,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-import { CustomInput, WarningAlert } from '../../..';
+import { CustomInput, PasswordInput, WarningAlert } from '../../..';
 
 interface AuthFormData {
   email: string;
@@ -150,67 +150,19 @@ function SignInForm({ onClose, showSignUp }: Readonly<Props>) {
           marginBottom: '12px',
         }}
       >
-        <CustomInput
-          fullWidth
+        <PasswordInput
           label="Пароль"
-          type="password"
           error={!!errors.password}
-          helperText={
-            <Collapse in={!!errors.password} timeout={200} unmountOnExit>
-              <Box
-                sx={{
-                  display: 'flex',
-                  gap: '4px',
-                  alignItems: 'center',
-                  color: 'warning.main',
-                  paddingTop: '8px',
-                }}
-              >
-                <WarningIcon width={14} height={14} />
-                <Typography
-                  variant="caption"
-                  sx={{
-                    color: 'warning.main',
-                  }}
-                >
-                  {errors.password?.message}
-                </Typography>
-              </Box>
-            </Collapse>
-          }
-          {...register('password', {
+          errorMessage={errors.password?.message}
+          watchPassword={!!watch('password')}
+          register={register('password', {
             required: 'Пароль обов’язковий',
             minLength: {
               value: 8,
               message: 'Пароль має містити мінімум 8 символів',
             },
           })}
-          slotProps={{
-            input: {
-              endAdornment: (
-                <Collapse
-                  in={!!watchPassword}
-                  orientation="horizontal"
-                  timeout={200}
-                  sx={{
-                    width: '24px',
-                    height: '24px',
-                  }}
-                >
-                  <IconButton
-                    sx={{
-                      backgroundColor: 'gray.100',
-                      color: 'gray.900',
-                      padding: '4px',
-                    }}
-                    onClick={() => setValue('password', '')}
-                  >
-                    <ClearIcon />
-                  </IconButton>
-                </Collapse>
-              ),
-            },
-          }}
+          clearPassword={() => setValue('password', '')}
         />
       </Box>
 

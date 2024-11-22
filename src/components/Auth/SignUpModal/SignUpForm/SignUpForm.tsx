@@ -1,7 +1,7 @@
 'use client';
 
 import { ClearIcon, WarningIcon } from '@/assets/icons';
-import { CustomInput, SelectArrowButton } from '@/components';
+import { CustomInput, PasswordInput, SelectArrowButton } from '@/components';
 import { ModalButton } from '@/components/UI/Buttons/ModalButton';
 import { auth, db } from '@/lib/database/firebase';
 import {
@@ -209,138 +209,32 @@ function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
             }}
           />
 
-          <CustomInput
-            fullWidth
+          <PasswordInput
             label="Пароль"
-            type="password"
             error={!!errors.password && isSubmitted}
-            enterKeyHint="next"
-            helperText={
-              <Collapse
-                in={!!errors.password && isSubmitted}
-                timeout={200}
-                unmountOnExit
-              >
-                <Box
-                  sx={{
-                    display: 'flex',
-                    gap: '4px',
-                    alignItems: 'center',
-                    color: 'warning.main',
-                    paddingTop: '8px',
-                  }}
-                >
-                  <WarningIcon width={14} height={14} />
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      color: 'warning.main',
-                    }}
-                  >
-                    {errors.password?.message}
-                  </Typography>
-                </Box>
-              </Collapse>
-            }
-            {...register('password', {
+            errorMessage={errors.password?.message}
+            watchPassword={!!watch('password')}
+            register={register('password', {
               required: 'Пароль обов’язковий',
               minLength: {
                 value: 8,
                 message: 'Пароль має містити мінімум 8 символів',
               },
             })}
-            slotProps={{
-              input: {
-                endAdornment: (
-                  <Collapse
-                    in={!!watchPassword}
-                    orientation="horizontal"
-                    timeout={200}
-                    sx={{
-                      width: '24px',
-                      height: '24px',
-                    }}
-                  >
-                    <IconButton
-                      sx={{
-                        backgroundColor: 'gray.100',
-                        color: 'gray.900',
-                        padding: '4px',
-                      }}
-                      onClick={() => setValue('password', '')}
-                    >
-                      <ClearIcon />
-                    </IconButton>
-                  </Collapse>
-                ),
-              },
-            }}
+            clearPassword={() => setValue('password', '')}
           />
 
-          <CustomInput
-            fullWidth
+          <PasswordInput
             label="Підтвердити пароль"
-            type="password"
             error={(!!errors.confirmPassword || !passwordsMatch) && isSubmitted}
-            enterKeyHint="next"
-            helperText={
-              <Collapse
-                in={!passwordsMatch && isSubmitted}
-                timeout={200}
-                unmountOnExit
-              >
-                <Box
-                  sx={{
-                    display: 'flex',
-                    gap: '4px',
-                    alignItems: 'center',
-                    color: 'warning.main',
-                    paddingTop: '8px',
-                  }}
-                >
-                  <WarningIcon width={14} height={14} />
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      color: 'warning.main',
-                    }}
-                  >
-                    Паролі не збігаються
-                  </Typography>
-                </Box>
-              </Collapse>
-            }
-            {...register('confirmPassword', {
+            errorMessage={'Паролі не збігаються'}
+            watchPassword={!!watch('confirmPassword')}
+            register={register('confirmPassword', {
               required: 'Підтвердження пароля обов’язкове',
               validate: (value) =>
                 value === getValues('password') || 'Паролі не збігаються',
             })}
-            slotProps={{
-              input: {
-                endAdornment: (
-                  <Collapse
-                    in={!!watchConfirmPassword}
-                    orientation="horizontal"
-                    timeout={200}
-                    sx={{
-                      width: '24px',
-                      height: '24px',
-                    }}
-                  >
-                    <IconButton
-                      sx={{
-                        backgroundColor: 'gray.100',
-                        color: 'gray.900',
-                        padding: '4px',
-                      }}
-                      onClick={() => setValue('confirmPassword', '')}
-                    >
-                      <ClearIcon />
-                    </IconButton>
-                  </Collapse>
-                ),
-              },
-            }}
+            clearPassword={() => setValue('confirmPassword', '')}
           />
         </>
       )}
