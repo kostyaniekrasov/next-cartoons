@@ -21,6 +21,7 @@ import {
   MenuItem,
   Typography,
 } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -49,6 +50,8 @@ const TabProfile = ({ value, handleClose, index }: Props) => {
     },
   });
 
+  const router = useRouter();
+
   const handleToggle = () => {
     setIsShowAvatars(!isShowAvatars);
   };
@@ -69,6 +72,8 @@ const TabProfile = ({ value, handleClose, index }: Props) => {
         .catch(() => setIsAlert('ProfileError'))
         .finally(() => setIsLoading(false));
     }
+
+    return router.refresh();
   };
 
   const arrowFunction = () => <SelectArrowButton open={isMenuOpen} />;

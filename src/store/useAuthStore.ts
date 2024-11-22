@@ -18,7 +18,7 @@ import { persist } from 'zustand/middleware';
 interface AuthState {
   user: User | null;
   loading: boolean;
-  isInitialized: boolean; // Додаємо стан для відстеження ініціалізації
+  isInitialized: boolean;
   error: string | null;
   loginWithEmailAndPassword: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -33,7 +33,7 @@ interface AuthState {
   ) => Promise<void>;
   startLoading: () => void;
   stopLoading: () => void;
-  setInitialized: (initialized: boolean) => void; // Додаємо функцію для встановлення ініціалізації
+  setInitialized: (initialized: boolean) => void;
 }
 
 const useAuthStore = create<AuthState>()(
@@ -41,14 +41,14 @@ const useAuthStore = create<AuthState>()(
     (set, get) => ({
       user: null,
       loading: true,
-      isInitialized: false, // Початковий стан ініціалізації
+      isInitialized: false,
       error: null,
 
       startLoading: () => set(() => ({ loading: true })),
       stopLoading: () => set(() => ({ loading: false })),
       setUser: (user) => {
         set(() => ({ user }));
-        set(() => ({ isInitialized: true })); // Встановлюємо `isInitialized` після встановлення користувача
+        set(() => ({ isInitialized: true }));
       },
       setInitialized: (initialized) =>
         set(() => ({ isInitialized: initialized })),
@@ -73,7 +73,7 @@ const useAuthStore = create<AuthState>()(
             get().setUser(loggedInUser);
             saveUserCookie(loggedInUser);
           }
-          get().setInitialized(true); // Встановлюємо `isInitialized` у true після успішного логіну
+          get().setInitialized(true);
         } catch (err) {
           handleLoginError(err, set);
         } finally {
@@ -88,7 +88,7 @@ const useAuthStore = create<AuthState>()(
           await signOut(auth);
           get().setUser(null);
           nookies.destroy(null, 'user_info');
-          get().setInitialized(true); // Встановлюємо `isInitialized` у true після виходу
+          get().setInitialized(true);
         } catch (err) {
           setError(err, set);
         } finally {
@@ -144,13 +144,12 @@ const useAuthStore = create<AuthState>()(
       },
     }),
     {
-      name: 'auth-storage', // Назва ключа в localStorage
-      partialize: (state) => ({ user: state.user }), // Зберігаємо тільки `user` в localStorage
+      name: 'auth-storage',
+      partialize: (state) => ({ user: state.user }),
     },
   ),
 );
 
-// Helper function to get user data from Firebase
 const getUserDataFromFirebase = async (uid: string): Promise<User | null> => {
   const userDocRef = doc(db, 'users', uid);
   const userDocSnap = await getDoc(userDocRef);
@@ -172,7 +171,6 @@ const getUserDataFromFirebase = async (uid: string): Promise<User | null> => {
   };
 };
 
-// Helper function to save user data in a cookie
 const saveUserCookie = (user: User) => {
   const cookieUser = nookies.get(null).user_info;
   if (JSON.stringify(cookieUser) !== JSON.stringify(user)) {
@@ -185,7 +183,6 @@ const saveUserCookie = (user: User) => {
   }
 };
 
-// Handle login errors
 const handleLoginError = (
   error: unknown,
   set: typeof useAuthStore.setState,
@@ -194,7 +191,6 @@ const handleLoginError = (
   set(() => ({ error: errorMessage }));
 };
 
-// General error handler
 const setError = (error: unknown, set: typeof useAuthStore.setState) => {
   set(() => ({
     error: error instanceof Error ? error.message : 'Something went wrong',

@@ -96,6 +96,14 @@ const GridForList = ({
               : playlist.videos[0].id;
             const firstVideo = playlist.videos[0];
 
+            const imgUrl =
+              firstVideo.snippet.thumbnails.maxres?.url ||
+              firstVideo.snippet.thumbnails.standard?.url ||
+              firstVideo.snippet.thumbnails.high?.url ||
+              firstVideo.snippet.thumbnails.medium?.url ||
+              firstVideo.snippet.thumbnails.default?.url ||
+              'https://media.istockphoto.com/id/1396814518/vector/image-coming-soon-no-photo-no-thumbnail-image-available-vector-illustration.jpg?s=612x612&w=0&k=20&c=hnh2OZgQGhf0b46-J2z7aHbIWwq8HNlSDaNp2wn_iko=';
+
             return (
               <Grid2 size={{ xs: 4, sm: 6, md: 3 }} key={playlist.id}>
                 <Box>
@@ -129,12 +137,7 @@ const GridForList = ({
                         }}
                       >
                         <Image
-                          src={
-                            firstVideo.snippet.thumbnails.maxres
-                              ? firstVideo.snippet.thumbnails.maxres.url
-                              : (firstVideo.snippet.thumbnails.standard.url ??
-                                'https://media.istockphoto.com/id/1396814518/vector/image-coming-soon-no-photo-no-thumbnail-image-available-vector-illustration.jpg?s=612x612&w=0&k=20&c=hnh2OZgQGhf0b46-J2z7aHbIWwq8HNlSDaNp2wn_iko=')
-                          }
+                          src={imgUrl}
                           alt={firstVideo.snippet.title}
                           fill
                           quality={85}

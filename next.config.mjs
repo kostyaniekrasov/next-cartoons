@@ -49,6 +49,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'brovary.net.ua',
       },
+      {
+        protocol: 'https',
+        hostname: 'media.istockphoto.com',
+      },
     ],
   },
   sassOptions: {
