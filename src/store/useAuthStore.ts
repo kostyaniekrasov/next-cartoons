@@ -189,6 +189,7 @@ const handleLoginError = (
 ) => {
   const errorMessage = handleAuthError(error);
   set(() => ({ error: errorMessage }));
+  throw errorMessage;
 };
 
 const setError = (error: unknown, set: typeof useAuthStore.setState) => {

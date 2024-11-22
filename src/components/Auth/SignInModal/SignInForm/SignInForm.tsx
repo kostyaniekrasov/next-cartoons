@@ -248,14 +248,26 @@ function SignInForm({ onClose, showSignUp }: Readonly<Props>) {
         </ModalButton>
       </Box>
 
-      <Collapse in={alert === 'emailNotVerified'} unmountOnExit>
+      <Collapse
+        in={alert === 'emailNotVerified'}
+        unmountOnExit
+        sx={{
+          mb: 2,
+        }}
+      >
         <WarningAlert onClose={() => setAlert('')}>
           Будь ласка, підтвердіть вашу електронну пошту і повторно виконайте
           вхід.
         </WarningAlert>
       </Collapse>
 
-      <Collapse in={alert === 'wrongPasswordOrEmail'} unmountOnExit>
+      <Collapse
+        in={alert === 'wrongPasswordOrEmail'}
+        unmountOnExit
+        sx={{
+          mb: 2,
+        }}
+      >
         <WarningAlert onClose={() => setAlert('')}>
           Невірний email або пароль. Будь ласка, спробуйте ще раз.
         </WarningAlert>
