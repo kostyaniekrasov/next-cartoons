@@ -47,8 +47,7 @@ const useAuthStore = create<AuthState>()(
       startLoading: () => set(() => ({ loading: true })),
       stopLoading: () => set(() => ({ loading: false })),
       setUser: (user) => {
-        set(() => ({ user }));
-        set(() => ({ isInitialized: true }));
+        set(() => ({ user, isInitialized: true }));
       },
       setInitialized: (initialized) =>
         set(() => ({ isInitialized: initialized })),

@@ -64,7 +64,8 @@ const Header = ({ categories }: Props) => {
   const searchParams = useSearchParams();
   const user = useAuthStore((state) => state.user);
   const isInitialized = useAuthStore((state) => state.isInitialized);
-
+  console.log('isInitialized: ', isInitialized);
+  console.log('user: ', user);
   const [selectedFilter, setSelectedFilter] = useState(
     getCurrentFilter(pathname),
   );
@@ -248,7 +249,7 @@ const Header = ({ categories }: Props) => {
                 <LogoMobileIcon />
               </Icon>
             </IconButton>
-            {!!user?.showSearch && (
+            {(!!user?.showSearch || !user) && (
               <CustomSearchField
                 id="search-bar"
                 sx={{

@@ -43,12 +43,14 @@ const fetchUserData = async (uid: string) => {
 };
 
 const AuthInitializer = () => {
-  const { setUser, startLoading, stopLoading, user } = useAuthStore();
+  const { setUser, setInitialized, startLoading, stopLoading, user } =
+    useAuthStore();
 
   useEffect(() => {
     const initializeAuth = async () => {
       if (user) {
         console.log('User found in Zustand store');
+        setInitialized(true);
         return;
       }
 
@@ -58,6 +60,8 @@ const AuthInitializer = () => {
       if (cookieUser) {
         setUser(JSON.parse(cookieUser));
         console.log('User found in cookies');
+        setInitialized(true);
+
         return;
       }
 
