@@ -151,7 +151,7 @@ const ChangePasswordModal = ({ open, closeModal, showAlert }: Props) => {
             label="Новий пароль"
             error={!!errors.newPassword}
             errorMessage={errors.newPassword?.message}
-            watchPassword={!!watch('currentPassword')}
+            watchPassword={!!watch('newPassword')}
             register={register('newPassword', {
               required: 'Новий пароль обов’язковий',
               minLength: {
@@ -166,7 +166,7 @@ const ChangePasswordModal = ({ open, closeModal, showAlert }: Props) => {
             label="Підтвердити пароль"
             error={!!errors.confirmNewPassword || !passwordsMatch}
             errorMessage={errors.confirmNewPassword?.message}
-            watchPassword={!!watch('currentPassword')}
+            watchPassword={!!watch('confirmNewPassword')}
             register={register('confirmNewPassword', {
               required: 'Підтвердження пароля обов’язкове',
               validate: (value) =>
