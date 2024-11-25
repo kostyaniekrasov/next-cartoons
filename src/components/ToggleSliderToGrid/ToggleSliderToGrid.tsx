@@ -83,7 +83,13 @@ const ToggleSliderToGrid = ({
     setIsOpen(state);
   };
 
-  const iconComponent = () => <SelectFilterArrow open={isOpen} />;
+  const toggleSelect = () => {
+    setIsOpen((prev) => !prev);
+  };
+
+  const iconComponent = () => (
+    <SelectFilterArrow openSelect={toggleSelect} open={isOpen} />
+  );
 
   const sortedPlaylists = [...playlists].sort((playlistA, playlistB) => {
     if (filterOrder === 'updatedTime') {
@@ -121,8 +127,6 @@ const ToggleSliderToGrid = ({
     }
     return 0;
   });
-
-  console.log(playlists);
 
   return (
     <>
@@ -215,6 +219,7 @@ const ToggleSliderToGrid = ({
                   IconComponent={iconComponent}
                   onOpen={() => handleToggleSelect(true)}
                   onClose={() => handleToggleSelect(false)}
+                  open={isOpen}
                   sx={{
                     width: '235px',
                     borderRadius: '12px',

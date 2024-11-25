@@ -13,7 +13,6 @@ import {
 import { doc, getDoc } from 'firebase/firestore';
 import nookies from 'nookies';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 
 interface AuthState {
   user: User | null;
@@ -36,118 +35,110 @@ interface AuthState {
   setInitialized: (initialized: boolean) => void;
 }
 
-const useAuthStore = create<AuthState>()(
-  persist(
-    (set, get) => ({
-      user: null,
-      loading: true,
-      isInitialized: false,
-      error: null,
+const useAuthStore = create<AuthState>()((set, get) => ({
+  user: null,
+  loading: true,
+  isInitialized: false,
+  error: null,
 
-      startLoading: () => set(() => ({ loading: true })),
-      stopLoading: () => set(() => ({ loading: false })),
-      setUser: (user) => {
-        set(() => ({ user, isInitialized: true }));
-      },
-      setInitialized: (initialized) =>
-        set(() => ({ isInitialized: initialized })),
+  startLoading: () => set(() => ({ loading: true })),
+  stopLoading: () => set(() => ({ loading: false })),
+  setUser: (user) => {
+    set(() => ({ user, isInitialized: true }));
+  },
+  setInitialized: (initialized) => set(() => ({ isInitialized: initialized })),
 
-      loginWithEmailAndPassword: async (email, password) => {
-        const auth = getAuth();
-        get().startLoading();
-        try {
-          const userCredential = await signInWithEmailAndPassword(
-            auth,
-            email,
-            password,
-          );
-          const user = userCredential.user;
+  loginWithEmailAndPassword: async (email, password) => {
+    const auth = getAuth();
+    get().startLoading();
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      const user = userCredential.user;
 
-          if (!user.emailVerified) {
-            throw new Error('Email not verified');
-          }
+      if (!user.emailVerified) {
+        throw new Error('Email not verified');
+      }
 
-          const loggedInUser = await getUserDataFromFirebase(user.uid);
-          if (loggedInUser) {
-            get().setUser(loggedInUser);
-            saveUserCookie(loggedInUser);
-          }
-          get().setInitialized(true);
-        } catch (err) {
-          handleLoginError(err, set);
-        } finally {
-          get().stopLoading();
-        }
-      },
+      const loggedInUser = await getUserDataFromFirebase(user.uid);
+      if (loggedInUser) {
+        get().setUser(loggedInUser);
+        saveUserCookie(loggedInUser);
+      }
+      get().setInitialized(true);
+    } catch (err) {
+      handleLoginError(err, set);
+    } finally {
+      get().stopLoading();
+    }
+  },
 
-      logout: async () => {
-        const auth = getAuth();
-        get().startLoading();
-        try {
-          await signOut(auth);
-          get().setUser(null);
-          nookies.destroy(null, 'user_info');
-          get().setInitialized(true);
-        } catch (err) {
-          setError(err, set);
-        } finally {
-          get().stopLoading();
-        }
-      },
+  logout: async () => {
+    const auth = getAuth();
+    get().startLoading();
+    try {
+      await signOut(auth);
+      get().setUser(null);
+      nookies.destroy(null, 'user_info');
+      get().setInitialized(true);
+    } catch (err) {
+      setError(err, set);
+    } finally {
+      get().stopLoading();
+    }
+  },
 
-      updateUserProfile: async (data, selectedAvatar) => {
-        const currentUser = get().user;
-        if (!currentUser) return;
+  updateUserProfile: async (data, selectedAvatar) => {
+    const currentUser = get().user;
+    if (!currentUser) return;
 
-        const updatedData: UpdateUserData = { ...data };
-        if (selectedAvatar) {
-          updatedData.avatar = selectedAvatar;
-        }
+    const updatedData: UpdateUserData = { ...data };
+    if (selectedAvatar) {
+      updatedData.avatar = selectedAvatar;
+    }
 
-        get().startLoading();
-        try {
-          const updatedUser = { ...currentUser, ...updatedData };
-          await updateUserData(currentUser.id, updatedData);
-          get().setUser(updatedUser);
-          saveUserCookie(updatedUser);
-        } catch (error) {
-          setError(error, set);
-        } finally {
-          get().stopLoading();
-        }
-      },
+    get().startLoading();
+    try {
+      const updatedUser = { ...currentUser, ...updatedData };
+      await updateUserData(currentUser.id, updatedData);
 
-      changePassword: async (currentPassword, newPassword) => {
-        const auth = getAuth();
-        const currentUser = auth.currentUser;
-        if (!currentUser || !currentPassword || !newPassword) {
-          setError(new Error('Invalid data provided'), set);
-          return;
-        }
+      get().setUser(updatedUser);
+      saveUserCookie(updatedUser);
+    } catch (error) {
+      setError(error, set);
+    } finally {
+      get().stopLoading();
+    }
+  },
 
-        get().startLoading();
-        try {
-          const credential = EmailAuthProvider.credential(
-            currentUser.email ?? '',
-            currentPassword,
-          );
+  changePassword: async (currentPassword, newPassword) => {
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+    if (!currentUser || !currentPassword || !newPassword) {
+      setError(new Error('Invalid data provided'), set);
+      return;
+    }
 
-          await reauthenticateWithCredential(currentUser, credential);
-          await updatePassword(currentUser, newPassword);
-          set(() => ({ error: null }));
-        } catch (err) {
-          setError(err, set);
-        } finally {
-          get().stopLoading();
-        }
-      },
-    }),
-    {
-      name: 'auth-storage',
-      partialize: (state) => ({ user: state.user }),
-    },
-  ),
-);
+    get().startLoading();
+    try {
+      const credential = EmailAuthProvider.credential(
+        currentUser.email ?? '',
+        currentPassword,
+      );
+
+      await reauthenticateWithCredential(currentUser, credential);
+      await updatePassword(currentUser, newPassword);
+      set(() => ({ error: null }));
+    } catch (err) {
+      setError(err, set);
+    } finally {
+      get().stopLoading();
+    }
+  },
+}));
 
 const getUserDataFromFirebase = async (uid: string): Promise<User | null> => {
   const userDocRef = doc(db, 'users', uid);
@@ -172,7 +163,10 @@ const getUserDataFromFirebase = async (uid: string): Promise<User | null> => {
 
 const saveUserCookie = (user: User) => {
   const cookieUser = nookies.get(null).user_info;
-  if (JSON.stringify(cookieUser) !== JSON.stringify(user)) {
+  if (
+    !cookieUser ||
+    JSON.stringify(JSON.parse(cookieUser)) !== JSON.stringify(user)
+  ) {
     nookies.set(null, 'user_info', JSON.stringify(user), {
       maxAge: 2 * 24 * 60 * 60,
       path: '/',

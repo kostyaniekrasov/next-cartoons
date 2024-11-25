@@ -43,25 +43,11 @@ const fetchUserData = async (uid: string) => {
 };
 
 const AuthInitializer = () => {
-  const { setUser, setInitialized, startLoading, stopLoading, user } =
-    useAuthStore();
+  const { setUser, startLoading, stopLoading } = useAuthStore();
 
   useEffect(() => {
     const initializeAuth = async () => {
-      if (user) {
-        setInitialized(true);
-        return;
-      }
-
       const auth = getAuth();
-      const cookieUser = nookies.get(null).user_info;
-
-      if (cookieUser) {
-        setUser(JSON.parse(cookieUser));
-        setInitialized(true);
-
-        return;
-      }
 
       startLoading();
 
@@ -98,7 +84,8 @@ const AuthInitializer = () => {
 
     initializeAuth();
     stopLoading();
-  }, [user, setUser, setInitialized, startLoading, stopLoading]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return null;
 };

@@ -6,6 +6,7 @@ import React from 'react';
 
 interface Props {
   open: boolean;
+  openSelect: () => void;
 }
 
 const rotateOpen = keyframes`
@@ -26,9 +27,10 @@ const rotateClose = keyframes`
   }
 `;
 
-const SelectFilterArrow = ({ open }: Props) => {
+const SelectFilterArrow = ({ open, openSelect }: Props) => {
   return (
     <IconButton
+      onClick={openSelect}
       sx={{
         color: 'gray.900',
         padding: 0,
@@ -50,4 +52,4 @@ const SelectFilterArrow = ({ open }: Props) => {
 
 SelectFilterArrow.displayName = 'SelectFilterArrow';
 
-export default SelectFilterArrow;
+export default React.memo(SelectFilterArrow);

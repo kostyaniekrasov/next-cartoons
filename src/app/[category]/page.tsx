@@ -8,17 +8,14 @@ import { PlaylistsType, User } from '@/types';
 import { Playlist } from '@/types/VideoData';
 import { Box, Collapse, Container } from '@mui/material';
 
-const filterVideosByAge = (
-  playlists: Playlist[],
-  userAge: number | undefined,
-) =>
+const filterVideosByAge = (playlists: Playlist[], userAge?: number) =>
   playlists
     .map((playlist) => ({
       ...playlist,
       videos: playlist.videos.filter((video) =>
-        userAge !== undefined && userAge <= 5
-          ? video.recommendedAge <= 5
-          : video.recommendedAge > 5,
+        userAge && userAge >= 8
+          ? video.recommendedAge >= 8
+          : video.recommendedAge <= 5,
       ),
     }))
     .filter((playlist) => playlist.videos.length > 0);

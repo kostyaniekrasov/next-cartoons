@@ -30,11 +30,9 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
     : `https://www.youtube.com/watch?v=${videoId}`;
 
   const handlePause = () => {
-    console.log('pause');
     setIsPlaying(false);
     if (playerRef.current) {
       const currentTime = playerRef.current.getCurrentTime();
-      console.log(`current videoId - ${videoId}`);
       if (user) {
         saveProgress(user.id, playlistId, videoId, currentTime);
       }
@@ -55,7 +53,6 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
   const handleProgress = (state: { played: number }) => {
     if (state.played >= 0.9 && !hasWatched) {
       setHasWatched(true);
-      console.log('Відео переглянуто');
     }
   };
 

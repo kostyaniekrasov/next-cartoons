@@ -76,7 +76,13 @@ const TabProfile = ({ value, handleClose, index }: Props) => {
     return router.refresh();
   };
 
-  const arrowFunction = () => <SelectArrowButton open={isMenuOpen} />;
+  const toggleSelect = () => {
+    setIsMenuOpen((prev) => !prev);
+  };
+
+  const arrowFunction = () => (
+    <SelectArrowButton openSelect={toggleSelect} open={isMenuOpen} />
+  );
 
   return (
     <TabPanel value={value} index={index}>
@@ -172,6 +178,7 @@ const TabProfile = ({ value, handleClose, index }: Props) => {
               IconComponent: arrowFunction,
               onOpen: () => setIsMenuOpen(true),
               onClose: () => setIsMenuOpen(false),
+              open: isMenuOpen,
               MenuProps: {
                 PaperProps: {
                   sx: {

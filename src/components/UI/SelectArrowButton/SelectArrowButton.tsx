@@ -6,6 +6,7 @@ import React from 'react';
 
 interface Props {
   open: boolean;
+  openSelect: () => void;
 }
 
 const rotateOpen = keyframes`
@@ -26,9 +27,10 @@ const rotateClose = keyframes`
   }
 `;
 
-const SelectArrowButton = React.memo(({ open }: Props) => {
+const SelectArrowButton = ({ open, openSelect }: Props) => {
   return (
     <IconButton
+      onClick={openSelect}
       sx={{
         color: 'gray.900',
         padding: 0,
@@ -46,8 +48,8 @@ const SelectArrowButton = React.memo(({ open }: Props) => {
       <CaretDownIcon />
     </IconButton>
   );
-});
+};
 
 SelectArrowButton.displayName = 'SelectArrowButton';
 
-export default SelectArrowButton;
+export default React.memo(SelectArrowButton);

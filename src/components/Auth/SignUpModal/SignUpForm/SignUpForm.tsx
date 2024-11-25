@@ -126,7 +126,13 @@ function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
     }
   };
 
-  const arrowFunction = () => <SelectArrowButton open={isMenuOpen} />;
+  const toggleSelect = () => {
+    setIsMenuOpen((prev) => !prev);
+  };
+
+  const arrowFunction = () => (
+    <SelectArrowButton openSelect={toggleSelect} open={isMenuOpen} />
+  );
 
   return (
     <Box
@@ -328,6 +334,7 @@ function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
                 IconComponent: arrowFunction,
                 onOpen: () => setIsMenuOpen(true),
                 onClose: () => setIsMenuOpen(false),
+                open: isMenuOpen,
                 MenuProps: {
                   PaperProps: {
                     sx: {
