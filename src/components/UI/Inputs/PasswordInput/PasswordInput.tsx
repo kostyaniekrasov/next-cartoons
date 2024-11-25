@@ -45,94 +45,121 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
   };
 
   return (
-    <CustomInput
-      enterKeyHint="next"
-      fullWidth
-      label={label}
-      type={showPassword ? 'text' : 'password'}
-      error={error}
-      helperText={
-        errorMessage ? (
-          <Collapse in={error} timeout={200} unmountOnExit>
-            <Box
-              sx={{
-                display: 'flex',
-                gap: '4px',
-                alignItems: 'center',
-                color: 'warning.main',
-                paddingTop: '8px',
-              }}
-            >
-              <WarningIcon width={14} height={14} />
-              <Typography
-                variant="caption"
-                sx={{
-                  color: 'warning.main',
-                }}
-              >
-                {errorMessage}
-              </Typography>
-            </Box>
-          </Collapse>
-        ) : null
-      }
-      {...register}
-      slotProps={{
-        input: {
-          endAdornment: (
-            <InputAdornment position="end">
-              <Collapse
-                in={!!watchPassword}
-                orientation="horizontal"
-                timeout={200}
-                sx={{
-                  height: '24px',
-                }}
-              >
-                <Box
+    <Box>
+      <CustomInput
+        enterKeyHint="next"
+        fullWidth
+        label={label}
+        type={showPassword ? 'text' : 'password'}
+        error={error}
+        // helperText={
+        //   errorMessage ? (
+        //     <Collapse in={error} timeout={200} unmountOnExit>
+        //       <Box
+        //         sx={{
+        //           display: 'flex',
+        //           gap: '4px',
+        //           alignItems: 'center',
+        //           color: 'warning.main',
+        //           paddingTop: '8px',
+        //         }}
+        //       >
+        //         <WarningIcon width={14} height={14} />
+        //         <Typography
+        //           component={'span'}
+        //           variant="caption"
+        //           sx={{
+        //             color: 'warning.main',
+        //           }}
+        //         >
+        //           {errorMessage}
+        //         </Typography>
+        //       </Box>
+        //     </Collapse>
+        //   ) : null
+        // }
+        {...register}
+        slotProps={{
+          input: {
+            endAdornment: (
+              <InputAdornment position="end">
+                <Collapse
+                  in={!!watchPassword}
+                  orientation="horizontal"
+                  timeout={200}
                   sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: '55px',
+                    height: '24px',
                   }}
                 >
-                  <IconButton
-                    onClick={togglePasswordVisibility}
-                    edge="end"
-                    aria-label="toggle password visibility"
+                  <Box
                     sx={{
-                      backgroundColor: 'gray.100',
-                      color: 'gray.900',
-                      padding: '4px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      width: '55px',
                     }}
                   >
-                    {showPassword ? (
-                      <Visibility fontSize="small" />
-                    ) : (
-                      <VisibilityOff fontSize="small" />
-                    )}
-                  </IconButton>
-
-                  {clearPassword && (
                     <IconButton
+                      onClick={togglePasswordVisibility}
+                      edge="end"
+                      aria-label="toggle password visibility"
                       sx={{
                         backgroundColor: 'gray.100',
                         color: 'gray.900',
                         padding: '4px',
                       }}
-                      onClick={clearPassword}
                     >
-                      <ClearIcon />
+                      {showPassword ? (
+                        <Visibility fontSize="small" />
+                      ) : (
+                        <VisibilityOff fontSize="small" />
+                      )}
                     </IconButton>
-                  )}
-                </Box>
-              </Collapse>
-            </InputAdornment>
-          ),
-        },
-      }}
-    />
+
+                    {clearPassword && (
+                      <IconButton
+                        sx={{
+                          backgroundColor: 'gray.100',
+                          color: 'gray.900',
+                          padding: '4px',
+                        }}
+                        onClick={clearPassword}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    )}
+                  </Box>
+                </Collapse>
+              </InputAdornment>
+            ),
+          },
+        }}
+      />
+      {errorMessage ? (
+        <Collapse in={error} timeout={200} unmountOnExit>
+          <Box
+            sx={{
+              display: 'flex',
+              gap: '4px',
+              alignItems: 'center',
+              color: 'warning.main',
+              paddingTop: '8px',
+            }}
+          >
+            <WarningIcon width={14} height={14} />
+            <Typography
+              component={'span'}
+              variant="caption"
+              sx={{
+                color: 'warning.main',
+              }}
+            >
+              {errorMessage}
+            </Typography>
+          </Box>
+        </Collapse>
+      ) : null}
+    </Box>
   );
 };
 

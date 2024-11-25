@@ -115,14 +115,16 @@ const useAuthStore = create<AuthState>()((set, get) => ({
   },
 
   changePassword: async (currentPassword, newPassword) => {
+    get().startLoading();
     const auth = getAuth();
     const currentUser = auth.currentUser;
     if (!currentUser || !currentPassword || !newPassword) {
       setError(new Error('Invalid data provided'), set);
+      get().stopLoading();
+
       return;
     }
 
-    get().startLoading();
     try {
       const credential = EmailAuthProvider.credential(
         currentUser.email ?? '',
@@ -186,9 +188,13 @@ const handleLoginError = (
 };
 
 const setError = (error: unknown, set: typeof useAuthStore.setState) => {
+  const errorMessage =
+    error instanceof Error ? error.message : 'Something went wrong';
   set(() => ({
-    error: error instanceof Error ? error.message : 'Something went wrong',
+    error: errorMessage,
   }));
+
+  throw errorMessage;
 };
 
 export default useAuthStore;

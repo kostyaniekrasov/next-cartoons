@@ -333,8 +333,9 @@ const TabSettings = ({ value, handleClose, index }: Props) => {
           </Box>
         </Box>
       </Box>
+
       <Snackbar
-        open={successChangeAlert}
+        open={!!successChangeAlert}
         onClose={() => setSuccessChangeAlert(false)}
         autoHideDuration={3000}
         anchorOrigin={{

@@ -34,12 +34,12 @@ const ChangePasswordModal = ({ open, closeModal, showAlert }: Props) => {
     register,
     setValue,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isSubmitted },
     watch,
     getValues,
   } = useForm<ModalData>();
 
-  const { changePassword, loading, error } = useAuthStore();
+  const { changePassword, loading } = useAuthStore();
   const [isErrorAlert, setIsErrorAlert] = useState(false);
 
   const watchCurrentPassword = watch('currentPassword');
@@ -57,6 +57,7 @@ const ChangePasswordModal = ({ open, closeModal, showAlert }: Props) => {
     } catch (error) {
       console.log(error);
     } finally {
+      const { error } = useAuthStore.getState();
       if (error) {
         setIsErrorAlert(true);
       }
@@ -138,7 +139,7 @@ const ChangePasswordModal = ({ open, closeModal, showAlert }: Props) => {
 
           <PasswordInput
             label="Поточний пароль"
-            error={!!errors.currentPassword}
+            error={!!errors.currentPassword && isSubmitted}
             errorMessage={errors.currentPassword?.message}
             watchPassword={!!watch('currentPassword')}
             register={register('currentPassword', {
@@ -149,7 +150,7 @@ const ChangePasswordModal = ({ open, closeModal, showAlert }: Props) => {
 
           <PasswordInput
             label="Новий пароль"
-            error={!!errors.newPassword}
+            error={!!errors.newPassword && isSubmitted}
             errorMessage={errors.newPassword?.message}
             watchPassword={!!watch('newPassword')}
             register={register('newPassword', {
@@ -164,8 +165,10 @@ const ChangePasswordModal = ({ open, closeModal, showAlert }: Props) => {
 
           <PasswordInput
             label="Підтвердити пароль"
-            error={!!errors.confirmNewPassword || !passwordsMatch}
-            errorMessage={errors.confirmNewPassword?.message}
+            error={
+              (!!errors.confirmNewPassword || !passwordsMatch) && isSubmitted
+            }
+            errorMessage={'Паролі не збігаються'}
             watchPassword={!!watch('confirmNewPassword')}
             register={register('confirmNewPassword', {
               required: 'Підтвердження пароля обов’язкове',
