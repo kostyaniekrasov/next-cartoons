@@ -16,9 +16,19 @@ const addToWatchLater = async (userId: string, playlist: Playlist) => {
   const userDocSnap = await getDoc(userRef);
 
   if (userDocSnap.exists()) {
-    await updateDoc(userRef, {
-      watchLater: arrayUnion(playlist),
-    });
+    const userData = userDocSnap.data();
+
+    const isPlaylistExists = userData.watchLater?.some(
+      (existingPlaylist: Playlist) => existingPlaylist.id === playlist.id,
+    );
+
+    if (!isPlaylistExists) {
+      await updateDoc(userRef, {
+        watchLater: arrayUnion(playlist),
+      });
+    } else {
+      console.log('Playlist already exists in the watch later list');
+    }
   } else {
     await setDoc(userRef, {
       watchLater: [playlist],

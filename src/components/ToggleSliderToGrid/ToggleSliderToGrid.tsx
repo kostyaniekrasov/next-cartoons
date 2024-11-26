@@ -301,20 +301,29 @@ const ToggleSliderToGrid = ({
       {!!playlists.length && (
         <AnimatePresence mode="wait">
           {!isGrid ? (
-            <motion.div
-              key="slider"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.3 }}
+            <Box
+              sx={{
+                mr: {
+                  xs: '-16px',
+                  lg: 0,
+                },
+              }}
             >
-              <CartoonSlider
-                playlistsType={playlistsType}
-                categories={categories}
-                playlists={playlists}
-                continueWatchingList={CWlinks ?? []}
-              />
-            </motion.div>
+              <motion.div
+                key="slider"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3 }}
+              >
+                <CartoonSlider
+                  playlistsType={playlistsType}
+                  categories={categories}
+                  playlists={playlists}
+                  continueWatchingList={CWlinks ?? []}
+                />
+              </motion.div>
+            </Box>
           ) : (
             <motion.div
               key="grid"
@@ -325,6 +334,7 @@ const ToggleSliderToGrid = ({
             >
               <GridForList
                 categories={categories}
+                playlistsType={playlistsType}
                 playlists={
                   playlistsType === PlaylistsType.ByCategory
                     ? sortedPlaylists

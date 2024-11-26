@@ -62,7 +62,7 @@ const SliderMenu = ({
     );
   };
 
-  const handleRemoveVideoFromCW = async () => {
+  const handleRemoveVideoFromContinueWatching = async () => {
     if (user) {
       await removePlaylistFromCW(user.id, playlist.id);
       showAlert('removedAlert');
@@ -72,7 +72,7 @@ const SliderMenu = ({
     }
   };
 
-  const handleRemoveVideoFromWL = async () => {
+  const handleRemoveVideoFromSaved = async () => {
     if (removeFromSaved) {
       await removeFromSaved(playlist.id);
       showAlert('removedAlert');
@@ -143,8 +143,8 @@ const SliderMenu = ({
         <MenuItem
           onClick={
             playlistsType === PlaylistsType.Saved
-              ? handleRemoveVideoFromWL
-              : handleRemoveVideoFromCW
+              ? handleRemoveVideoFromSaved
+              : handleRemoveVideoFromContinueWatching
           }
         >
           <Typography variant="secondaryText" color="error">

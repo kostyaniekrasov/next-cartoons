@@ -44,7 +44,7 @@ const MobileMenu = ({ onClose, user, openSignIn }: Props) => {
     onClose();
   };
   const goToSaved = () => {
-    router.push(`${pathname}/saved`);
+    router.push(`/saved`);
     onClose();
   };
 

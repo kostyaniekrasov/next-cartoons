@@ -1,15 +1,16 @@
 'use client';
 
 import { ChevronLeftIcon } from '@/assets/icons';
-import { GridForList, SliderSkeleton } from '@/components';
+import { GridForList, SignInButton, SliderSkeleton } from '@/components';
 import {
   getUserLists,
   removeFromWatchLater,
 } from '@/lib/playlists/savedVideos';
 import useAuthStore from '@/store/useAuthStore';
+import { PlaylistsType } from '@/types';
 import { Playlist } from '@/types/VideoData';
 import { Alert, Box, Container, IconButton, Typography } from '@mui/material';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const SavedVideos = () => {
@@ -19,6 +20,11 @@ const SavedVideos = () => {
   );
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const pathname = usePathname();
+
+  const handleShowSignIn = () => {
+    router.push(`${pathname}?signin=true`);
+  };
 
   const handleRemoveFromSaved = async (playlistId: string) => {
     if (user) {
@@ -53,11 +59,26 @@ const SavedVideos = () => {
   if (!loading && !user) {
     return (
       <Container disableGutters>
-        <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '20px',
+            mx: 'auto',
+            width: {
+              xs: '100%',
+              lg: 'max-content',
+            },
+            justifyContent: 'center',
+          }}
+        >
           <Alert variant="filled" severity="warning">
             Цей список доступний лише авторизованим користувачам. Будь ласка,
             виконайте вхід в систему.
           </Alert>
+          <SignInButton onClick={handleShowSignIn}>
+            <Typography color="accentPink">Виконати вхід</Typography>
+          </SignInButton>
         </Box>
       </Container>
     );
@@ -68,9 +89,9 @@ const SavedVideos = () => {
   if (isLoading) {
     content = (
       <Box sx={{ display: 'flex', gap: '24px' }}>
-        {Array.from(new Array(4)).map((index, element) => (
-          <SliderSkeleton key={`skeleton-${element}`} />
-        ))}
+        {Array.from(new Array(4)).map((_, i) => {
+          return <SliderSkeleton key={i} />;
+        })}
       </Box>
     );
   } else if (watchLaterPlaylists.length > 0) {
@@ -82,6 +103,7 @@ const SavedVideos = () => {
         <GridForList
           playlists={watchLaterPlaylists}
           removeFromSaved={handleRemoveFromSaved}
+          playlistsType={PlaylistsType.Saved}
         />
       </>
     );

@@ -7,6 +7,7 @@ import { SeriesTitleCounter, getCategoryName } from '@/utils';
 import {
   Alert,
   Box,
+  CircularProgress,
   Collapse,
   Fade,
   Grid2,
@@ -24,6 +25,7 @@ interface Props {
   categories?: VideoCategory[];
   playlists: Playlist[];
   continueWatchingList?: ContinueWatching[];
+  playlistsType: PlaylistsType;
   removeFromSaved?: (playlistId: string) => Promise<void>;
 }
 
@@ -32,6 +34,7 @@ const GridForList = ({
   continueWatchingList,
   removeFromSaved,
   categories,
+  playlistsType,
 }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -40,8 +43,10 @@ const GridForList = ({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [activePlaylist, setActivePlaylist] = useState<Playlist | null>(null);
   const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
-  const open = Boolean(anchorEl);
   const [alert, setAlert] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [removingPlaylistId, setRemovingPlaylistId] = useState('');
+  const open = Boolean(anchorEl);
 
   const handleShowAlert = (alertName: string) => {
     setAlert(alertName);
@@ -73,14 +78,29 @@ const GridForList = ({
     [router, pathname],
   );
 
+  const handleRemove = async (playlistId: string) => {
+    setRemovingPlaylistId(playlistId);
+    if (removeFromSaved) {
+      setIsLoading(true);
+      await removeFromSaved(playlistId).finally(() => setIsLoading(false));
+    }
+  };
+
   return (
     <>
-      <Fade in={true} key={playlists.map((p) => p.id).join(',')}>
+      <Fade
+        in={true}
+        key={playlists
+          .map((p) => {
+            return p.id;
+          })
+          .join(',')}
+      >
         <Grid2
           container
           spacing={4}
           columnSpacing={3}
-          columns={{ xs: 4, sm: 8, md: 12 }}
+          columns={{ xs: 4, sm: 8, md: 8, lg: 12 }}
         >
           {playlists.map((playlist) => {
             if (!playlist.videos || playlist.videos.length === 0) {
@@ -105,110 +125,136 @@ const GridForList = ({
               'https://media.istockphoto.com/id/1396814518/vector/image-coming-soon-no-photo-no-thumbnail-image-available-vector-illustration.jpg?s=612x612&w=0&k=20&c=hnh2OZgQGhf0b46-J2z7aHbIWwq8HNlSDaNp2wn_iko=';
 
             return (
-              <Grid2 size={{ xs: 4, sm: 6, md: 3 }} key={playlist.id}>
-                <Box>
-                  <Box>
+              <Grid2
+                size={{ xs: 4, sm: 4, md: 4, lg: 4, xl: 3 }}
+                key={playlist.id}
+              >
+                <>
+                  {/* <> */}
+                  <Box
+                    sx={{
+                      position: 'relative',
+                      borderRadius: '12px',
+                      boxSizing: 'border-box',
+                      width: {
+                        xs: '100%',
+                        // sm: '318px',
+                        // '3xl': '416px',
+                      },
+                      aspectRatio: '16/9',
+                      marginBottom: '8px',
+                      border: '1px solid',
+                      borderColor: 'gray.300',
+                    }}
+                    onMouseEnter={() => !open && setHover(playlist.id)}
+                    onMouseLeave={() => !open && setHover(null)}
+                  >
                     <Box
                       sx={{
-                        position: 'relative',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
                         borderRadius: '12px',
-                        boxSizing: 'border-box',
-                        width: {
-                          xs: '100%',
-                          sm: '318px',
-                          '3xl': '416px',
-                        },
-                        aspectRatio: '16/9',
-                        marginBottom: '8px',
-                        border: '1px solid',
-                        borderColor: 'gray.300',
                       }}
-                      onMouseEnter={() => !open && setHover(playlist.id)}
-                      onMouseLeave={() => !open && setHover(null)}
+                    >
+                      <Image
+                        src={imgUrl}
+                        alt={firstVideo.snippet.title}
+                        fill
+                        quality={85}
+                        priority
+                        loading="eager"
+                        sizes="100%"
+                        onClick={() =>
+                          handleSlideClick(playlist.id, selectedVideoId)
+                        }
+                        style={{
+                          borderRadius: '12px',
+                          objectPosition: 'center',
+                        }}
+                      />
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          bottom: '8px',
+                          right: '8px',
+                          background: 'rgba(242, 242, 247, 0.70)',
+                          borderRadius: '10px',
+                          display: 'flex',
+                          padding: '4px 8px',
+                          backdropFilter: 'blur(25px)',
+                        }}
+                      >
+                        <Typography
+                          variant="footnote"
+                          color="gray.900"
+                          lineHeight={'100%'}
+                        >
+                          {SeriesTitleCounter(playlist.videos.length)}
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    <Collapse
+                      in={hover === playlist.id && !isLoading}
+                      unmountOnExit
+                    >
+                      <Box
+                        onClick={() =>
+                          handleSlideClick(playlist.id, selectedVideoId)
+                        }
+                        sx={{
+                          position: 'absolute',
+                          padding: '16px',
+                          inset: 0,
+                          background: 'rgba(54, 54, 54, 0.6)',
+                          display: 'flex',
+                          justifyContent: 'flex-end',
+                          borderRadius: '12px',
+                        }}
+                      >
+                        <IconButton
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            handleClick(event, playlist, selectedVideoId);
+                          }}
+                          sx={{
+                            backgroundColor: ' rgba(242, 242, 247, 0.5)',
+                            padding: 0,
+                            color: 'white',
+                            borderRadius: '999px',
+                            width: '24px',
+                            height: '24px',
+                          }}
+                        >
+                          <MoreHorizontalIcon />
+                        </IconButton>
+                      </Box>
+                    </Collapse>
+
+                    <Collapse
+                      in={isLoading && removingPlaylistId === playlist.id}
                     >
                       <Box
                         sx={{
                           position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
+                          padding: '16px',
+                          inset: 0,
+                          background: 'rgba(54, 54, 54, 0.6)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
                           borderRadius: '12px',
                         }}
                       >
-                        <Image
-                          src={imgUrl}
-                          alt={firstVideo.snippet.title}
-                          fill
-                          quality={85}
-                          priority
-                          loading="eager"
-                          sizes="100%"
-                          onClick={() =>
-                            handleSlideClick(playlist.id, selectedVideoId)
-                          }
-                          style={{
-                            borderRadius: '12px',
-                            objectPosition: 'center',
-                          }}
-                        />
-                        <Box
-                          sx={{
-                            position: 'absolute',
-                            bottom: '8px',
-                            right: '8px',
-                            background: 'rgba(242, 242, 247, 0.70)',
-                            borderRadius: '10px',
-                            display: 'flex',
-                            padding: '4px 8px',
-                            backdropFilter: 'blur(25px)',
-                          }}
-                        >
-                          <Typography
-                            variant="footnote"
-                            color="gray.900"
-                            lineHeight={'100%'}
-                          >
-                            {SeriesTitleCounter(playlist.videos.length)}
-                          </Typography>
-                        </Box>
+                        <CircularProgress size={'60px'} />
                       </Box>
-
-                      <Collapse in={hover === playlist.id} unmountOnExit>
-                        <Box
-                          onClick={() =>
-                            handleSlideClick(playlist.id, selectedVideoId)
-                          }
-                          sx={{
-                            position: 'absolute',
-                            padding: '16px',
-                            inset: 0,
-                            background: 'rgba(54, 54, 54, 0.6)',
-                            display: 'flex',
-                            justifyContent: 'flex-end',
-                            borderRadius: '12px',
-                          }}
-                        >
-                          <IconButton
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              handleClick(event, playlist, selectedVideoId);
-                            }}
-                            sx={{
-                              backgroundColor: ' rgba(242, 242, 247, 0.5)',
-                              padding: 0,
-                              color: 'white',
-                              borderRadius: '999px',
-                              width: '24px',
-                              height: '24px',
-                            }}
-                          >
-                            <MoreHorizontalIcon />
-                          </IconButton>
-                        </Box>
-                      </Collapse>
-                    </Box>
+                    </Collapse>
                   </Box>
+                  {/* </> */}
+
                   <Typography
                     variant="mainTextSemibold"
                     color="gray.900"
@@ -236,7 +282,7 @@ const GridForList = ({
                     {categories &&
                       getCategoryName(categories, firstVideo.category)}
                   </Typography>
-                </Box>
+                </>
               </Grid2>
             );
           })}
@@ -250,8 +296,8 @@ const GridForList = ({
           handleClose={handleClose}
           selectedVideoId={activeVideoId}
           showAlert={handleShowAlert}
-          playlistsType={PlaylistsType.Saved}
-          removeFromSaved={removeFromSaved}
+          playlistsType={playlistsType}
+          removeFromSaved={handleRemove}
           slideClick={handleSlideClick}
         />
       )}
