@@ -4,6 +4,7 @@ import { getCategories } from '@/lib';
 import { ThemeModeProvider } from '@/theme/ThemeContext';
 import { Box, CircularProgress, CssBaseline } from '@mui/material';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
+import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import React, { Suspense } from 'react';
@@ -34,6 +35,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${inter.variable}`}>
       <body className={`antialiased`}>
+        <Analytics />
         <AppRouterCacheProvider options={{ key: 'css', prepend: true }}>
           <ThemeModeProvider>
             <CssBaseline />
