@@ -3,6 +3,7 @@
 import { ChevronLeftIcon } from '@/assets/icons';
 import { GridForList } from '@/components';
 import { useVideoStore } from '@/store/useVideoStore';
+import { PlaylistsType } from '@/types';
 import { Playlist } from '@/types/VideoData';
 import { Box, Container, IconButton, Typography } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
@@ -60,7 +61,10 @@ const SearchPage = () => {
           </Typography>
         </IconButton>
         {searchResults.length > 0 ? (
-          <GridForList playlists={searchResults} />
+          <GridForList
+            playlists={searchResults}
+            playlistsType={PlaylistsType.ByCategory}
+          />
         ) : (
           <Typography variant="h5" align="center">
             Нічого не знайдено за запитом {query}

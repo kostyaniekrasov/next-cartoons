@@ -100,6 +100,14 @@ const useAuthStore = create<AuthState>()((set, get) => ({
       updatedData.avatar = selectedAvatar;
     }
 
+    const isDataChanged = Object.entries(updatedData).some(([key, value]) => {
+      return currentUser[key as keyof typeof currentUser] !== value;
+    });
+
+    if (!isDataChanged) {
+      throw new Error('No changes');
+    }
+
     get().startLoading();
     try {
       const updatedUser = { ...currentUser, ...updatedData };
@@ -165,16 +173,34 @@ const getUserDataFromFirebase = async (uid: string): Promise<User | null> => {
 
 const saveUserCookie = (user: User) => {
   const cookieUser = nookies.get(null).user_info;
+  console.log('Cookie before:', cookieUser);
+  console.log('User to save:', user);
+
+  const updUser = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    age: user.age,
+    biggerKid: user.biggerKid,
+    littleChild: user.littleChild,
+    avatar: user.avatar,
+    role: user.role,
+    showSearch: user.showSearch,
+  };
+
   if (
     !cookieUser ||
-    JSON.stringify(JSON.parse(cookieUser)) !== JSON.stringify(user)
+    JSON.stringify(JSON.parse(cookieUser)) !== JSON.stringify(updUser)
   ) {
-    nookies.set(null, 'user_info', JSON.stringify(user), {
+    nookies.set(null, 'user_info', JSON.stringify(updUser), {
       maxAge: 2 * 24 * 60 * 60,
       path: '/',
       sameSite: 'None',
       secure: true,
     });
+    console.log('Cookie updated:', JSON.stringify(updUser));
+  } else {
+    console.log('No cookie update needed');
   }
 };
 

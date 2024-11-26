@@ -1,8 +1,14 @@
 'use client';
 
-import { ChevronRightIcon, CloseIcon } from '@/assets/icons';
+import {
+  ChevronRightIcon,
+  ClearIcon,
+  CloseIcon,
+  WarningIcon,
+} from '@/assets/icons';
 import {
   CustomInput,
+  ErrorAlert,
   SelectArrowButton,
   SuccessAlert,
   WarningAlert,
@@ -33,22 +39,35 @@ interface Props {
   index: number;
 }
 
+interface InputsData {
+  name: string;
+  age: number;
+}
+
 const TabProfile = ({ value, handleClose, index }: Props) => {
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const [isShowAvatars, setIsShowAvatars] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const [selectedAvatar, setSelectedAvatar] = useState<AvatarData | null>(null);
   const [isAlert, setIsAlert] = useState('');
 
-  const { user, updateUserProfile } = useAuthStore();
+  const { user, updateUserProfile, loading } = useAuthStore();
 
-  const { register, handleSubmit } = useForm({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+    watch,
+  } = useForm<InputsData>({
     defaultValues: {
       name: user?.name,
       age: user?.age,
     },
   });
+  const watchName = watch('name');
+  const watchAge = watch('age');
 
   const router = useRouter();
 
@@ -61,19 +80,39 @@ const TabProfile = ({ value, handleClose, index }: Props) => {
   };
 
   const onSubmit = async (data: Partial<UpdateUserData>) => {
+    setIsAlert('');
+
     if (selectedAvatar) {
       await updateUserProfile(data, selectedAvatar)
-        .then(() => setIsAlert('Profile'))
-        .catch(() => setIsAlert('ProfileError'))
-        .finally(() => setIsLoading(false));
+        .then(() => {
+          setIsAlert('Profile');
+          router.refresh();
+        })
+        .catch((err) => {
+          if (err instanceof Error && err.message === 'No changes') {
+            setIsAlert('NoChanges');
+          } else {
+            setIsAlert('ProfileError');
+            console.error(err);
+          }
+        });
+      // .finally(() => setIsLoading(false));
     } else {
       await updateUserProfile(data)
-        .then(() => setIsAlert('Profile'))
-        .catch(() => setIsAlert('ProfileError'))
-        .finally(() => setIsLoading(false));
+        .then(() => {
+          setIsAlert('Profile');
+          router.refresh();
+        })
+        .catch((err) => {
+          if (err instanceof Error && err.message === 'No changes') {
+            setIsAlert('NoChanges');
+          } else {
+            setIsAlert('ProfileError');
+            console.error(err);
+          }
+        });
+      // .finally(() => setIsLoading(false));
     }
-
-    return router.refresh();
   };
 
   const toggleSelect = () => {
@@ -115,6 +154,7 @@ const TabProfile = ({ value, handleClose, index }: Props) => {
           >
             Профіль
           </Typography>
+
           <IconButton
             onClick={handleClose}
             sx={{
@@ -124,6 +164,7 @@ const TabProfile = ({ value, handleClose, index }: Props) => {
             <CloseIcon width={24} height={24} />
           </IconButton>
         </Box>
+
         <Avatar
           alt="Avatar"
           src={selectedAvatar ? selectedAvatar.url : user?.avatar?.url}
@@ -134,6 +175,7 @@ const TabProfile = ({ value, handleClose, index }: Props) => {
             backgroundColor: 'gray.100',
           }}
         />
+
         <IconButton
           onClick={handleToggle}
           sx={{
@@ -155,18 +197,87 @@ const TabProfile = ({ value, handleClose, index }: Props) => {
             <ChevronRightIcon />
           </Box>
         </IconButton>
+
         <Collapse in={isShowAvatars} unmountOnExit>
           <AvatarsList
             avatarUrl={selectedAvatar?.url}
             selectAvatar={handleSelectAvatar}
           />
         </Collapse>
-        <CustomInput title="name" label="Ім'я" {...register('name')} />
+
+        <CustomInput
+          fullWidth
+          label="Ім'я"
+          type="text"
+          error={!!errors.name}
+          enterKeyHint="next"
+          helperText={
+            <Collapse in={!!errors.name} timeout={200} unmountOnExit>
+              <Box
+                sx={{
+                  display: 'flex',
+                  gap: '4px',
+                  alignItems: 'center',
+                  color: 'warning.main',
+                  paddingTop: '8px',
+                }}
+              >
+                <WarningIcon width={14} height={14} />
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: 'warning.main',
+                  }}
+                >
+                  {errors.name?.message}
+                </Typography>
+              </Box>
+            </Collapse>
+          }
+          {...register('name', {
+            required: 'Ім’я обов’язкове',
+            maxLength: { value: 30, message: 'Максимум 30 символів' },
+            validate: (value) =>
+              /^[a-zA-Zа-яА-ЯіІїЇєЄ' ]*$/.test(value) ||
+              'Тільки алфавітні символи',
+          })}
+          slotProps={{
+            input: {
+              endAdornment: (
+                <Collapse
+                  in={!!watchName}
+                  orientation="horizontal"
+                  timeout={200}
+                  sx={{
+                    width: '24px',
+                    height: '24px',
+                  }}
+                >
+                  <IconButton
+                    sx={{
+                      backgroundColor: 'gray.100',
+                      color: 'gray.900',
+                      padding: '4px',
+                    }}
+                    onClick={() => setValue('name', '')}
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                </Collapse>
+              ),
+            },
+          }}
+          onInput={(e) => {
+            const input = e.target as HTMLInputElement;
+            input.value = input.value.replace(/[^a-zA-Zа-яА-ЯіІїЇєЄ' ]+/g, '');
+          }}
+        />
+
         <CustomInput
           title="age"
           select
           label="Вік"
-          defaultValue={user?.age}
+          value={watchAge}
           {...register('age', { valueAsNumber: true })}
           sx={{
             '& .Mui-focused arrow': {
@@ -214,18 +325,27 @@ const TabProfile = ({ value, handleClose, index }: Props) => {
           <MenuItem value={5}>3-5</MenuItem>
           <MenuItem value={8}>6-8</MenuItem>
         </CustomInput>
+
         <Collapse in={isAlert === 'Profile'} unmountOnExit>
           <SuccessAlert onClose={() => setIsAlert('')}>
             Дані успішно змінено.
           </SuccessAlert>
         </Collapse>
+
         <Collapse in={isAlert === 'ProfileError'} unmountOnExit>
-          <WarningAlert onClose={() => setIsAlert('')}>
+          <ErrorAlert onClose={() => setIsAlert('')}>
             Відбулись помилки при зміні данних. Спробуйте пізніше.
+          </ErrorAlert>
+        </Collapse>
+
+        <Collapse in={isAlert === 'NoChanges'} unmountOnExit>
+          <WarningAlert onClose={() => setIsAlert('')}>
+            Немає змін для оновлення
           </WarningAlert>
         </Collapse>
+
         <ModalButton type="submit">
-          {isLoading ? (
+          {loading ? (
             <CircularProgress />
           ) : (
             <Typography variant="mainText">Зберегти</Typography>

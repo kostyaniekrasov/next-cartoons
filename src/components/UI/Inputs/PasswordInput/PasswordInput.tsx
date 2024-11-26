@@ -52,32 +52,6 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
         label={label}
         type={showPassword ? 'text' : 'password'}
         error={error}
-        // helperText={
-        //   errorMessage ? (
-        //     <Collapse in={error} timeout={200} unmountOnExit>
-        //       <Box
-        //         sx={{
-        //           display: 'flex',
-        //           gap: '4px',
-        //           alignItems: 'center',
-        //           color: 'warning.main',
-        //           paddingTop: '8px',
-        //         }}
-        //       >
-        //         <WarningIcon width={14} height={14} />
-        //         <Typography
-        //           component={'span'}
-        //           variant="caption"
-        //           sx={{
-        //             color: 'warning.main',
-        //           }}
-        //         >
-        //           {errorMessage}
-        //         </Typography>
-        //       </Box>
-        //     </Collapse>
-        //   ) : null
-        // }
         {...register}
         slotProps={{
           input: {

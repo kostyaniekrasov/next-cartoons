@@ -159,6 +159,23 @@ const ChangePasswordModal = ({ open, closeModal, showAlert }: Props) => {
                 value: 8,
                 message: 'Пароль має містити мінімум 8 символів',
               },
+              maxLength: {
+                value: 30,
+                message: 'Пароль має бути не більше 30 символів',
+              },
+              validate: {
+                hasSpecialChar: (value) =>
+                  /[!@#$%^&*(),.?":{}|<>]/.test(value) ||
+                  'Пароль має містити хоча б один спец-символ',
+                hasDigit: (value) =>
+                  /\d/.test(value) || 'Пароль має містити хоча б одну цифру',
+                hasUpperCase: (value) =>
+                  /[A-Z]/.test(value) ||
+                  'Пароль повинен містити принаймні одну велику літеру',
+                noNonPrinting: (value) =>
+                  /^[\x20-\x7E]+$/.test(value) ||
+                  'Недруковані символи заборонені',
+              },
             })}
             clearPassword={() => setValue('newPassword', '')}
           />
