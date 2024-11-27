@@ -47,8 +47,9 @@ const CustomInput = React.forwardRef<HTMLInputElement, TextFieldProps>(
             },
             '& input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus':
               {
-                WebkitBoxShadow: `0 0 0 1000px white inset`,
-                WebkitTextFillColor: '#181818',
+                WebkitBoxShadow: `0 0 0 1000px inset`,
+                border: 'none',
+                borderRadius: 0,
               },
           },
           '& .MuiInputLabel-root': {

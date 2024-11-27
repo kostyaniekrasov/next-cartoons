@@ -62,12 +62,14 @@ const Header = ({ categories }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const query = searchParams.get('query');
   const user = useAuthStore((state) => state.user);
   const isInitialized = useAuthStore((state) => state.isInitialized);
+
   const [selectedFilter, setSelectedFilter] = useState(
     getCurrentFilter(pathname),
   );
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(query ?? '');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isEmpty, setIsEmpty] = useState(true);
   const [isOpenMobileMenu, setIsOpenMobileMenu] = useState(false);
@@ -116,18 +118,12 @@ const Header = ({ categories }: Props) => {
     [router],
   );
 
-  const handleSearch = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const val = event.target.value;
-      setValue(val);
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
+    const val = event.target.value;
+    setValue(val);
 
-      if (val.trim() === '') {
-        router.push('/all');
-      }
-      setIsEmpty(!val.trim());
-    },
-    [router],
-  );
+    setIsEmpty(!val.trim());
+  };
 
   const handleClearSearch = useCallback(() => {
     setValue('');
@@ -135,7 +131,7 @@ const Header = ({ categories }: Props) => {
   }, []);
 
   const handleClickSearch = useCallback(() => {
-    router.push(`/search?query=${value}`);
+    router.push(`/search?query=${value.trim()}`);
   }, [router, value]);
 
   const handleKeyDown = useCallback(

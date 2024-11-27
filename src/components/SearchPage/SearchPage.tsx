@@ -6,6 +6,7 @@ import { useVideoStore } from '@/store/useVideoStore';
 import { PlaylistsType } from '@/types';
 import { Playlist } from '@/types/VideoData';
 import { Box, Container, IconButton, Typography } from '@mui/material';
+import Fuse from 'fuse.js';
 import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -19,11 +20,27 @@ const SearchPage = () => {
   const performSearch = useCallback(
     (query: string) => {
       if (query) {
-        const filteredResults = playlists.filter((playlist) => {
-          const firstWord = playlist.title.split(' ')[0].toLowerCase();
-          return firstWord.startsWith(query.toLowerCase());
+        const fuse = new Fuse(playlists, {
+          keys: ['title'],
+          threshold: 0.4,
         });
-        setSearchResults(filteredResults);
+
+        const fuseResults = fuse.search(query);
+
+        const startsWithQuery = fuseResults
+          .filter((result) =>
+            result.item.title.toLowerCase().startsWith(query.toLowerCase()),
+          )
+          .map((result) => result.item);
+
+        const otherResults = fuseResults
+          .filter(
+            (result) =>
+              !result.item.title.toLowerCase().startsWith(query.toLowerCase()),
+          )
+          .map((result) => result.item);
+
+        setSearchResults([...startsWithQuery, ...otherResults]);
       } else {
         setSearchResults([]);
       }

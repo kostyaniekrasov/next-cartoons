@@ -206,6 +206,7 @@ const VideoBlock = React.memo(
                     xs: '16px',
                     sm: '24px',
                   },
+                  color: 'accentPink',
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',

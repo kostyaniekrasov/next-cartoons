@@ -10,11 +10,11 @@ import {
   VerticalSliderSkeleton,
   VideoBlock,
 } from '@/components';
-import { fetchPlaylistsByCategory, getCategories } from '@/lib';
 import { fetchPlaylistById } from '@/lib/playlists/fetchPlaylistById';
 import { isPlaylistSaved } from '@/lib/playlists/isSavedVideo';
 import { addToWatchLater } from '@/lib/playlists/savedVideos';
 import useAuthStore from '@/store/useAuthStore';
+import { useVideoStore } from '@/store/useVideoStore';
 import { PlaylistsType, VideoCategory } from '@/types';
 import { Playlist, VideoData } from '@/types/VideoData';
 import { getNextVideoInPlaylist } from '@/utils';
@@ -35,13 +35,18 @@ const VideoPage = ({
   params: { category: string; playlistId: string; videoId: string };
 }) => {
   const { category, playlistId, videoId } = params;
+  const {
+    categories,
+    fetchCategoriesIfEmpty,
+    filteredPlaylists,
+    fetchPlaylistsIfEmpty,
+    setPlaylistsByCategory,
+  } = useVideoStore();
   const [playlist, setPlaylist] = useState<Playlist>();
-  const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [currentCategory, setCurrentCategory] = useState<VideoCategory | null>(
     null,
   );
   const [open, setOpen] = useState(false);
-  const [categories, setCategories] = useState<VideoCategory[]>([]);
   const [currentVideo, setCurrentVideo] = useState<VideoData>();
   const { user } = useAuthStore();
   const [isSaved, setIsSaved] = useState(false);
@@ -130,31 +135,31 @@ const VideoPage = ({
 
   useEffect(() => {
     const fetchCategories = async () => {
-      if (!categories.length) {
-        const fetchedCategories = await getCategories();
-        if (fetchedCategories) {
-          setCategories(fetchedCategories);
-          const foundCategory = fetchedCategories.find(
-            (c) => c.name === category,
-          );
-          if (foundCategory) setCurrentCategory(foundCategory);
-        }
+      await fetchCategoriesIfEmpty();
+      if (categories) {
+        const foundCategory = categories.find((c) => c.name === category);
+        if (foundCategory) setCurrentCategory(foundCategory);
       }
     };
 
     fetchCategories();
-  }, [categories.length, category]);
+  }, [categories, category, fetchCategoriesIfEmpty]);
 
   useEffect(() => {
     const fetchPlaylists = async () => {
-      if (!playlists.length) {
-        const fetchedPlaylists = await fetchPlaylistsByCategory(category);
-        setPlaylists(fetchedPlaylists || []);
+      await fetchPlaylistsIfEmpty();
+      if (!filteredPlaylists.length) {
+        setPlaylistsByCategory(category);
       }
     };
 
     fetchPlaylists();
-  }, [playlists.length, category]);
+  }, [
+    category,
+    fetchPlaylistsIfEmpty,
+    filteredPlaylists.length,
+    setPlaylistsByCategory,
+  ]);
 
   useEffect(() => {
     const checkIfSaved = async () => {
@@ -229,7 +234,7 @@ const VideoPage = ({
           </Box>
           {playlist ? (
             <VerticalSlider
-              playlists={playlists}
+              playlists={filteredPlaylists}
               categories={categories}
               slideClick={handleSlideClick}
             />
@@ -269,7 +274,7 @@ const VideoPage = ({
             </IconButton>
 
             <CartoonSlider
-              playlists={playlists}
+              playlists={filteredPlaylists}
               categories={categories}
               slideClick={handleSlideClick}
               playlistsType={PlaylistsType.ByCategory}

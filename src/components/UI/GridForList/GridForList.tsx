@@ -71,12 +71,17 @@ const GridForList = ({
     setActiveVideoId(null);
   }, []);
 
-  const handleSlideClick = useCallback(
-    (playlistId: string, videoId: string) => {
+  const handleSlideClick = (
+    playlistId: string,
+    videoId: string,
+    videoCategory?: string,
+  ) => {
+    if (playlistsType === PlaylistsType.Saved) {
+      router.push(`/${videoCategory}/video-page/${playlistId}/${videoId}`);
+    } else {
       router.push(`${pathname}/video-page/${playlistId}/${videoId}`);
-    },
-    [router, pathname],
-  );
+    }
+  };
 
   const handleRemove = async (playlistId: string) => {
     setRemovingPlaylistId(playlistId);
@@ -168,7 +173,11 @@ const GridForList = ({
                         loading="eager"
                         sizes="100%"
                         onClick={() =>
-                          handleSlideClick(playlist.id, selectedVideoId)
+                          handleSlideClick(
+                            playlist.id,
+                            selectedVideoId,
+                            firstVideo.category,
+                          )
                         }
                         style={{
                           borderRadius: '12px',
@@ -203,7 +212,11 @@ const GridForList = ({
                     >
                       <Box
                         onClick={() =>
-                          handleSlideClick(playlist.id, selectedVideoId)
+                          handleSlideClick(
+                            playlist.id,
+                            selectedVideoId,
+                            firstVideo.category,
+                          )
                         }
                         sx={{
                           position: 'absolute',

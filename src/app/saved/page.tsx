@@ -7,6 +7,7 @@ import {
   removeFromWatchLater,
 } from '@/lib/playlists/savedVideos';
 import useAuthStore from '@/store/useAuthStore';
+import { useVideoStore } from '@/store/useVideoStore';
 import { PlaylistsType } from '@/types';
 import { Playlist } from '@/types/VideoData';
 import { Alert, Box, Container, IconButton, Typography } from '@mui/material';
@@ -15,6 +16,7 @@ import { useEffect, useState } from 'react';
 
 const SavedVideos = () => {
   const { user, loading } = useAuthStore();
+  const { categories, fetchCategoriesIfEmpty } = useVideoStore();
   const [watchLaterPlaylists, setWatchLaterPlaylists] = useState<Playlist[]>(
     [],
   );
@@ -55,6 +57,14 @@ const SavedVideos = () => {
       setIsLoading(false);
     }
   }, [user]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      await fetchCategoriesIfEmpty();
+    };
+
+    fetchCategories();
+  });
 
   if (!loading && !user) {
     return (
@@ -104,6 +114,7 @@ const SavedVideos = () => {
           playlists={watchLaterPlaylists}
           removeFromSaved={handleRemoveFromSaved}
           playlistsType={PlaylistsType.Saved}
+          categories={categories}
         />
       </>
     );

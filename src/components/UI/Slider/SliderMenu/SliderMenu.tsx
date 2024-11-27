@@ -18,7 +18,11 @@ interface Props {
   selectedVideoId: string;
   showAlert: (alertName: string) => void;
   removeFromSaved?: (playlistId: string) => Promise<void>;
-  slideClick: (playlistId: string, videoId: string) => void;
+  slideClick: (
+    playlistId: string,
+    videoId: string,
+    playlistCategory?: string,
+  ) => void;
   playlistsType: PlaylistsType;
 }
 
@@ -128,7 +132,11 @@ const SliderMenu = ({
         },
       }}
     >
-      <MenuItem onClick={() => slideClick(playlist.id, selectedVideoId)}>
+      <MenuItem
+        onClick={() =>
+          slideClick(playlist.id, selectedVideoId, playlist.category)
+        }
+      >
         <Typography variant="secondaryText">Перейти до перегляду</Typography>
       </MenuItem>
       <MenuItem onClick={handleShareClick}>

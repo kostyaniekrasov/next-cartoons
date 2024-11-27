@@ -5,6 +5,7 @@ export const lightPalette = {
   secondary: {
     main: '#ff2d55',
   },
+
   background: {
     default: '#fff',
     paper: '#fff',
@@ -44,6 +45,11 @@ export const lightPalette = {
 };
 
 export const darkPalette = {
+  action: {
+    disabled: '#BDBDBD',
+    disabledBackground: '#F5F5F5',
+  },
+
   primary: {
     main: '#ff2d55',
   },
