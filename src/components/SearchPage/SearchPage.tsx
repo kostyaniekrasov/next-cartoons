@@ -13,7 +13,12 @@ import { useCallback, useEffect, useState } from 'react';
 const SearchPage = () => {
   const searchParams = useSearchParams();
   const query = searchParams.get('query');
-  const { playlists, fetchPlaylistsIfEmpty } = useVideoStore();
+  const {
+    playlists,
+    fetchPlaylistsIfEmpty,
+    categories,
+    fetchCategoriesIfEmpty,
+  } = useVideoStore();
   const [searchResults, setSearchResults] = useState<Playlist[]>([]);
   const [lastQuery, setLastQuery] = useState<string | null>(null);
 
@@ -60,6 +65,14 @@ const SearchPage = () => {
     runSearch();
   }, [query, lastQuery, fetchPlaylistsIfEmpty, performSearch]);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      await fetchCategoriesIfEmpty();
+    };
+
+    fetchCategories();
+  }, []);
+
   return (
     <Box>
       <Container disableGutters>
@@ -81,6 +94,7 @@ const SearchPage = () => {
           <GridForList
             playlists={searchResults}
             playlistsType={PlaylistsType.ByCategory}
+            categories={categories}
           />
         ) : (
           <Typography variant="h5" align="center">

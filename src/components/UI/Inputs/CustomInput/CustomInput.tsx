@@ -1,8 +1,10 @@
-import { TextField, TextFieldProps } from '@mui/material';
+import { TextField, TextFieldProps, useTheme } from '@mui/material';
 import React from 'react';
 
 const CustomInput = React.forwardRef<HTMLInputElement, TextFieldProps>(
   (props, ref) => {
+    const theme = useTheme();
+
     return (
       <TextField
         ref={ref}
@@ -45,11 +47,12 @@ const CustomInput = React.forwardRef<HTMLInputElement, TextFieldProps>(
               color: 'gray.400',
               borderColor: 'gray.200',
             },
-            '& input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus':
+            '& input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, :autofill':
               {
-                WebkitBoxShadow: `0 0 0 1000px inset`,
+                WebkitBoxShadow: `0 0 0 1000px ${theme.palette.white} inset`,
                 border: 'none',
                 borderRadius: 0,
+                WebkitTextFillColor: theme.palette.gray[900],
               },
           },
           '& .MuiInputLabel-root': {

@@ -1,8 +1,9 @@
-import { TextField, TextFieldProps } from '@mui/material';
+import { TextField, TextFieldProps, useTheme } from '@mui/material';
 import React from 'react';
 
 const CustomSearch = React.forwardRef<HTMLInputElement, TextFieldProps>(
   (props, ref) => {
+    const theme = useTheme();
     return (
       <TextField
         ref={ref}
@@ -32,10 +33,14 @@ const CustomSearch = React.forwardRef<HTMLInputElement, TextFieldProps>(
               borderColor: 'gray.400',
             },
 
-            '& input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus':
+            '& input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, :autofill':
               {
-                WebkitBoxShadow: '0 0 0 1000px gray.100 inset',
-                WebkitTextFillColor: 'gray.900',
+                WebkitBoxShadow: `0 0 0 1000px ${theme.palette.gray[100]} inset`,
+                border: 'none',
+                height: 'min-height',
+                width: 'min-width',
+                borderRadius: 0,
+                WebkitTextFillColor: theme.palette.gray[900],
               },
           },
         }}
