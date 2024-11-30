@@ -102,6 +102,8 @@ const CartoonSlider = ({
   //   [playlists],
   // );
 
+  // console.log('slider playlists', playlists);
+
   return (
     <>
       <Fade

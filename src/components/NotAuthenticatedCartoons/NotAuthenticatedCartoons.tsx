@@ -10,10 +10,12 @@ interface Props {
 }
 
 const NotAuthenticatedCartoons = ({ playlists, categories }: Props) => {
-  const playlistsForLittleKids = playlists.map((playlist) => ({
-    ...playlist,
-    videos: playlist.videos.filter((video) => video.recommendedAge <= 5),
-  }));
+  const playlistsForLittleKids = playlists
+    .map((playlist) => ({
+      ...playlist,
+      videos: playlist.videos.filter((video) => video.recommendedAge <= 5),
+    }))
+    .filter((playlist) => playlist.videos.length > 0);
 
   const playlistsForBiggerKids = playlists
     .map((playlist) => ({
@@ -22,6 +24,9 @@ const NotAuthenticatedCartoons = ({ playlists, categories }: Props) => {
     }))
     .filter((playlist) => playlist.videos.length > 0);
 
+  console.clear();
+  console.log('playlistsForBiggerKids ', playlistsForBiggerKids);
+  console.log('playlistsForLittleKids ', playlistsForLittleKids);
   return (
     <Box
       sx={{
@@ -33,13 +38,15 @@ const NotAuthenticatedCartoons = ({ playlists, categories }: Props) => {
         },
       }}
     >
-      <ToggleSliderToGrid
-        user={null}
-        title="Маленьким дітям"
-        playlists={playlistsForLittleKids}
-        categories={categories}
-        playlistsType={PlaylistsType.ByCategory}
-      />
+      {!!playlistsForLittleKids.length && (
+        <ToggleSliderToGrid
+          user={null}
+          title="Маленьким дітям"
+          playlists={playlistsForLittleKids}
+          categories={categories}
+          playlistsType={PlaylistsType.ByCategory}
+        />
+      )}
       {!!playlistsForBiggerKids.length && (
         <ToggleSliderToGrid
           user={null}

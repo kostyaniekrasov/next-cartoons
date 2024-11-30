@@ -1,15 +1,12 @@
 'use client';
 
-// import { removePlaylistFromCW } from '@/lib/playlists/continueWatching';
 import { isPlaylistSaved } from '@/lib/playlists/isSavedVideo';
 import { addToWatchLater } from '@/lib/playlists/savedVideos';
 import useAuthStore from '@/store/useAuthStore';
 import { PlaylistsType } from '@/types';
 import { Playlist } from '@/types/VideoData';
 import { CircularProgress, Menu, MenuItem, Typography } from '@mui/material';
-import {
-  usePathname, // useRouter
-} from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 interface Props {

@@ -30,7 +30,6 @@ const CategoryPage = async ({ params }: { params: { category: string } }) => {
   const currentCategory = categories?.find((c) => c.name === category);
 
   const playlists: Playlist[] = await fetchPlaylistsByCategory(category);
-
   const videosByAgeCategory = filterVideosByAge(playlists, user?.age);
 
   const continueWatchingLinks =
