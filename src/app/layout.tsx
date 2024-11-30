@@ -12,9 +12,9 @@ import React, { Suspense } from 'react';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'ukrainian cartoon',
+  title: 'Toon Joy',
   description:
-    'Велика бібліотека мультиків, пісень та навчальних відео в українській озвучці',
+    'Велика бібліотека мультиків, пісень та навчальних відео рідною мовою',
 };
 
 const inter = Inter({
@@ -34,6 +34,24 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={`${inter.variable}`}>
+      <head>
+        <link
+          rel="icon"
+          type="image/png"
+          href="/favicon-96x96.png"
+          sizes="96x96"
+        />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        />
+        <meta name="apple-mobile-web-app-title" content="Toon Joy" />
+        <link rel="manifest" href="/site.webmanifest" />
+      </head>
+
       <body className={`antialiased`}>
         <Analytics />
         <AppRouterCacheProvider options={{ key: 'css', prepend: true }}>

@@ -1,10 +1,14 @@
 'use client';
 
 import { ChevronLeftIcon } from '@/assets/icons';
-import { GridForList, SignInButton, SliderSkeleton } from '@/components';
 import {
-  getUserLists,
-  removeFromWatchLater,
+  // GridForList,
+  SignInButton,
+  SliderSkeleton,
+  ToggleSliderToGrid,
+} from '@/components';
+import {
+  getUserLists, // removeFromWatchLater,
 } from '@/lib/playlists/savedVideos';
 import useAuthStore from '@/store/useAuthStore';
 import { useVideoStore } from '@/store/useVideoStore';
@@ -28,14 +32,14 @@ const SavedVideos = () => {
     router.push(`${pathname}?signin=true`);
   };
 
-  const handleRemoveFromSaved = async (playlistId: string) => {
-    if (user) {
-      await removeFromWatchLater(user.id, playlistId);
-      setWatchLaterPlaylists((prevPlaylists) =>
-        prevPlaylists.filter((list) => list.id !== playlistId),
-      );
-    }
-  };
+  // const handleRemoveFromSaved = async (playlistId: string) => {
+  //   if (user) {
+  //     await removeFromWatchLater(user.id, playlistId);
+  //     setWatchLaterPlaylists((prevPlaylists) =>
+  //       prevPlaylists.filter((list) => list.id !== playlistId),
+  //     );
+  //   }
+  // };
 
   useEffect(() => {
     const fetchWatchLaterPlaylists = async () => {
@@ -107,15 +111,22 @@ const SavedVideos = () => {
   } else if (watchLaterPlaylists.length > 0) {
     content = (
       <>
-        <Typography variant="h1" color="gray.900" marginBottom={'32px'}>
+        {/* <Typography variant="h1" color="gray.900" marginBottom={'32px'}>
           Збережені
-        </Typography>
-        <GridForList
+        </Typography> */}
+        <ToggleSliderToGrid
+          title="Збережені"
+          user={user}
           playlists={watchLaterPlaylists}
-          removeFromSaved={handleRemoveFromSaved}
           playlistsType={PlaylistsType.Saved}
           categories={categories}
         />
+        {/* <GridForList
+          playlists={watchLaterPlaylists}
+          // removeFromSaved={handleRemoveFromSaved}
+          playlistsType={PlaylistsType.Saved}
+          categories={categories}
+        /> */}
       </>
     );
   } else if (!watchLaterPlaylists.length) {

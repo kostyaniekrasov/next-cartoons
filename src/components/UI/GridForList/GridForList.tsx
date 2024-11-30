@@ -26,13 +26,17 @@ interface Props {
   playlists: Playlist[];
   continueWatchingList?: ContinueWatching[];
   playlistsType: PlaylistsType;
-  removeFromSaved?: (playlistId: string) => Promise<void>;
+  removeFunction: (playlistId: string) => Promise<void>;
+  isLoading: boolean;
+  removingPlaylistId: string;
 }
 
 const GridForList = ({
   playlists,
   continueWatchingList,
-  removeFromSaved,
+  removeFunction,
+  isLoading,
+  removingPlaylistId,
   categories,
   playlistsType,
 }: Props) => {
@@ -44,8 +48,6 @@ const GridForList = ({
   const [activePlaylist, setActivePlaylist] = useState<Playlist | null>(null);
   const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
   const [alert, setAlert] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [removingPlaylistId, setRemovingPlaylistId] = useState('');
   const open = Boolean(anchorEl);
 
   const handleShowAlert = (alertName: string) => {
@@ -80,14 +82,6 @@ const GridForList = ({
       router.push(`/${videoCategory}/video-page/${playlistId}/${videoId}`);
     } else {
       router.push(`${pathname}/video-page/${playlistId}/${videoId}`);
-    }
-  };
-
-  const handleRemove = async (playlistId: string) => {
-    setRemovingPlaylistId(playlistId);
-    if (removeFromSaved) {
-      setIsLoading(true);
-      await removeFromSaved(playlistId).finally(() => setIsLoading(false));
     }
   };
 
@@ -135,7 +129,6 @@ const GridForList = ({
                 key={playlist.id}
               >
                 <>
-                  {/* <> */}
                   <Box
                     sx={{
                       position: 'relative',
@@ -143,8 +136,6 @@ const GridForList = ({
                       boxSizing: 'border-box',
                       width: {
                         xs: '100%',
-                        // sm: '318px',
-                        // '3xl': '416px',
                       },
                       aspectRatio: '16/9',
                       marginBottom: '8px',
@@ -266,7 +257,6 @@ const GridForList = ({
                       </Box>
                     </Collapse>
                   </Box>
-                  {/* </> */}
 
                   <Typography
                     variant="mainTextSemibold"
@@ -310,7 +300,7 @@ const GridForList = ({
           selectedVideoId={activeVideoId}
           showAlert={handleShowAlert}
           playlistsType={playlistsType}
-          removeFromSaved={handleRemove}
+          removeFunction={removeFunction}
           slideClick={handleSlideClick}
         />
       )}

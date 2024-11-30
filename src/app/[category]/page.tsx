@@ -58,7 +58,7 @@ const CategoryPage = async ({ params }: { params: { category: string } }) => {
           }}
         >
           <Collapse in={isAuthenticated} unmountOnExit>
-            <Box
+            {/* <Box
               sx={{
                 borderBottom: '1px solid',
                 borderColor: 'gray.200',
@@ -67,32 +67,34 @@ const CategoryPage = async ({ params }: { params: { category: string } }) => {
                   sm: '30px',
                 },
               }}
-            >
-              <ToggleSliderToGrid
-                categories={categories}
-                category={currentCategory}
-                playlists={videosByAgeCategory}
-                playlistsType={PlaylistsType.ByCategory}
-              />
-            </Box>
+            > */}
+            <ToggleSliderToGrid
+              user={user}
+              categories={categories}
+              category={currentCategory}
+              playlists={videosByAgeCategory}
+              playlistsType={PlaylistsType.ByCategory}
+            />
+            {/* </Box> */}
           </Collapse>
 
           {isAuthenticated && continueWatchingPlaylists.length > 0 && (
-            <Box
-              sx={{
-                borderBottom: '1px solid',
-                borderColor: 'gray.200',
-                paddingBottom: '30px',
-              }}
-            >
-              <ToggleSliderToGrid
-                categories={categories}
-                title={'Продовжити перегляд'}
-                playlists={continueWatchingPlaylists}
-                CWlinks={continueWatchingLinks}
-                playlistsType={PlaylistsType.ContinueWatching}
-              />
-            </Box>
+            // <Box
+            //   sx={{
+            //     borderBottom: '1px solid',
+            //     borderColor: 'gray.200',
+            //     paddingBottom: '30px',
+            //   }}
+            // >
+            <ToggleSliderToGrid
+              user={user}
+              categories={categories}
+              title={'Продовжити перегляд'}
+              playlists={continueWatchingPlaylists}
+              CWlinks={continueWatchingLinks}
+              playlistsType={PlaylistsType.ContinueWatching}
+            />
+            // </Box>
           )}
         </Box>
 

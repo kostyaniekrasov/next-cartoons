@@ -5,6 +5,7 @@ import { VideoData } from '@/types/VideoData';
 import seriesTitle from '@/utils/seriesTitle';
 import {
   Box,
+  CircularProgress,
   Divider,
   Icon,
   IconButton,
@@ -22,6 +23,7 @@ interface Props {
   playlistId: string;
   user: User | null;
   goToSignIn: () => void;
+  isLoading: boolean;
 }
 
 const VideoBlock = React.memo(
@@ -34,6 +36,7 @@ const VideoBlock = React.memo(
     playlistId,
     user,
     goToSignIn,
+    isLoading,
   }: Props) => {
     return (
       <Box
@@ -212,6 +215,14 @@ const VideoBlock = React.memo(
                   alignItems: 'center',
                 }}
               >
+                {isLoading && (
+                  <CircularProgress
+                    color="secondary"
+                    sx={{
+                      position: 'absolute',
+                    }}
+                  />
+                )}
                 <BookmarkIcon width={'100%'} height={'100%'} />
               </Icon>
             </IconButton>

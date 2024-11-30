@@ -2,7 +2,8 @@
 
 import { ChevronRightIcon } from '@/assets/icons';
 import { CartoonSlider, GridForList, SelectFilterArrow } from '@/components';
-import { ContinueWatching, PlaylistsType, VideoCategory } from '@/types';
+import { removeFromWatchLater, removePlaylistFromCW } from '@/lib';
+import { ContinueWatching, PlaylistsType, User, VideoCategory } from '@/types';
 import { Playlist } from '@/types/VideoData';
 import {
   Box,
@@ -17,7 +18,7 @@ import {
   selectClasses,
 } from '@mui/material';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 interface Props {
   title?: string;
@@ -26,6 +27,7 @@ interface Props {
   playlists: Playlist[];
   CWlinks?: ContinueWatching[];
   playlistsType: PlaylistsType;
+  user: User | null;
 }
 
 const ToggleSliderToGrid = ({
@@ -35,45 +37,19 @@ const ToggleSliderToGrid = ({
   title,
   categories,
   playlistsType,
+  user,
 }: Props) => {
   const [isGrid, setIsGrid] = useState(false);
   const [filterOrder, setFilterOrder] = useState('updatedTime');
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [removingPlaylistId, setRemovingPlaylistId] = useState('');
+  const [filteredPlaylists, setFilteredPlaylists] =
+    useState<Playlist[]>(playlists);
 
   const handleToggle = useCallback(() => {
     setIsGrid((prev) => !prev);
   }, []);
-
-  const iconButtonStyles = useMemo(
-    () => ({
-      color: 'gray.600',
-      gap: '4px',
-      borderRadius: '12px',
-      width: 'max-content',
-      transform: 'translateX(-5px)',
-      padding: '5px',
-    }),
-    [],
-  );
-
-  const titleStyles = useMemo(
-    () => ({
-      fontSize: {
-        xs: '17px',
-        sm: '21px',
-      },
-    }),
-    [],
-  );
-
-  const chevronStyles = useMemo(
-    () => ({
-      display: 'flex',
-      transition: 'transform 0.3s ease',
-      transform: isGrid ? 'rotate(90deg)' : 'rotate(0deg)',
-    }),
-    [isGrid],
-  );
 
   const handleChangeFilrerOrder = (e: SelectChangeEvent<string>) => {
     setFilterOrder(e.target.value);
@@ -91,51 +67,82 @@ const ToggleSliderToGrid = ({
     <SelectFilterArrow openSelect={toggleSelect} open={isOpen} />
   );
 
-  const sortedPlaylists = [...playlists].sort((playlistA, playlistB) => {
-    if (filterOrder === 'updatedTime') {
-      const dateA = new Date(playlistA.createdAt);
-      const dateB = new Date(playlistB.createdAt);
-      return dateB.getTime() - dateA.getTime();
-    }
-
-    if (filterOrder === 'viewCount') {
-      const averageViewsA =
-        playlistA.videos.reduce(
-          (sum, video) => sum + (Number(video.statistics.viewCount) || 0),
-          0,
-        ) / playlistA.videos.length || 0;
-      const averageViewsB =
-        playlistB.videos.reduce(
-          (sum, video) => sum + (Number(video.statistics.viewCount) || 0),
-          0,
-        ) / playlistB.videos.length || 0;
-
-      if (averageViewsB !== averageViewsA) {
-        return averageViewsB - averageViewsA;
+  const sortedPlaylists = [...filteredPlaylists].sort(
+    (playlistA, playlistB) => {
+      if (filterOrder === 'updatedTime') {
+        const dateA = new Date(playlistA.createdAt);
+        const dateB = new Date(playlistB.createdAt);
+        return dateB.getTime() - dateA.getTime();
       }
 
-      const totalViewsA = playlistA.videos.reduce(
-        (sum, video) => sum + (Number(video.statistics.viewCount) || 0),
-        0,
-      );
-      const totalViewsB = playlistB.videos.reduce(
-        (sum, video) => sum + (Number(video.statistics.viewCount) || 0),
-        0,
-      );
+      if (filterOrder === 'viewCount') {
+        const averageViewsA =
+          playlistA.videos.reduce(
+            (sum, video) => sum + (Number(video.statistics.viewCount) || 0),
+            0,
+          ) / playlistA.videos.length || 0;
+        const averageViewsB =
+          playlistB.videos.reduce(
+            (sum, video) => sum + (Number(video.statistics.viewCount) || 0),
+            0,
+          ) / playlistB.videos.length || 0;
 
-      return totalViewsB - totalViewsA;
+        if (averageViewsB !== averageViewsA) {
+          return averageViewsB - averageViewsA;
+        }
+
+        const totalViewsA = playlistA.videos.reduce(
+          (sum, video) => sum + (Number(video.statistics.viewCount) || 0),
+          0,
+        );
+        const totalViewsB = playlistB.videos.reduce(
+          (sum, video) => sum + (Number(video.statistics.viewCount) || 0),
+          0,
+        );
+
+        return totalViewsB - totalViewsA;
+      }
+      return 0;
+    },
+  );
+
+  const newPlaylists = (playlistId: string) => {
+    setFilteredPlaylists((prevState) =>
+      prevState.filter((p) => p.id !== playlistId),
+    );
+  };
+
+  const handleRemove = async (playlistId: string) => {
+    setIsLoading(true);
+    setRemovingPlaylistId(playlistId);
+
+    if (!user) {
+      return;
     }
-    return 0;
-  });
+
+    if (playlistsType === PlaylistsType.Saved) {
+      await removeFromWatchLater(user.id, playlistId)
+        .then(() => newPlaylists(playlistId))
+        .finally(() => setIsLoading(false));
+    } else if (playlistsType === PlaylistsType.ContinueWatching) {
+      await removePlaylistFromCW(user.id, playlistId)
+        .then(() => newPlaylists(playlistId))
+        .finally(() => setIsLoading(false));
+    }
+  };
+
+  if (filteredPlaylists.length === 0) {
+    return null;
+  }
 
   return (
-    <>
+    <Box>
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'baseline',
-          marginBottom: '16px',
+          marginBottom: category ? '16px' : 0,
           width: '100%',
         }}
       >
@@ -146,12 +153,28 @@ const ToggleSliderToGrid = ({
             justifyContent: 'space-between',
           }}
         >
-          <IconButton onClick={handleToggle} sx={iconButtonStyles}>
+          <IconButton
+            onClick={handleToggle}
+            sx={{
+              color: 'gray.600',
+              gap: '4px',
+              borderRadius: '12px',
+              width: 'max-content',
+              transform: 'translateX(-5px)',
+              padding: '5px',
+              mb: category ? '0' : '16px',
+            }}
+          >
             {title && (
               <Typography
                 variant="categoryTitle"
                 color="gray.900"
-                sx={titleStyles}
+                sx={{
+                  fontSize: {
+                    xs: '17px',
+                    sm: '21px',
+                  },
+                }}
               >
                 {title}
               </Typography>
@@ -160,12 +183,23 @@ const ToggleSliderToGrid = ({
               <Typography
                 variant="categoryTitle"
                 color="gray.900"
-                sx={titleStyles}
+                sx={{
+                  fontSize: {
+                    xs: '17px',
+                    sm: '21px',
+                  },
+                }}
               >
                 {category.title}
               </Typography>
             )}
-            <Box sx={chevronStyles}>
+            <Box
+              sx={{
+                display: 'flex',
+                transition: 'transform 0.3s ease',
+                transform: isGrid ? 'rotate(90deg)' : 'rotate(0deg)',
+              }}
+            >
               <ChevronRightIcon />
             </Box>
           </IconButton>
@@ -292,66 +326,89 @@ const ToggleSliderToGrid = ({
           )}
         </Box>
         {category && (
-          <Typography variant="secondaryText" color="gray.600">
+          <Typography
+            variant="secondaryText"
+            color="gray.600"
+            sx={{
+              mb: '16px',
+            }}
+          >
             {category.description}
           </Typography>
         )}
       </Box>
 
       {!!playlists.length && (
-        <AnimatePresence mode="wait">
-          {!isGrid ? (
-            <Box
-              sx={{
-                mr: {
-                  xs: '-16px',
-                  lg: 0,
-                },
-              }}
-            >
+        <Box
+          sx={{
+            borderBottom: '1px solid',
+            borderColor: 'gray.200',
+            paddingBottom: {
+              xs: '16px',
+              sm: '30px',
+            },
+          }}
+        >
+          <AnimatePresence mode="wait">
+            {!isGrid ? (
+              <Box
+                sx={{
+                  mr: {
+                    xs: '-16px',
+                    lg: 0,
+                  },
+                }}
+              >
+                <motion.div
+                  key="slider"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <CartoonSlider
+                    playlistsType={playlistsType}
+                    categories={categories}
+                    playlists={filteredPlaylists}
+                    removeFunction={handleRemove}
+                    isLoading={isLoading}
+                    removingPlaylistId={removingPlaylistId}
+                    continueWatchingList={CWlinks ?? []}
+                  />
+                </motion.div>
+              </Box>
+            ) : (
               <motion.div
-                key="slider"
+                key="grid"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.3 }}
               >
-                <CartoonSlider
-                  playlistsType={playlistsType}
+                <GridForList
                   categories={categories}
-                  playlists={playlists}
+                  playlistsType={playlistsType}
+                  removeFunction={handleRemove}
+                  isLoading={isLoading}
+                  removingPlaylistId={removingPlaylistId}
+                  playlists={
+                    playlistsType === PlaylistsType.ByCategory
+                      ? sortedPlaylists
+                      : filteredPlaylists
+                  }
                   continueWatchingList={CWlinks ?? []}
                 />
               </motion.div>
-            </Box>
-          ) : (
-            <motion.div
-              key="grid"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.3 }}
-            >
-              <GridForList
-                categories={categories}
-                playlistsType={playlistsType}
-                playlists={
-                  playlistsType === PlaylistsType.ByCategory
-                    ? sortedPlaylists
-                    : playlists
-                }
-                continueWatchingList={CWlinks ?? []}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+            )}
+          </AnimatePresence>
+        </Box>
       )}
       {!playlists.length && (
         <Typography variant="h3">
           За категорією {category?.title} нічого не знайдено
         </Typography>
       )}
-    </>
+    </Box>
   );
 };
 

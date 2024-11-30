@@ -1,13 +1,15 @@
 'use client';
 
-import { removePlaylistFromCW } from '@/lib/playlists/continueWatching';
+// import { removePlaylistFromCW } from '@/lib/playlists/continueWatching';
 import { isPlaylistSaved } from '@/lib/playlists/isSavedVideo';
 import { addToWatchLater } from '@/lib/playlists/savedVideos';
 import useAuthStore from '@/store/useAuthStore';
 import { PlaylistsType } from '@/types';
 import { Playlist } from '@/types/VideoData';
-import { Menu, MenuItem, Typography } from '@mui/material';
-import { usePathname, useRouter } from 'next/navigation';
+import { CircularProgress, Menu, MenuItem, Typography } from '@mui/material';
+import {
+  usePathname, // useRouter
+} from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 interface Props {
@@ -17,7 +19,7 @@ interface Props {
   playlist: Playlist;
   selectedVideoId: string;
   showAlert: (alertName: string) => void;
-  removeFromSaved?: (playlistId: string) => Promise<void>;
+  removeFunction?: (playlistId: string) => Promise<void>;
   slideClick: (
     playlistId: string,
     videoId: string,
@@ -33,23 +35,25 @@ const SliderMenu = ({
   playlist,
   selectedVideoId,
   showAlert,
-  removeFromSaved,
+  removeFunction,
   slideClick,
   playlistsType,
 }: Props) => {
-  const router = useRouter();
   const pathname = usePathname();
   const [isSaved, setIsSaved] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuthStore();
 
   const handleAddToSaved = async () => {
     if (playlist) {
       if (user) {
-        await addToWatchLater(user.id, playlist);
-        showAlert('savedAlert');
-
-        setIsSaved(true);
+        setIsLoading(true);
+        await addToWatchLater(user.id, playlist)
+          .then(() => {
+            showAlert('savedAlert');
+            setIsSaved(true);
+          })
+          .finally(() => setIsLoading(false));
       }
     }
   };
@@ -66,20 +70,9 @@ const SliderMenu = ({
     );
   };
 
-  const handleRemoveVideoFromContinueWatching = async () => {
-    if (user) {
-      await removePlaylistFromCW(user.id, playlist.id);
-      showAlert('removedAlert');
-
-      router.refresh();
-      handleClose();
-    }
-  };
-
-  const handleRemoveVideoFromSaved = async () => {
-    if (removeFromSaved) {
-      await removeFromSaved(playlist.id);
-      showAlert('removedAlert');
+  const handleRemove = async () => {
+    if (removeFunction) {
+      await removeFunction(playlist.id).then(() => showAlert('removedAlert'));
       handleClose();
     }
   };
@@ -143,18 +136,28 @@ const SliderMenu = ({
         <Typography variant="secondaryText">Поділитися</Typography>
       </MenuItem>
       {user && (
-        <MenuItem onClick={handleAddToSaved} disabled={isSaved}>
+        <MenuItem
+          onClick={handleAddToSaved}
+          disabled={isSaved}
+          sx={{
+            position: 'relative',
+          }}
+        >
           <Typography variant="secondaryText">Зберегти</Typography>
+          {isLoading && (
+            <CircularProgress
+              size={'30px'}
+              sx={{
+                position: 'absolute',
+                inset: 0,
+                mx: 'auto',
+              }}
+            />
+          )}
         </MenuItem>
       )}
       {showRemoveButton && user && (
-        <MenuItem
-          onClick={
-            playlistsType === PlaylistsType.Saved
-              ? handleRemoveVideoFromSaved
-              : handleRemoveVideoFromContinueWatching
-          }
-        >
+        <MenuItem onClick={handleRemove}>
           <Typography variant="secondaryText" color="error">
             Видалити
           </Typography>

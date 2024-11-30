@@ -42,30 +42,34 @@ const VideoPage = ({
     fetchPlaylistsIfEmpty,
     setPlaylistsByCategory,
   } = useVideoStore();
+  const { user } = useAuthStore();
+
   const [playlist, setPlaylist] = useState<Playlist>();
   const [currentCategory, setCurrentCategory] = useState<VideoCategory | null>(
     null,
   );
   const [open, setOpen] = useState(false);
   const [currentVideo, setCurrentVideo] = useState<VideoData>();
-  const { user } = useAuthStore();
   const [isSaved, setIsSaved] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const theme = useTheme();
   const isMobileScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const [videoHeight, setVideoHeight] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const initialized = useRef(false);
+  const videoRef = useRef<HTMLDivElement>(null);
   const nextVideo = useMemo(
     () => getNextVideoInPlaylist(playlist, currentVideo),
     [playlist, currentVideo],
   );
-  const initialized = useRef(false);
-  const videoRef = useRef<HTMLDivElement>(null);
-  const [videoHeight, setVideoHeight] = useState<number | null>(null);
-
   const handleAddToSaved = useCallback(async () => {
     if (playlist && user) {
-      await addToWatchLater(user.id, playlist);
-      setIsSaved(true);
+      setIsLoading(true);
+      await addToWatchLater(user.id, playlist)
+        .then(() => setIsSaved(true))
+        .finally(() => setIsLoading(false));
     }
   }, [playlist, user]);
 
@@ -172,6 +176,10 @@ const VideoPage = ({
     checkIfSaved();
   }, [user, playlistId]);
 
+  const filteredPlaylistsWithoutCurrent = filteredPlaylists.filter(
+    (p) => p.id !== playlistId,
+  );
+
   return (
     <Box
       sx={{
@@ -205,6 +213,7 @@ const VideoPage = ({
             }}
           >
             <VideoBlock
+              isLoading={isLoading}
               playlistTitle={playlistTitle}
               currentVideo={currentVideo}
               onVideoEnd={playNextVideo}
@@ -234,7 +243,7 @@ const VideoPage = ({
           </Box>
           {playlist ? (
             <VerticalSlider
-              playlists={filteredPlaylists}
+              playlists={filteredPlaylistsWithoutCurrent}
               categories={categories}
               slideClick={handleSlideClick}
             />
@@ -274,7 +283,7 @@ const VideoPage = ({
             </IconButton>
 
             <CartoonSlider
-              playlists={filteredPlaylists}
+              playlists={filteredPlaylistsWithoutCurrent}
               categories={categories}
               slideClick={handleSlideClick}
               playlistsType={PlaylistsType.ByCategory}

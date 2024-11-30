@@ -44,6 +44,7 @@ const NotAuthenticatedCartoons = ({ playlists, categories }: Props) => {
         }}
       >
         <ToggleSliderToGrid
+          user={null}
           title="Маленьким дітям"
           playlists={playlistsForLittleKids}
           categories={categories}
@@ -51,20 +52,21 @@ const NotAuthenticatedCartoons = ({ playlists, categories }: Props) => {
         />
       </Box>
       {!!playlistsForBiggerKids.length && (
-        <Box
-          sx={{
-            borderBottom: '1px solid',
-            borderColor: 'gray.200',
-            paddingBottom: '30px',
-          }}
-        >
-          <ToggleSliderToGrid
-            title="Дітям старшого віку"
-            playlists={playlistsForBiggerKids}
-            categories={categories}
-            playlistsType={PlaylistsType.ByCategory}
-          />
-        </Box>
+        // <Box
+        //   sx={{
+        //     borderBottom: '1px solid',
+        //     borderColor: 'gray.200',
+        //     paddingBottom: '30px',
+        //   }}
+        // >
+        <ToggleSliderToGrid
+          user={null}
+          title="Дітям старшого віку"
+          playlists={playlistsForBiggerKids}
+          categories={categories}
+          playlistsType={PlaylistsType.ByCategory}
+        />
+        // </Box>
       )}
     </Box>
   );
