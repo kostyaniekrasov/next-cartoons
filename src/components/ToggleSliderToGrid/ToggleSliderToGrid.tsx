@@ -18,7 +18,7 @@ import {
   selectClasses,
 } from '@mui/material';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface Props {
   title?: string;
@@ -105,6 +105,10 @@ const ToggleSliderToGrid = ({
       return 0;
     },
   );
+
+  useEffect(() => {
+    setFilteredPlaylists(playlists);
+  }, [playlists]);
 
   const newPlaylists = (playlistId: string) => {
     setFilteredPlaylists((prevState) =>

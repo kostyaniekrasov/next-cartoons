@@ -45,7 +45,6 @@ interface InputsData {
 }
 
 const TabProfile = ({ value, handleClose, index }: Props) => {
-  // const [isLoading, setIsLoading] = useState(false);
   const [isShowAvatars, setIsShowAvatars] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -96,7 +95,6 @@ const TabProfile = ({ value, handleClose, index }: Props) => {
             console.error(err);
           }
         });
-      // .finally(() => setIsLoading(false));
     } else {
       await updateUserProfile(data)
         .then(() => {
@@ -111,7 +109,6 @@ const TabProfile = ({ value, handleClose, index }: Props) => {
             console.error(err);
           }
         });
-      // .finally(() => setIsLoading(false));
     }
   };
 

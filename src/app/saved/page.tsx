@@ -1,15 +1,8 @@
 'use client';
 
 import { ChevronLeftIcon } from '@/assets/icons';
-import {
-  // GridForList,
-  SignInButton,
-  SliderSkeleton,
-  ToggleSliderToGrid,
-} from '@/components';
-import {
-  getUserLists, // removeFromWatchLater,
-} from '@/lib/playlists/savedVideos';
+import { SignInButton, SliderSkeleton, ToggleSliderToGrid } from '@/components';
+import { getUserLists } from '@/lib/playlists/savedVideos';
 import useAuthStore from '@/store/useAuthStore';
 import { useVideoStore } from '@/store/useVideoStore';
 import { PlaylistsType } from '@/types';
@@ -31,15 +24,6 @@ const SavedVideos = () => {
   const handleShowSignIn = () => {
     router.push(`${pathname}?signin=true`);
   };
-
-  // const handleRemoveFromSaved = async (playlistId: string) => {
-  //   if (user) {
-  //     await removeFromWatchLater(user.id, playlistId);
-  //     setWatchLaterPlaylists((prevPlaylists) =>
-  //       prevPlaylists.filter((list) => list.id !== playlistId),
-  //     );
-  //   }
-  // };
 
   useEffect(() => {
     const fetchWatchLaterPlaylists = async () => {
