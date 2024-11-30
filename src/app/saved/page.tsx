@@ -110,24 +110,13 @@ const SavedVideos = () => {
     );
   } else if (watchLaterPlaylists.length > 0) {
     content = (
-      <>
-        {/* <Typography variant="h1" color="gray.900" marginBottom={'32px'}>
-          Збережені
-        </Typography> */}
-        <ToggleSliderToGrid
-          title="Збережені"
-          user={user}
-          playlists={watchLaterPlaylists}
-          playlistsType={PlaylistsType.Saved}
-          categories={categories}
-        />
-        {/* <GridForList
-          playlists={watchLaterPlaylists}
-          // removeFromSaved={handleRemoveFromSaved}
-          playlistsType={PlaylistsType.Saved}
-          categories={categories}
-        /> */}
-      </>
+      <ToggleSliderToGrid
+        title="Збережені"
+        user={user}
+        playlists={watchLaterPlaylists}
+        playlistsType={PlaylistsType.Saved}
+        categories={categories}
+      />
     );
   } else if (!watchLaterPlaylists.length) {
     content = (
