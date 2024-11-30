@@ -26,9 +26,9 @@ interface Props {
   playlists: Playlist[];
   continueWatchingList?: ContinueWatching[];
   playlistsType: PlaylistsType;
-  removeFunction: (playlistId: string) => Promise<void>;
-  isLoading: boolean;
-  removingPlaylistId: string;
+  removeFunction?: (playlistId: string) => Promise<void>;
+  isLoading?: boolean;
+  removingPlaylistId?: string;
 }
 
 const GridForList = ({

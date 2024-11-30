@@ -132,7 +132,11 @@ const ToggleSliderToGrid = ({
   };
 
   if (filteredPlaylists.length === 0) {
-    return null;
+    return (
+      <Typography variant="h3">
+        {`На разі категорія "${category?.title}" не містить відео`}
+      </Typography>
+    );
   }
 
   return (
@@ -402,11 +406,6 @@ const ToggleSliderToGrid = ({
             )}
           </AnimatePresence>
         </Box>
-      )}
-      {!playlists.length && (
-        <Typography variant="h3">
-          За категорією {category?.title} нічого не знайдено
-        </Typography>
       )}
     </Box>
   );

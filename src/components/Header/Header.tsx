@@ -41,6 +41,7 @@ import {
   Zoom,
 } from '@mui/material';
 import useEmblaCarousel from 'embla-carousel-react';
+import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, {
   ChangeEvent,
@@ -112,10 +113,10 @@ const Header = ({ categories }: Props) => {
     (event: React.MouseEvent<HTMLElement>, newFilter: string) => {
       if (newFilter !== null) {
         setSelectedFilter(newFilter);
-        router.push(`/${newFilter}`);
+        // router.push(`/${newFilter}`);
       }
     },
-    [router],
+    [],
   );
 
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
@@ -490,24 +491,30 @@ const Header = ({ categories }: Props) => {
                 }}
               >
                 {categories?.map((category) => (
-                  <CustomToggleButton
-                    value={category.name}
+                  <Link
+                    href={`/${category.name}`}
                     key={category.name.toUpperCase()}
-                    sx={{ flex: '0 0 auto', width: 'auto' }}
+                    passHref
                   >
-                    <Typography
-                      variant="mainText"
-                      sx={{
-                        width: 'max-content',
-                        fontSize: {
-                          xs: '12px',
-                          sm: '17px',
-                        },
-                      }}
+                    <CustomToggleButton
+                      value={category.name}
+                      key={category.name.toUpperCase()}
+                      sx={{ flex: '0 0 auto', width: 'auto' }}
                     >
-                      {category.title}
-                    </Typography>
-                  </CustomToggleButton>
+                      <Typography
+                        variant="mainText"
+                        sx={{
+                          width: 'max-content',
+                          fontSize: {
+                            xs: '12px',
+                            sm: '17px',
+                          },
+                        }}
+                      >
+                        {category.title}
+                      </Typography>
+                    </CustomToggleButton>
+                  </Link>
                 ))}
               </Box>
             </Box>

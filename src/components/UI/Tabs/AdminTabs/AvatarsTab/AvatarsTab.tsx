@@ -6,8 +6,17 @@ import { fetchAvatars, removeAvatar } from '@/lib';
 import addAvatarToCollection from '@/lib/database/addAvatarToCollection';
 import checkIfAvatarsUrlExists from '@/lib/database/checkIfAvatarsUrlExists';
 import { AvatarData } from '@/types';
-import { Box, Button, Collapse, List, ListItem, Tabs } from '@mui/material';
+import {
+  Box,
+  Button,
+  Collapse,
+  List,
+  ListItem,
+  Tabs,
+  Typography,
+} from '@mui/material';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -112,6 +121,7 @@ const AvatarsTab = () => {
           {...a11yProps(1)}
         />
       </Tabs>
+
       <TabPanel value={value} index={0}>
         <Box
           component={'form'}
@@ -165,8 +175,51 @@ const AvatarsTab = () => {
           >
             Надіслати
           </Button>
+
+          <Box display={'flex'} flexDirection={'column'}>
+            <Typography>
+              Зображення можна додати тільки з таких доменів:
+            </Typography>
+
+            <Link href={'https://cdn1.iconfinder.com'} target="_blank">
+              cdn1.iconfinder.com
+            </Link>
+
+            <Link href={'https://i.pinimg.com'} target="_blank">
+              i.pinimg.com
+            </Link>
+
+            <Link href={'https://images.ctfassets.net'} target="_blank">
+              images.ctfassets.net
+            </Link>
+
+            <Link href={'https://cdn.icon-icons.com'} target="_blank">
+              cdn.icon-icons.com
+            </Link>
+
+            <Link href={'https://img.icons8.com'} target="_blank">
+              img.icons8.com
+            </Link>
+
+            <Link href={'https://cdn.worldvectorlogo.com'} target="_blank">
+              cdn.worldvectorlogo.com
+            </Link>
+
+            <Link href={'https://i.imgur.com'} target="_blank">
+              i.imgur.com
+            </Link>
+
+            <Link href={'https://brovary.net.ua'} target="_blank">
+              brovary.net.ua
+            </Link>
+
+            <Link href={'https://media.istockphoto.com'} target="_blank">
+              media.istockphoto.com
+            </Link>
+          </Box>
         </Box>
       </TabPanel>
+
       <TabPanel value={value} index={1}>
         <List>
           {!!avatars.length &&

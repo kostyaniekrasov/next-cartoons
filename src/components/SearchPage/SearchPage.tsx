@@ -98,7 +98,7 @@ const SearchPage = () => {
           />
         ) : (
           <Typography variant="h5" align="center">
-            Нічого не знайдено за запитом {query}
+            {`Нічого не знайдено за запитом "${query}"`}
           </Typography>
         )}
       </Container>

@@ -75,9 +75,9 @@ const VideoPage = ({
 
   const handleSlideClick = useCallback(
     (playlistId: string, videoId: string) => {
-      router.push(`/${category}/video-page/${playlistId}/${videoId}`);
+      return `/${category}/video-page/${playlistId}/${videoId}`;
     },
-    [router, category],
+    [category],
   );
 
   const handleChangeVideo = useCallback(

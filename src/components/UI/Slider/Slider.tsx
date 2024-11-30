@@ -151,6 +151,11 @@ const CartoonSlider = React.memo(
                   return (
                     <Box
                       key={playlist.id}
+                      onClick={() =>
+                        slideClick
+                          ? slideClick(playlist.id, selectedVideoId)
+                          : handleSlideClick(playlist.id, selectedVideoId)
+                      }
                       sx={{ flex: '0 0 auto', width: 'auto' }}
                     >
                       <Box
@@ -189,11 +194,6 @@ const CartoonSlider = React.memo(
                             priority
                             loading="eager"
                             sizes="100%"
-                            onClick={() =>
-                              slideClick
-                                ? slideClick(playlist.id, selectedVideoId)
-                                : handleSlideClick(playlist.id, selectedVideoId)
-                            }
                             style={{
                               borderRadius: '12px',
                               objectPosition: 'center',
@@ -234,11 +234,6 @@ const CartoonSlider = React.memo(
                           }
                         >
                           <Box
-                            onClick={() =>
-                              slideClick
-                                ? slideClick(playlist.id, selectedVideoId)
-                                : handleSlideClick(playlist.id, selectedVideoId)
-                            }
                             sx={{
                               position: 'absolute',
                               padding: '16px',

@@ -58,16 +58,6 @@ const CategoryPage = async ({ params }: { params: { category: string } }) => {
           }}
         >
           <Collapse in={isAuthenticated} unmountOnExit>
-            {/* <Box
-              sx={{
-                borderBottom: '1px solid',
-                borderColor: 'gray.200',
-                paddingBottom: {
-                  xs: '16px',
-                  sm: '30px',
-                },
-              }}
-            > */}
             <ToggleSliderToGrid
               user={user}
               categories={categories}
@@ -75,17 +65,9 @@ const CategoryPage = async ({ params }: { params: { category: string } }) => {
               playlists={videosByAgeCategory}
               playlistsType={PlaylistsType.ByCategory}
             />
-            {/* </Box> */}
           </Collapse>
 
           {isAuthenticated && continueWatchingPlaylists.length > 0 && (
-            // <Box
-            //   sx={{
-            //     borderBottom: '1px solid',
-            //     borderColor: 'gray.200',
-            //     paddingBottom: '30px',
-            //   }}
-            // >
             <ToggleSliderToGrid
               user={user}
               categories={categories}
@@ -94,7 +76,6 @@ const CategoryPage = async ({ params }: { params: { category: string } }) => {
               CWlinks={continueWatchingLinks}
               playlistsType={PlaylistsType.ContinueWatching}
             />
-            // </Box>
           )}
         </Box>
 
