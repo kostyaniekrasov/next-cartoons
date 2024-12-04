@@ -17,7 +17,7 @@ import useAuthStore from '@/store/useAuthStore';
 import { useVideoStore } from '@/store/useVideoStore';
 import { PlaylistsType, VideoCategory } from '@/types';
 import { Playlist, VideoData } from '@/types/VideoData';
-import { getNextVideoInPlaylist } from '@/utils';
+import { filterPlaylistsByAge, getNextVideoInPlaylist } from '@/utils';
 import {
   Box,
   Container,
@@ -75,9 +75,9 @@ const VideoPage = ({
 
   const handleSlideClick = useCallback(
     (playlistId: string, videoId: string) => {
-      return `/${category}/video-page/${playlistId}/${videoId}`;
+      router.push(`/${category}/video-page/${playlistId}/${videoId}`);
     },
-    [category],
+    [category, router],
   );
 
   const handleChangeVideo = useCallback(
@@ -176,9 +176,10 @@ const VideoPage = ({
     checkIfSaved();
   }, [user, playlistId]);
 
-  const filteredPlaylistsWithoutCurrent = filteredPlaylists.filter(
-    (p) => p.id !== playlistId,
-  );
+  const filteredPlaylistsWithoutCurrent = filterPlaylistsByAge(
+    filteredPlaylists,
+    user?.age,
+  ).filter((p) => p.id !== playlistId);
 
   return (
     <Box

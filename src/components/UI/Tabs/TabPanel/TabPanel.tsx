@@ -18,7 +18,6 @@ function TabPanel(props: Readonly<TabPanelProps>) {
       {...other}
       sx={{
         width: '100%',
-        // maxWidth: '90%',
       }}
     >
       {value === index && children}

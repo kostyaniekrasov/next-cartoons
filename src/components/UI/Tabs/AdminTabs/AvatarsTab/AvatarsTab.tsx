@@ -56,11 +56,12 @@ const AvatarsTab = () => {
       }
 
       const docRef = await addAvatarToCollection(data.imgLink);
-      console.log(`Документ успішно додано з ID: ${docRef.id}`);
+      alert(`Документ успішно додано з ID: ${docRef.id}`);
 
       reset();
     } catch (error) {
-      console.error('Помилка при доданні документа: ', error);
+      alert(`Помилка при доданні документа: ${error}`);
+      throw new Error();
     }
   };
 

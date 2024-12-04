@@ -6,19 +6,8 @@ import { getClList } from '@/lib/playlists/continueWatching';
 import { fetchPlaylistsByCategory } from '@/lib/playlists/getSortedPlaylists';
 import { PlaylistsType, User } from '@/types';
 import { Playlist } from '@/types/VideoData';
+import { filterPlaylistsByAge } from '@/utils';
 import { Box, Collapse, Container } from '@mui/material';
-
-const filterVideosByAge = (playlists: Playlist[], userAge?: number) =>
-  playlists
-    .map((playlist) => ({
-      ...playlist,
-      videos: playlist.videos.filter((video) =>
-        userAge && userAge >= 8
-          ? video.recommendedAge >= 8
-          : video.recommendedAge <= 5,
-      ),
-    }))
-    .filter((playlist) => playlist.videos.length > 0);
 
 const CategoryPage = async ({ params }: { params: { category: string } }) => {
   const { category } = params;
@@ -30,7 +19,7 @@ const CategoryPage = async ({ params }: { params: { category: string } }) => {
   const currentCategory = categories?.find((c) => c.name === category);
 
   const playlists: Playlist[] = await fetchPlaylistsByCategory(category);
-  const videosByAgeCategory = filterVideosByAge(playlists, user?.age);
+  const videosByAgeCategory = filterPlaylistsByAge(playlists, user?.age);
 
   const continueWatchingLinks =
     isAuthenticated && user.id ? await getClList(user.id) : [];

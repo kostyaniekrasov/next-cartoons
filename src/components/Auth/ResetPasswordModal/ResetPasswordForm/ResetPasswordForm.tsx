@@ -22,7 +22,11 @@ interface ResetPasswordData {
   email: string;
 }
 
-function ResetPasswordForm() {
+interface Props {
+  showBackToSignIn?: boolean;
+}
+
+function ResetPasswordForm({ showBackToSignIn = true }: Props) {
   const {
     register,
     setValue,
@@ -166,17 +170,19 @@ function ResetPasswordForm() {
         </ModalButton>
       </Box>
 
-      <Typography
-        variant="footnote"
-        color="accentPink"
-        onClick={handleBackToSingIn}
-        textAlign={'center'}
-        sx={{
-          cursor: 'pointer',
-        }}
-      >
-        Повернутися до авторизації
-      </Typography>
+      {showBackToSignIn && (
+        <Typography
+          variant="footnote"
+          color="accentPink"
+          onClick={handleBackToSingIn}
+          textAlign={'center'}
+          sx={{
+            cursor: 'pointer',
+          }}
+        >
+          Повернутися до авторизації
+        </Typography>
+      )}
 
       <Collapse
         in={alert === 'success'}

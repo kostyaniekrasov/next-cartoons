@@ -94,16 +94,6 @@ const CartoonSlider = ({
     );
   }, []);
 
-  // const memoizedPlaylists = useMemo(
-  //   () =>
-  //     playlists.filter(
-  //       (playlist) => playlist.videos && playlist.videos.length > 0,
-  //     ),
-  //   [playlists],
-  // );
-
-  // console.log('slider playlists', playlists);
-
   return (
     <>
       <Fade

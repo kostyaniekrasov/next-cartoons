@@ -1,24 +1,16 @@
 'use client';
 
 import { CloseIcon } from '@/assets/icons';
-import { ChangePasswordModal, SuccessAlert } from '@/components/UI';
-import { removeAllVideosFromCW } from '@/lib/playlists/continueWatching';
-import { removeAllVideosFromWatchLater } from '@/lib/playlists/savedVideos';
-import useAuthStore from '@/store/useAuthStore';
-import { UpdateUserData } from '@/types';
-import {
-  Box,
-  Divider,
-  IconButton,
-  Snackbar,
-  Switch,
-  Typography,
-} from '@mui/material';
-import { useRouter } from 'next/navigation';
+import { ResetPasswordForm } from '@/components/Auth/ResetPasswordModal/ResetPasswordForm';
+import { SuccessAlert } from '@/components/UI';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import { Box, Fade, IconButton, Snackbar, Typography } from '@mui/material';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 
-import { TabModal } from '../TabModal';
+import { ChangePasswordScreen } from '../ChangePasswordScreen';
 import TabPanel from '../TabPanel/TabPanel';
+import { AllSettings } from './AllSettings';
 
 interface Props {
   value: number;
@@ -27,40 +19,40 @@ interface Props {
 }
 
 const TabSettings = ({ value, handleClose, index }: Props) => {
-  const { user, updateUserProfile } = useAuthStore();
-  const [isOpenModal, setIsOpenModal] = useState('');
   const [successChangeAlert, setSuccessChangeAlert] = useState(false);
-  const router = useRouter();
-
-  const handleChangeSearchInput = async () => {
-    if (!user) return;
-
-    try {
-      const updatedData: UpdateUserData = { showSearch: !user.showSearch };
-      await updateUserProfile(updatedData);
-    } catch (error) {
-      console.error('Failed to update search visibility:', error);
-    }
-  };
-
-  const handleRemoveCW = async () => {
-    if (user) {
-      await removeAllVideosFromCW(user.id);
-      router.refresh();
-    }
-    setIsOpenModal('');
-  };
-
-  const handleRemoveWatchLater = async () => {
-    if (user) {
-      await removeAllVideosFromWatchLater(user.id);
-      router.refresh();
-    }
-    setIsOpenModal('');
-  };
+  const [currentScreen, setCurrentScreen] = useState('all');
 
   const handleShowAlert = () => {
     setSuccessChangeAlert(true);
+  };
+
+  const handleBackScreen = () => {
+    if (currentScreen === 'changePassword') {
+      setCurrentScreen('all');
+    }
+
+    if (currentScreen === 'resetPassword') {
+      setCurrentScreen('changePassword');
+    }
+  };
+
+  const handleChangeScreen = (name: string) => {
+    setCurrentScreen(name);
+  };
+  const getTitle = () => {
+    switch (currentScreen) {
+      case 'all':
+        return 'Налаштування';
+
+      case 'changePassword':
+        return 'Зміна паролю';
+
+      case 'resetPassword':
+        return 'Відновлення паролю';
+
+      default:
+        return 'Налаштування';
+    }
   };
 
   return (
@@ -82,6 +74,16 @@ const TabSettings = ({ value, handleClose, index }: Props) => {
             justifyContent: 'space-between',
           }}
         >
+          <Fade in={currentScreen !== 'all'}>
+            <IconButton onClick={handleBackScreen}>
+              <ArrowBackIosNewIcon
+                fontSize="small"
+                sx={{
+                  color: 'gray.900',
+                }}
+              />
+            </IconButton>
+          </Fade>
           <Typography
             variant="h3Semibold"
             sx={{
@@ -90,7 +92,7 @@ const TabSettings = ({ value, handleClose, index }: Props) => {
               marginRight: '-24px',
             }}
           >
-            Налаштування
+            {getTitle()}
           </Typography>
           <IconButton
             onClick={handleClose}
@@ -102,236 +104,49 @@ const TabSettings = ({ value, handleClose, index }: Props) => {
           </IconButton>
         </Box>
 
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '16px',
-          }}
-        >
-          <Typography variant="mainTextMedium">Відображення пошуку</Typography>
-
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '4px',
-              }}
+        {/* <Fade timeout={200} in={currentScreen === 'all'} unmountOnExit> */}
+        <AnimatePresence mode="wait">
+          {currentScreen === 'all' && (
+            <motion.div
+              key="AllSettings"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
             >
-              <Typography variant="secondaryTextSemibold" color="accentPink">
-                Пошук
-              </Typography>
-              <Typography variant="caption" color="gray.700">
-                Вимкнення пошуку сховає поле пошуку на сторінці
-              </Typography>
-            </Box>
-            <Switch
-              checked={user?.showSearch}
-              onChange={handleChangeSearchInput}
-              sx={{
-                width: 56,
-                height: 32,
-                padding: 0,
-                '& .MuiSwitch-switchBase': {
-                  padding: 1,
-                  top: '50%',
-                  transform: 'translate(-5px,-50%)',
-
-                  '&.Mui-checked': {
-                    transform: 'translate(18px, -50%)',
-                    color: 'white',
-                    '& + .MuiSwitch-track': {
-                      backgroundColor: 'accentPink.main',
-                      opacity: 1,
-                      border: 0,
-                    },
-                  },
-
-                  '&:hover': {
-                    backgroundColor: 'transparent',
-                  },
-                },
-                '& .MuiSwitch-thumb': {
-                  width: 28,
-                  height: 28,
-                  borderRadius: '50%',
-                },
-                '& .MuiSwitch-track': {
-                  borderRadius: 16,
-                  backgroundColor: 'gray.200',
-                  opacity: 1,
-                },
-              }}
-            />
-          </Box>
-        </Box>
-
-        <Divider
-          sx={{
-            backgroundColor: 'gray.100',
-          }}
-        />
-
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '16px',
-          }}
-        >
-          <Typography variant="mainTextMedium">Управління списками</Typography>
-
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '4px',
-            }}
-          >
-            <Typography
-              variant="secondaryTextSemibold"
-              color="accentPink"
-              onClick={() => setIsOpenModal('WL')}
-              sx={{
-                cursor: 'pointer',
-              }}
-            >
-              {`Очистити збережені відео`}
-            </Typography>
-            <Typography variant="caption" color="gray.700">
-              {`Видалить всі відео зі "Збережені"`}
-            </Typography>
-            <TabModal
-              title="Видалити список?"
-              open={isOpenModal === 'WL'}
-              closeModal={() => setIsOpenModal('')}
-              someFunction={handleRemoveWatchLater}
-            />
-          </Box>
-
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '4px',
-            }}
-          >
-            <Typography
-              variant="secondaryTextSemibold"
-              color="accentPink"
-              onClick={() => setIsOpenModal('CW')}
-              sx={{
-                cursor: 'pointer',
-              }}
-            >
-              {`Очистити "Продовжити перегляд"`}
-            </Typography>
-            <Typography variant="caption" color="gray.700">
-              {`Видалить всі відео з "Продовжити перегляд"`}
-            </Typography>
-            <TabModal
-              title="Видалити список?"
-              open={isOpenModal === 'CW'}
-              closeModal={() => setIsOpenModal('')}
-              someFunction={handleRemoveCW}
-            />
-          </Box>
-        </Box>
-
-        {/* 
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '16px',
-          }}
-        >
-          <Typography variant="mainTextMedium">
-            Зовнішній вигляд (Інтерфейс)
-          </Typography>
-
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '4px',
-              }}
-            >
-              <Typography variant="secondaryTextSemibold" color="accentPink">
-                Темний/Світлий режим
-              </Typography>
-              <Typography variant="caption" color="gray.700">
-                Перемикач між темним і світлим дизайном.
-              </Typography>
-            </Box>
-            <ThemeSwitcher />
-          </Box>
-        </Box> */}
-
-        <Divider
-          sx={{
-            backgroundColor: 'gray.100',
-          }}
-        />
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '16px',
-          }}
-        >
-          <Typography variant="mainTextMedium">Безпека</Typography>
-
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '4px',
-              }}
-            >
-              <Typography
-                variant="secondaryTextSemibold"
-                color="accentPink"
-                onClick={() => setIsOpenModal('changePassword')}
-                sx={{
-                  cursor: 'pointer',
-                }}
-              >
-                Змінити пароль
-              </Typography>
-              <Typography variant="caption" color="gray.700">
-                Змінити поточний пароль на новий
-              </Typography>
-
-              <ChangePasswordModal
-                open={isOpenModal === 'changePassword'}
-                closeModal={() => setIsOpenModal('')}
-                showAlert={handleShowAlert}
+              <AllSettings
+                openChangePassword={() => setCurrentScreen('changePassword')}
               />
-            </Box>
-          </Box>
-        </Box>
+            </motion.div>
+          )}
+
+          {currentScreen === 'changePassword' && (
+            <motion.div
+              key="changePassword"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ChangePasswordScreen
+                showAlert={handleShowAlert}
+                handleChangeScreen={handleChangeScreen}
+              />
+            </motion.div>
+          )}
+
+          {currentScreen === 'resetPassword' && (
+            <motion.div
+              key="resetPassword"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ResetPasswordForm showBackToSignIn={false} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </Box>
 
       <Snackbar

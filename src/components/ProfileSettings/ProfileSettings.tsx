@@ -65,7 +65,10 @@ const ProfileSettings = ({ open }: Readonly<Props>) => {
           component="div"
           sx={{
             display: 'flex',
-            width: '660px',
+            width: {
+              sm: '660px',
+              xl: '760px',
+            },
             padding: '24px',
             border: `1px solid `,
             borderColor: 'gray.200',

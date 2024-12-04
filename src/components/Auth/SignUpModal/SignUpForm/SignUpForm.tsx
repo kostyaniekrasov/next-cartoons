@@ -242,6 +242,8 @@ function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
                 noNonPrinting: (value) =>
                   /^[\x20-\x7E]+$/.test(value) ||
                   'Недруковані символи заборонені',
+                noSpaces: (value) =>
+                  !/\s/.test(value) || 'Пробіли не дозволені у паролі',
               },
             })}
             clearPassword={() => setValue('password', '')}

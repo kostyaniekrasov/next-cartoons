@@ -24,9 +24,6 @@ const NotAuthenticatedCartoons = ({ playlists, categories }: Props) => {
     }))
     .filter((playlist) => playlist.videos.length > 0);
 
-  console.clear();
-  console.log('playlistsForBiggerKids ', playlistsForBiggerKids);
-  console.log('playlistsForLittleKids ', playlistsForLittleKids);
   return (
     <Box
       sx={{
