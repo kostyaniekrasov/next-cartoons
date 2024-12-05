@@ -3,15 +3,14 @@
 import { CloseIcon } from '@/assets/icons';
 import { SignUpForm } from '@/components';
 import { Box, IconButton, Modal, Typography } from '@mui/material';
-import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-interface Props {
-  open: boolean;
-}
-
-function SignUpModal({ open }: Readonly<Props>) {
+function SignUpModal() {
   const [title, setTitle] = useState('Реєстрація');
+  const searchParams = useSearchParams();
+  const signUpModal = searchParams.get('sign-up');
+  const [open, setOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -20,12 +19,18 @@ function SignUpModal({ open }: Readonly<Props>) {
   };
 
   const openSignInModal = () => {
-    router.push(`${pathname}?signin=true`);
+    router.push(`${pathname}?sign-in=true`);
   };
 
   const ChangeTitle = (newTitle: string) => {
     setTitle(newTitle);
   };
+
+  useEffect(() => {
+    if (signUpModal === 'true') {
+      setOpen(true);
+    } else setOpen(false);
+  }, [signUpModal]);
 
   return (
     <Modal

@@ -2,21 +2,27 @@
 
 import { CloseIcon } from '@/assets/icons';
 import { Box, IconButton, Modal, Typography } from '@mui/material';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 import ResetPasswordForm from './ResetPasswordForm/ResetPasswordForm';
 
-interface Props {
-  open: boolean;
-}
-
-function ResetPasswordModal({ open }: Readonly<Props>) {
+function ResetPasswordModal() {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const resetPasswordModal = searchParams.get('reset-password');
+  const [open, setOpen] = useState(false);
 
   const closeResetPasswordModal = () => {
     router.replace(pathname);
   };
+
+  useEffect(() => {
+    if (resetPasswordModal === 'true') {
+      setOpen(true);
+    } else setOpen(false);
+  }, [resetPasswordModal]);
 
   return (
     <Modal

@@ -3,23 +3,30 @@
 import { CloseIcon } from '@/assets/icons';
 import { SignInForm } from '@/components';
 import { Box, IconButton, Modal, Typography } from '@mui/material';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-interface Props {
-  open: boolean;
-}
-
-function SignInModal({ open }: Readonly<Props>) {
+function SignInModal() {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
+  const modalSignIn = searchParams.get('sign-in');
+
+  const [open, setOpen] = useState(false);
   const closeSignInModal = () => {
     router.replace(pathname);
   };
 
   const openSignUpModal = () => {
-    router.push(`${pathname}?signup=true`);
+    router.push(`${pathname}?sign-up=true`);
   };
+
+  useEffect(() => {
+    if (modalSignIn === 'true') {
+      setOpen(true);
+    } else setOpen(false);
+  }, [modalSignIn]);
 
   return (
     <Modal

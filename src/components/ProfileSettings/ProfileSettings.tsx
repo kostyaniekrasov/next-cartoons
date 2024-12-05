@@ -4,23 +4,21 @@ import { LogOutIcon, SettingsIcon, UserIcon } from '@/assets/icons';
 import { TabProfile, TabSettings, a11yProps } from '@/components';
 import useAuthStore from '@/store/useAuthStore';
 import { Box, Modal, Tabs } from '@mui/material';
+import { AnimatePresence, motion } from 'framer-motion';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { SettingsTab, TabModal } from '../UI';
 
-interface Props {
-  open: boolean;
-}
-
-const ProfileSettings = ({ open }: Readonly<Props>) => {
+const ProfileSettings = () => {
   const [value, setValue] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { logout } = useAuthStore();
-
+  const [open, setOpen] = useState(false);
+  const settingsTab = searchParams.get('settings');
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -30,13 +28,14 @@ const ProfileSettings = ({ open }: Readonly<Props>) => {
   };
 
   useEffect(() => {
-    const currentSection = searchParams.get('settings');
-    if (currentSection === 'profile') {
+    if (settingsTab === 'profile') {
+      setOpen(true);
       setValue(0);
-    } else if (currentSection === 'settings') {
+    } else if (settingsTab === 'settings') {
+      setOpen(true);
       setValue(1);
-    }
-  }, [searchParams]);
+    } else setOpen(false);
+  }, [settingsTab]);
 
   return (
     <Modal
@@ -111,19 +110,56 @@ const ProfileSettings = ({ open }: Readonly<Props>) => {
               customLabel="Профіль"
               {...a11yProps(0)}
             />
+
             <SettingsTab
               customIcon={<SettingsIcon width={24} height={24} />}
               customLabel="Налаштування"
               {...a11yProps(1)}
             />
+
             <SettingsTab
               customIcon={<LogOutIcon width={24} height={24} />}
               customLabel="Вихід"
               onClick={() => setShowModal(true)}
             />
           </Tabs>
-          <TabProfile value={value} handleClose={handleClose} index={0} />
-          <TabSettings value={value} index={1} handleClose={handleClose} />
+
+          <AnimatePresence mode="wait">
+            {value === 0 && (
+              <motion.div
+                key="TabProfile"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3 }}
+                style={{
+                  width: '100%',
+                }}
+              >
+                <TabProfile value={value} handleClose={handleClose} index={0} />
+              </motion.div>
+            )}
+
+            {value === 1 && (
+              <motion.div
+                key="TabSettings"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3 }}
+                style={{
+                  width: '100%',
+                }}
+              >
+                <TabSettings
+                  value={value}
+                  index={1}
+                  handleClose={handleClose}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <TabModal
             title="Вийти з системи?"
             open={showModal}

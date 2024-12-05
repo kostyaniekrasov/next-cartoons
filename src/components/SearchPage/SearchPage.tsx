@@ -5,7 +5,15 @@ import { GridForList } from '@/components';
 import { useVideoStore } from '@/store/useVideoStore';
 import { PlaylistsType } from '@/types';
 import { Playlist } from '@/types/VideoData';
-import { Box, Container, IconButton, Typography } from '@mui/material';
+import {
+  Box,
+  Checkbox,
+  Container,
+  FormControlLabel,
+  FormGroup,
+  IconButton,
+  Typography,
+} from '@mui/material';
 import Fuse from 'fuse.js';
 import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
@@ -20,7 +28,21 @@ const SearchPage = () => {
     fetchCategoriesIfEmpty,
   } = useVideoStore();
   const [searchResults, setSearchResults] = useState<Playlist[]>([]);
-  const [lastQuery, setLastQuery] = useState<string | null>(null);
+  const [filters, setFilters] = useState<Record<string, boolean>>({});
+  const [initialResults, setInitialResults] = useState<Playlist[]>([]);
+
+  useEffect(() => {
+    if (categories.length > 0) {
+      const initialFilters = categories.reduce(
+        (acc, category) => ({
+          ...acc,
+          [category.name]: false,
+        }),
+        {},
+      );
+      setFilters(initialFilters);
+    }
+  }, [categories]);
 
   const performSearch = useCallback(
     (query: string) => {
@@ -46,24 +68,39 @@ const SearchPage = () => {
           .map((result) => result.item);
 
         setSearchResults([...startsWithQuery, ...otherResults]);
+        setInitialResults([...startsWithQuery, ...otherResults]);
       } else {
         setSearchResults([]);
+        setInitialResults([]);
       }
     },
     [playlists],
   );
 
+  const applyFilters = useCallback(() => {
+    const activeFilters = Object.entries(filters)
+      .filter(([, isChecked]) => isChecked)
+      .map(([category]) => category);
+
+    if (activeFilters.length > 0) {
+      const filteredResults = initialResults.filter((playlist) =>
+        activeFilters.includes(playlist.category),
+      );
+      setSearchResults(filteredResults);
+    } else {
+      setSearchResults(initialResults);
+    }
+  }, [filters, initialResults]);
   useEffect(() => {
     const runSearch = async () => {
-      if (query && query !== lastQuery) {
+      if (query) {
         await fetchPlaylistsIfEmpty();
         performSearch(query);
-        setLastQuery(query);
       }
     };
 
     runSearch();
-  }, [query, lastQuery, fetchPlaylistsIfEmpty, performSearch]);
+  }, [query, fetchPlaylistsIfEmpty, performSearch]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -71,25 +108,66 @@ const SearchPage = () => {
     };
 
     fetchCategories();
-  }, []);
+  }, [fetchCategoriesIfEmpty, playlists.length]);
+
+  useEffect(() => {
+    applyFilters();
+  }, [filters, applyFilters]);
+
+  const handleCheckboxChange = (category: string) => {
+    setFilters((prev) => ({
+      ...prev,
+      [category]: !prev[category],
+    }));
+  };
 
   return (
     <Box>
       <Container disableGutters>
-        <IconButton
-          href={`/all`}
+        <Box
           sx={{
+            display: 'flex',
             alignItems: 'center',
+            justifyContent: 'space-between',
             marginBottom: '16px',
-            padding: '0 10px 0 0',
-            borderRadius: '12px',
           }}
         >
-          <ChevronLeftIcon width={17} height={17} />
-          <Typography variant="mainTextSemibold" color="gray.700">
-            Повернутися
-          </Typography>
-        </IconButton>
+          <IconButton
+            href={`/all`}
+            sx={{
+              alignItems: 'center',
+              padding: '0 10px 0 0',
+              borderRadius: '12px',
+            }}
+          >
+            <ChevronLeftIcon width={17} height={17} />
+            <Typography variant="mainTextSemibold" color="gray.700">
+              Повернутися
+            </Typography>
+          </IconButton>
+
+          <FormGroup
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+            }}
+          >
+            {categories
+              .filter((category) => category.name !== 'all')
+              .map((category) => (
+                <FormControlLabel
+                  key={category.name}
+                  control={
+                    <Checkbox
+                      checked={filters[category.name] || false}
+                      onChange={() => handleCheckboxChange(category.name)}
+                    />
+                  }
+                  label={category.title}
+                />
+              ))}
+          </FormGroup>
+        </Box>
         {searchResults.length > 0 ? (
           <GridForList
             playlists={searchResults}

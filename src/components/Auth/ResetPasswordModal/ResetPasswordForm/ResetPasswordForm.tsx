@@ -26,7 +26,7 @@ interface Props {
   showBackToSignIn?: boolean;
 }
 
-function ResetPasswordForm({ showBackToSignIn = true }: Props) {
+function ResetPasswordForm({ showBackToSignIn = true }: Readonly<Props>) {
   const {
     register,
     setValue,
@@ -41,7 +41,7 @@ function ResetPasswordForm({ showBackToSignIn = true }: Props) {
   const pathname = usePathname();
 
   const handleBackToSingIn = () => {
-    router.push(`${pathname}?signin=true`);
+    router.push(`${pathname}?sign-in=true`);
   };
 
   const onSubmit: SubmitHandler<ResetPasswordData> = async (data) => {

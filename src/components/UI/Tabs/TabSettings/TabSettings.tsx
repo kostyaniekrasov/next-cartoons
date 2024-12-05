@@ -27,12 +27,15 @@ const TabSettings = ({ value, handleClose, index }: Props) => {
   };
 
   const handleBackScreen = () => {
-    if (currentScreen === 'changePassword') {
-      setCurrentScreen('all');
-    }
+    switch (currentScreen) {
+      case 'changePassword':
+        return setCurrentScreen('all');
 
-    if (currentScreen === 'resetPassword') {
-      setCurrentScreen('changePassword');
+      case 'resetPassword':
+        return setCurrentScreen('changePassword');
+
+      default:
+        return setCurrentScreen('all');
     }
   };
 
@@ -104,7 +107,6 @@ const TabSettings = ({ value, handleClose, index }: Props) => {
           </IconButton>
         </Box>
 
-        {/* <Fade timeout={200} in={currentScreen === 'all'} unmountOnExit> */}
         <AnimatePresence mode="wait">
           {currentScreen === 'all' && (
             <motion.div

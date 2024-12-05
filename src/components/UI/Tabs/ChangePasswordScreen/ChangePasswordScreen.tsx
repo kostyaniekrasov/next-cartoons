@@ -45,7 +45,7 @@ const ChangePasswordScreen = ({ showAlert, handleChangeScreen }: Props) => {
     try {
       await changePassword(data.currentPassword, data.newPassword);
     } catch (error) {
-      alert(error);
+      console.log(error);
     } finally {
       const { error } = useAuthStore.getState();
       if (error) {

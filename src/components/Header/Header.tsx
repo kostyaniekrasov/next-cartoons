@@ -16,8 +16,6 @@ import {
   MenuBlock,
   MobileMenu,
   SignInButton,
-  SignInModal,
-  SignUpModal,
 } from '@/components';
 import useAuthStore from '@/store/useAuthStore';
 import { VideoCategory } from '@/types';
@@ -51,8 +49,6 @@ import React, {
   useState,
 } from 'react';
 
-import { ResetPasswordModal } from '../Auth/ResetPasswordModal';
-import ProfileSettings from '../ProfileSettings/ProfileSettings';
 import { CookieConsent } from '../UI/CookieConsent';
 
 interface Props {
@@ -83,11 +79,6 @@ const Header = ({ categories }: Props) => {
     containScroll: 'trimSnaps',
   });
 
-  const modalSignIn = searchParams.get('signin');
-  const modalSignUp = searchParams.get('signup');
-  const modalResetPassword = searchParams.get('reset-password');
-  const modalSettings = searchParams.get('settings');
-
   const open = Boolean(anchorEl);
 
   const handleClick = useCallback(
@@ -102,7 +93,7 @@ const Header = ({ categories }: Props) => {
   }, []);
 
   const openSignInModal = useCallback(() => {
-    router.push(`${pathname}?signin=true`);
+    router.push(`${pathname}?sign-in=true`);
   }, [router, pathname]);
 
   const handleOpenMobileMenu = useCallback(() => {
@@ -113,7 +104,6 @@ const Header = ({ categories }: Props) => {
     (event: React.MouseEvent<HTMLElement>, newFilter: string) => {
       if (newFilter !== null) {
         setSelectedFilter(newFilter);
-        // router.push(`/${newFilter}`);
       }
     },
     [],
@@ -390,11 +380,6 @@ const Header = ({ categories }: Props) => {
                   open={open}
                   handleClose={handleClose}
                 />
-                <ProfileSettings
-                  open={
-                    modalSettings === 'profile' || modalSettings === 'settings'
-                  }
-                />
               </Box>
             ) : (
               <SignInButton
@@ -411,9 +396,7 @@ const Header = ({ categories }: Props) => {
                 </Typography>
               </SignInButton>
             )}
-            <SignInModal open={modalSignIn === 'true'} />
-            <SignUpModal open={modalSignUp === 'true'} />
-            <ResetPasswordModal open={modalResetPassword === 'true'} />
+
             <Box
               sx={{
                 display: {
