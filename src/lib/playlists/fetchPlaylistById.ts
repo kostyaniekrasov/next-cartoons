@@ -3,7 +3,7 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 
 import { db } from '../database/firebase';
 
-export const fetchPlaylistById = async (
+const fetchPlaylistById = async (
   playlistId: string,
 ): Promise<Playlist | null> => {
   try {
@@ -24,3 +24,5 @@ export const fetchPlaylistById = async (
     return null;
   }
 };
+
+export default fetchPlaylistById;

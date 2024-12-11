@@ -1,5 +1,5 @@
 import { getCategories } from '@/lib';
-import { fetchPlaylistsByCategory } from '@/lib/playlists/getSortedPlaylists';
+import fetchPlaylistsByCategory from '@/lib/playlists/getSortedPlaylists';
 import { VideoCategory } from '@/types';
 import { Playlist, VideoData } from '@/types/VideoData';
 import { create } from 'zustand';
@@ -18,7 +18,7 @@ interface Store {
   setPlaylistsByCategory: (category: string) => void;
 }
 
-export const useVideoStore = create<Store>()((set, get) => ({
+const useVideoStore = create<Store>()((set, get) => ({
   playlists: [],
   categories: [],
   filteredPlaylists: [],
@@ -78,3 +78,5 @@ export const useVideoStore = create<Store>()((set, get) => ({
     set({ selectedFilter: category });
   },
 }));
+
+export default useVideoStore;

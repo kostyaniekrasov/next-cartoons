@@ -3,7 +3,7 @@ import NotAuthenticatedCartoons from '@/components/NotAuthenticatedCartoons/NotA
 import { getCategories } from '@/lib';
 import { getUserData } from '@/lib/api/getUserData';
 import { getClList } from '@/lib/playlists/continueWatching';
-import { fetchPlaylistsByCategory } from '@/lib/playlists/getSortedPlaylists';
+import fetchPlaylistsByCategory from '@/lib/playlists/getSortedPlaylists';
 import { PlaylistsType, User } from '@/types';
 import { Playlist } from '@/types/VideoData';
 import { filterPlaylistsByAge } from '@/utils';
@@ -29,52 +29,52 @@ const CategoryPage = async ({ params }: { params: { category: string } }) => {
   );
 
   return (
-    <Box
-      sx={{
-        width: '100%',
-      }}
-    >
-      <Container disableGutters>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: {
-              xs: '16px',
-              sm: '32px',
-            },
-          }}
-        >
-          <Collapse in={isAuthenticated} unmountOnExit>
-            <ToggleSliderToGrid
-              user={user}
-              categories={categories}
-              category={currentCategory}
-              playlists={videosByAgeCategory}
-              playlistsType={PlaylistsType.ByCategory}
-            />
-          </Collapse>
-
-          {isAuthenticated && continueWatchingPlaylists.length > 0 && (
-            <ToggleSliderToGrid
-              user={user}
-              categories={categories}
-              title={'Продовжити перегляд'}
-              playlists={continueWatchingPlaylists}
-              CWlinks={continueWatchingLinks}
-              playlistsType={PlaylistsType.ContinueWatching}
-            />
-          )}
-        </Box>
-
-        <Collapse in={!isAuthenticated} unmountOnExit>
-          <NotAuthenticatedCartoons
-            playlists={playlists}
+    // <Box
+    //   sx={{
+    //     width: '100%',
+    //   }}
+    // >
+    <Container disableGutters>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: {
+            xs: '16px',
+            sm: '32px',
+          },
+        }}
+      >
+        <Collapse in={isAuthenticated} unmountOnExit>
+          <ToggleSliderToGrid
+            user={user}
             categories={categories}
+            category={currentCategory}
+            playlists={videosByAgeCategory}
+            playlistsType={PlaylistsType.ByCategory}
           />
         </Collapse>
-      </Container>
-    </Box>
+
+        {isAuthenticated && continueWatchingPlaylists.length > 0 && (
+          <ToggleSliderToGrid
+            user={user}
+            categories={categories}
+            title={'Продовжити перегляд'}
+            playlists={continueWatchingPlaylists}
+            CWlinks={continueWatchingLinks}
+            playlistsType={PlaylistsType.ContinueWatching}
+          />
+        )}
+      </Box>
+
+      <Collapse in={!isAuthenticated} unmountOnExit>
+        <NotAuthenticatedCartoons
+          playlists={playlists}
+          categories={categories}
+        />
+      </Collapse>
+    </Container>
+    // </Box>
   );
 };
 

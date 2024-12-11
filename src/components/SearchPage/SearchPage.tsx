@@ -2,7 +2,7 @@
 
 import { ChevronLeftIcon } from '@/assets/icons';
 import { GridForList } from '@/components';
-import { useVideoStore } from '@/store/useVideoStore';
+import useVideoStore from '@/store/useVideoStore';
 import { PlaylistsType } from '@/types';
 import { Playlist } from '@/types/VideoData';
 import {

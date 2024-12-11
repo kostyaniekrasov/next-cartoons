@@ -4,7 +4,7 @@ import { ChevronLeftIcon } from '@/assets/icons';
 import { SignInButton, SliderSkeleton, ToggleSliderToGrid } from '@/components';
 import { getUserLists } from '@/lib/playlists/savedVideos';
 import useAuthStore from '@/store/useAuthStore';
-import { useVideoStore } from '@/store/useVideoStore';
+import useVideoStore from '@/store/useVideoStore';
 import { PlaylistsType } from '@/types';
 import { Playlist } from '@/types/VideoData';
 import { Alert, Box, Container, IconButton, Typography } from '@mui/material';

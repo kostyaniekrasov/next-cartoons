@@ -3,7 +3,7 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 
 import { db } from '../database/firebase';
 
-export const fetchPlaylistsByCategory = async (
+const fetchPlaylistsByCategory = async (
   category: string,
 ): Promise<Playlist[]> => {
   const playlistsRef = collection(db, 'sortedPlaylists');
@@ -27,3 +27,5 @@ export const fetchPlaylistsByCategory = async (
     ...doc.data(),
   })) as Playlist[];
 };
+
+export default fetchPlaylistsByCategory;

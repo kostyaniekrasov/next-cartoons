@@ -148,19 +148,20 @@ const ToggleSliderToGrid = ({
       <Box
         sx={{
           display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'baseline',
-          marginBottom: category ? '16px' : 0,
+          flexDirection: {
+            xs: 'column',
+            sm: 'row',
+          },
+          alignItems: {
+            sm: 'center',
+          },
+          gap: '8px',
+          justifyContent: 'space-between',
+          marginBottom: '16px',
           width: '100%',
         }}
       >
-        <Box
-          sx={{
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
-        >
+        <Box>
           <IconButton
             onClick={handleToggle}
             sx={{
@@ -170,7 +171,6 @@ const ToggleSliderToGrid = ({
               width: 'max-content',
               transform: 'translateX(-5px)',
               padding: '5px',
-              mb: category ? '0' : '16px',
             }}
           >
             {title && (
@@ -211,138 +211,133 @@ const ToggleSliderToGrid = ({
               <ChevronRightIcon />
             </Box>
           </IconButton>
-          {playlistsType === PlaylistsType.ByCategory && (
-            <Fade in={isGrid}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  gap: '8px',
-                  height: '100%',
-                }}
-              >
-                <Box
-                  sx={{
-                    display: {
-                      xs: 'none',
-                      sm: 'block',
-                    },
-                  }}
-                >
-                  <Typography
-                    variant="footnote"
-                    color="gray.600"
-                    component={'p'}
-                  >
-                    Показано
-                  </Typography>
-                  <Typography
-                    variant="secondaryText"
-                    color="gray.900"
-                    component={'p'}
-                  >{`${playlists.length}`}</Typography>
-                </Box>
 
-                <Divider
-                  orientation="vertical"
-                  sx={{
-                    height: 'auto',
-                    width: '1px',
-                    backgroundColor: 'gray.200',
-                    display: {
-                      xs: 'none',
-                      sm: 'block',
-                    },
-                  }}
-                />
-
-                <Select
-                  value={filterOrder}
-                  onChange={handleChangeFilrerOrder}
-                  IconComponent={iconComponent}
-                  onOpen={() => handleToggleSelect(true)}
-                  onClose={() => handleToggleSelect(false)}
-                  open={isOpen}
-                  sx={{
-                    width: '235px',
-                    borderRadius: '12px',
-                    [`& .${selectClasses.select}`]: {
-                      fontFamily: 'var(--font-inter), sans-serif',
-
-                      color: 'gray.900',
-                      padding: '8px 4px 8px 16px',
-                      paddingRight: '4px !important',
-                    },
-                    [`& .${outlinedInputClasses.notchedOutline}`]: {
-                      borderColor: 'gray.200',
-                      borderWidth: '2px',
-                    },
-                    '&:hover': {
-                      [`& .${outlinedInputClasses.notchedOutline}`]: {
-                        borderColor: 'gray.400',
-                      },
-                    },
-                    [`& .${outlinedInputClasses.root}`]: {
-                      fontFamily: 'var(--font-inter), sans-serif',
-
-                      padding: '0px',
-                      fontSize: '17px',
-                      fontWeight: '400',
-                      lineHeight: '140%',
-                      color: 'gray.600',
-                    },
-                    '& .MuiInputBase-input': {
-                      paddingRight: 0,
-                    },
-                  }}
-                  MenuProps={{
-                    sx: {
-                      '& .MuiPaper-root': {
-                        mt: 1,
-                        borderRadius: '12px',
-                      },
-                      '& .MuiList-root': {
-                        padding: 1,
-                      },
-                      '& .MuiMenuItem-root': {
-                        borderRadius: '12px',
-                        minHeight: '38px',
-                        '&:not(:last-child)': {
-                          marginBottom: 1,
-                        },
-
-                        color: 'gray.800',
-                        '&:hover': {
-                          bgcolor: 'accentPink.main',
-                          color: 'white',
-                        },
-                        '&.Mui-selected': {
-                          bgcolor: 'accentPink.main',
-                          color: 'white',
-                          '&:hover': {
-                            bgcolor: 'accentPink.main',
-                          },
-                        },
-                      },
-                    },
-                  }}
-                >
-                  <MenuItem value={'updatedTime'}>Останні оновлення</MenuItem>
-                  <MenuItem value={'viewCount'}>Найбільше переглядів</MenuItem>
-                </Select>
-              </Box>
-            </Fade>
+          {category && (
+            <Typography
+              variant="secondaryText"
+              color="gray.600"
+              component={'p'}
+            >
+              {category.description}
+            </Typography>
           )}
         </Box>
-        {category && (
-          <Typography
-            variant="secondaryText"
-            color="gray.600"
-            sx={{
-              mb: '16px',
-            }}
-          >
-            {category.description}
-          </Typography>
+        {playlistsType === PlaylistsType.ByCategory && (
+          <Fade in={isGrid} unmountOnExit>
+            <Box
+              sx={{
+                display: 'flex',
+                gap: '8px',
+                height: '100%',
+              }}
+            >
+              <Box
+                sx={{
+                  display: {
+                    xs: 'none',
+                    sm: 'block',
+                  },
+                }}
+              >
+                <Typography variant="footnote" color="gray.600" component={'p'}>
+                  Показано
+                </Typography>
+                <Typography
+                  variant="secondaryText"
+                  color="gray.900"
+                  component={'p'}
+                >{`${playlists.length}`}</Typography>
+              </Box>
+
+              <Divider
+                orientation="vertical"
+                sx={{
+                  height: 'auto',
+                  width: '1px',
+                  backgroundColor: 'gray.200',
+                  display: {
+                    xs: 'none',
+                    sm: 'block',
+                  },
+                }}
+              />
+
+              <Select
+                value={filterOrder}
+                onChange={handleChangeFilrerOrder}
+                IconComponent={iconComponent}
+                onOpen={() => handleToggleSelect(true)}
+                onClose={() => handleToggleSelect(false)}
+                open={isOpen}
+                sx={{
+                  width: '235px',
+                  borderRadius: '12px',
+                  [`& .${selectClasses.select}`]: {
+                    fontFamily: 'var(--font-inter), sans-serif',
+
+                    color: 'gray.900',
+                    padding: '8px 4px 8px 16px',
+                    paddingRight: '4px !important',
+                  },
+                  [`& .${outlinedInputClasses.notchedOutline}`]: {
+                    borderColor: 'gray.200',
+                    borderWidth: '2px',
+                  },
+                  '&:hover': {
+                    [`& .${outlinedInputClasses.notchedOutline}`]: {
+                      borderColor: 'gray.400',
+                    },
+                  },
+                  [`& .${outlinedInputClasses.root}`]: {
+                    fontFamily: 'var(--font-inter), sans-serif',
+
+                    padding: '0px',
+                    fontSize: '17px',
+                    fontWeight: '400',
+                    lineHeight: '140%',
+                    color: 'gray.600',
+                  },
+                  '& .MuiInputBase-input': {
+                    paddingRight: 0,
+                  },
+                }}
+                MenuProps={{
+                  sx: {
+                    '& .MuiPaper-root': {
+                      mt: 1,
+                      borderRadius: '12px',
+                    },
+                    '& .MuiList-root': {
+                      padding: 1,
+                    },
+                    '& .MuiMenuItem-root': {
+                      borderRadius: '12px',
+                      minHeight: '38px',
+                      '&:not(:last-child)': {
+                        marginBottom: 1,
+                      },
+
+                      color: 'gray.800',
+                      '&:hover': {
+                        bgcolor: 'accentPink.main',
+                        color: 'white',
+                      },
+                      '&.Mui-selected': {
+                        bgcolor: 'accentPink.main',
+                        color: 'white',
+                        '&:hover': {
+                          bgcolor: 'accentPink.main',
+                        },
+                      },
+                    },
+                  },
+                }}
+              >
+                <MenuItem value={'updatedTime'}>Останні оновлення</MenuItem>
+                <MenuItem value={'viewCount'}>Найбільше переглядів</MenuItem>
+              </Select>
+            </Box>
+          </Fade>
         )}
       </Box>
 

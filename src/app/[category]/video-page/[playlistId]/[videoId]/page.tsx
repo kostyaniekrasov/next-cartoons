@@ -10,11 +10,11 @@ import {
   VerticalSliderSkeleton,
   VideoBlock,
 } from '@/components';
-import { fetchPlaylistById } from '@/lib/playlists/fetchPlaylistById';
+import fetchPlaylistById from '@/lib/playlists/fetchPlaylistById';
 import { isPlaylistSaved } from '@/lib/playlists/isSavedVideo';
 import { addToWatchLater } from '@/lib/playlists/savedVideos';
 import useAuthStore from '@/store/useAuthStore';
-import { useVideoStore } from '@/store/useVideoStore';
+import useVideoStore from '@/store/useVideoStore';
 import { PlaylistsType, VideoCategory } from '@/types';
 import { Playlist, VideoData } from '@/types/VideoData';
 import { filterPlaylistsByAge, getNextVideoInPlaylist } from '@/utils';
@@ -152,9 +152,7 @@ const VideoPage = ({
   useEffect(() => {
     const fetchPlaylists = async () => {
       await fetchPlaylistsIfEmpty();
-      if (!filteredPlaylists.length) {
-        setPlaylistsByCategory(category);
-      }
+      setPlaylistsByCategory(category);
     };
 
     fetchPlaylists();
@@ -176,10 +174,11 @@ const VideoPage = ({
     checkIfSaved();
   }, [user, playlistId]);
 
-  const filteredPlaylistsWithoutCurrent = filterPlaylistsByAge(
-    filteredPlaylists,
-    user?.age,
-  ).filter((p) => p.id !== playlistId);
+  const filteredPlaylistsWithoutCurrent = useMemo(() => {
+    return filterPlaylistsByAge(filteredPlaylists, user?.age).filter(
+      (p) => p.id !== playlistId,
+    );
+  }, [filteredPlaylists, playlistId, user?.age]);
 
   return (
     <Box

@@ -8,8 +8,9 @@ html {
 
 body {
   min-width: 375px;
+  padding-bottom: 50px;
 }
 
-* {
-  /* border: 1px solid green; */
-}
+/*  {
+  border: 1px solid pink;
+} */

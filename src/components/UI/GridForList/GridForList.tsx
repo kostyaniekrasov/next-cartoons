@@ -94,6 +94,7 @@ const GridForList = ({
             return p.id;
           })
           .join(',')}
+        unmountOnExit
       >
         <Grid2
           container
@@ -134,9 +135,6 @@ const GridForList = ({
                       position: 'relative',
                       borderRadius: '12px',
                       boxSizing: 'border-box',
-                      width: {
-                        xs: '100%',
-                      },
                       aspectRatio: '16/9',
                       marginBottom: '8px',
                       border: '1px solid',
@@ -240,6 +238,7 @@ const GridForList = ({
 
                     <Collapse
                       in={isLoading && removingPlaylistId === playlist.id}
+                      unmountOnExit
                     >
                       <Box
                         sx={{
