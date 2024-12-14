@@ -34,11 +34,14 @@ import {
   Grow,
   Icon,
   IconButton,
+  InputAdornment,
+  TextField,
   ToggleButtonGroup,
   Typography,
   Zoom,
 } from '@mui/material';
 import useEmblaCarousel from 'embla-carousel-react';
+import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, {
@@ -71,6 +74,7 @@ const Header = ({ categories }: Props) => {
   const [isEmpty, setIsEmpty] = useState(true);
   const [isOpenMobileMenu, setIsOpenMobileMenu] = useState(false);
   const [showButton, setShowButton] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
 
   const [emblaRef] = useEmblaCarousel({
     loop: false,
@@ -207,9 +211,6 @@ const Header = ({ categories }: Props) => {
                 padding: 0,
               }}
             >
-              {/* <Typography variant="h1" color="accentPink">
-                Веселі Години
-              </Typography> */}
               <Icon
                 sx={{
                   width: '100%',
@@ -410,14 +411,61 @@ const Header = ({ categories }: Props) => {
                 gap: '20px',
               }}
             >
-              <IconButton
-                sx={{
-                  color: 'gray.900',
-                  padding: 0,
-                }}
-              >
-                <SearchIcon width={24} height={24} />
-              </IconButton>
+              {(!!user?.showSearch || !user) && (
+                <AnimatePresence mode="wait">
+                  {showSearch ? (
+                    <motion.div
+                      key="searchInput"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <TextField
+                        type="text"
+                        value={value}
+                        onChange={handleSearch}
+                        onKeyDown={handleKeyDown}
+                        autoFocus={showSearch}
+                        onBlur={() => setShowSearch(false)}
+                        fullWidth
+                        variant="standard"
+                        sx={{
+                          height: '24px',
+                        }}
+                        slotProps={{
+                          input: {
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <SearchIcon width={24} height={24} />
+                              </InputAdornment>
+                            ),
+                          },
+                        }}
+                      />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="searchButton"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <IconButton
+                        onClick={() => setShowSearch(true)}
+                        sx={{
+                          color: 'gray.900',
+                          padding: 0,
+                        }}
+                      >
+                        <SearchIcon width={24} height={24} />
+                      </IconButton>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              )}
+
               <IconButton
                 onClick={handleOpenMobileMenu}
                 sx={{
@@ -427,6 +475,7 @@ const Header = ({ categories }: Props) => {
               >
                 <MenuDuoIcon width={24} height={24} />
               </IconButton>
+
               <Drawer
                 anchor="right"
                 open={isOpenMobileMenu}

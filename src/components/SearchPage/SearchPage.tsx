@@ -127,7 +127,14 @@ const SearchPage = () => {
         <Box
           sx={{
             display: 'flex',
-            alignItems: 'center',
+            flexDirection: {
+              xs: 'column',
+              sm: 'row',
+            },
+            alignItems: {
+              xs: 'flex-start',
+              sm: 'center',
+            },
             justifyContent: 'space-between',
             marginBottom: '16px',
           }}

@@ -29,11 +29,6 @@ const CategoryPage = async ({ params }: { params: { category: string } }) => {
   );
 
   return (
-    // <Box
-    //   sx={{
-    //     width: '100%',
-    //   }}
-    // >
     <Container disableGutters>
       <Box
         sx={{
@@ -74,7 +69,6 @@ const CategoryPage = async ({ params }: { params: { category: string } }) => {
         />
       </Collapse>
     </Container>
-    // </Box>
   );
 };
 

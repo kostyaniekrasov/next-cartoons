@@ -18,9 +18,7 @@ const SavedVideos = () => {
     savedPlaylists,
     setSavedPlaylists,
   } = useVideoStore();
-  // const [watchLaterPlaylists, setWatchLaterPlaylists] = useState<Playlist[]>(
-  //   [],
-  // );
+
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
@@ -28,8 +26,6 @@ const SavedVideos = () => {
   const handleShowSignIn = () => {
     router.push(`${pathname}?signin=true`);
   };
-
-  console.log(savedPlaylists);
 
   useEffect(() => {
     const fetchWatchLaterPlaylists = async () => {
