@@ -15,8 +15,7 @@ import {
   Typography,
 } from '@mui/material';
 import Fuse from 'fuse.js';
-import { useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/router';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
 const SearchPage = () => {
