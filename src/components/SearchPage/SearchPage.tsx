@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import Fuse from 'fuse.js';
 import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 
 const SearchPage = () => {
@@ -30,7 +31,7 @@ const SearchPage = () => {
   const [searchResults, setSearchResults] = useState<Playlist[]>([]);
   const [filters, setFilters] = useState<Record<string, boolean>>({});
   const [initialResults, setInitialResults] = useState<Playlist[]>([]);
-
+  const router = useRouter();
   useEffect(() => {
     if (categories.length > 0) {
       const initialFilters = categories.reduce(
@@ -140,7 +141,7 @@ const SearchPage = () => {
           }}
         >
           <IconButton
-            href={`/all`}
+            onClick={() => router.back()}
             sx={{
               alignItems: 'center',
               padding: '0 10px 0 0',
