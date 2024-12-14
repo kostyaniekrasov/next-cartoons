@@ -207,6 +207,9 @@ const Header = ({ categories }: Props) => {
                 padding: 0,
               }}
             >
+              {/* <Typography variant="h1" color="accentPink">
+                Веселі Години
+              </Typography> */}
               <Icon
                 sx={{
                   width: '100%',

@@ -6,6 +6,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
   Box,
   Collapse,
+  Icon,
   IconButton,
   InputAdornment,
   Typography,
@@ -62,7 +63,14 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
                   orientation="horizontal"
                   timeout={200}
                   sx={{
-                    height: '24px',
+                    width: {
+                      xs: '18px',
+                      sm: '24px',
+                    },
+                    height: {
+                      xs: '18px',
+                      sm: '24px',
+                    },
                   }}
                 >
                   <Box
@@ -80,14 +88,27 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
                       sx={{
                         backgroundColor: 'gray.100',
                         color: 'gray.900',
-                        padding: '4px',
+                        padding: {
+                          xs: 0,
+                          sm: '4px',
+                        },
                       }}
                     >
-                      {showPassword ? (
-                        <Visibility fontSize="small" />
-                      ) : (
-                        <VisibilityOff fontSize="small" />
-                      )}
+                      <Icon
+                        sx={{
+                          width: '16px',
+                          height: '16px',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                      >
+                        {showPassword ? (
+                          <Visibility fontSize="small" />
+                        ) : (
+                          <VisibilityOff fontSize="small" />
+                        )}
+                      </Icon>
                     </IconButton>
 
                     {clearPassword && (
@@ -95,11 +116,24 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
                         sx={{
                           backgroundColor: 'gray.100',
                           color: 'gray.900',
-                          padding: '4px',
+                          padding: {
+                            xs: 0,
+                            sm: '4px',
+                          },
                         }}
                         onClick={clearPassword}
                       >
-                        <ClearIcon />
+                        <Icon
+                          sx={{
+                            width: '16px',
+                            height: '16px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <ClearIcon />
+                        </Icon>
                       </IconButton>
                     )}
                   </Box>

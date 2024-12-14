@@ -6,17 +6,21 @@ import { getUserLists } from '@/lib/playlists/savedVideos';
 import useAuthStore from '@/store/useAuthStore';
 import useVideoStore from '@/store/useVideoStore';
 import { PlaylistsType } from '@/types';
-import { Playlist } from '@/types/VideoData';
 import { Alert, Box, Container, IconButton, Typography } from '@mui/material';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const SavedVideos = () => {
   const { user, loading } = useAuthStore();
-  const { categories, fetchCategoriesIfEmpty } = useVideoStore();
-  const [watchLaterPlaylists, setWatchLaterPlaylists] = useState<Playlist[]>(
-    [],
-  );
+  const {
+    categories,
+    fetchCategoriesIfEmpty,
+    savedPlaylists,
+    setSavedPlaylists,
+  } = useVideoStore();
+  // const [watchLaterPlaylists, setWatchLaterPlaylists] = useState<Playlist[]>(
+  //   [],
+  // );
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
@@ -25,13 +29,15 @@ const SavedVideos = () => {
     router.push(`${pathname}?signin=true`);
   };
 
+  console.log(savedPlaylists);
+
   useEffect(() => {
     const fetchWatchLaterPlaylists = async () => {
       if (!user?.id) return;
 
       try {
         const playlists = await getUserLists(user.id);
-        setWatchLaterPlaylists(playlists.watchLater || []);
+        setSavedPlaylists(playlists.watchLater || []);
       } catch (error) {
         console.error('Error fetching watch later playlists:', error);
       } finally {
@@ -44,7 +50,7 @@ const SavedVideos = () => {
     } else {
       setIsLoading(false);
     }
-  }, [user]);
+  }, [setSavedPlaylists, user]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -92,17 +98,17 @@ const SavedVideos = () => {
         })}
       </Box>
     );
-  } else if (watchLaterPlaylists.length > 0) {
+  } else if (savedPlaylists.length > 0) {
     content = (
       <ToggleSliderToGrid
         title="Збережені"
         user={user}
-        playlists={watchLaterPlaylists}
+        playlists={savedPlaylists}
         playlistsType={PlaylistsType.Saved}
         categories={categories}
       />
     );
-  } else if (!watchLaterPlaylists.length) {
+  } else if (!savedPlaylists.length) {
     content = (
       <Typography variant="h5" color="gray.600">
         У вас немає збережених відео.

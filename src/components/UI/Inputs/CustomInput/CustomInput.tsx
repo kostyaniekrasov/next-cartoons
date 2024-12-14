@@ -18,6 +18,8 @@ const CustomInput = React.forwardRef<HTMLInputElement, TextFieldProps>(
             padding: '16px',
             borderRadius: '12px',
             transition: 'transform 0.3s ease',
+            fontSize: { xs: '13px', sm: '17px' },
+
             '& .MuiOutlinedInput-input': {
               padding: 0,
             },
@@ -58,8 +60,11 @@ const CustomInput = React.forwardRef<HTMLInputElement, TextFieldProps>(
           '& .MuiInputLabel-root': {
             color: 'gray.600',
             fontFamily: 'var(--font-inter), sans-serif',
-            fontSize: '17px',
             fontWeight: '400',
+            fontSize: {
+              xs: '13px',
+              sm: '17px',
+            },
             lineHeight: '140%',
             '&.Mui-focused': {
               color: 'gray.900',

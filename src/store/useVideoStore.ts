@@ -6,25 +6,32 @@ import { create } from 'zustand';
 
 interface Store {
   playlists: Playlist[];
+  savedPlaylists: Playlist[];
   categories: VideoCategory[];
   filteredPlaylists: Playlist[];
   selectedFilter: string;
   setSelectedFilter: (category: string) => void;
   setPlaylists: (playlists: Playlist[]) => void;
+  setSavedPlaylists: (playlists: Playlist[]) => void;
   setCategories: (categories: VideoCategory[]) => void;
   getPlaylistByTitle: (title: string) => Playlist | undefined;
   fetchPlaylistsIfEmpty: () => Promise<void>;
   fetchCategoriesIfEmpty: () => Promise<void>;
   setPlaylistsByCategory: (category: string) => void;
+  clearSavedPlaylists: () => void;
 }
 
 const useVideoStore = create<Store>()((set, get) => ({
   playlists: [],
+  savedPlaylists: [],
   categories: [],
   filteredPlaylists: [],
   selectedFilter: 'all',
   setPlaylists: (playlists: Playlist[]) => {
     set({ playlists });
+  },
+  setSavedPlaylists: (savedPlaylists: Playlist[]) => {
+    set({ savedPlaylists });
   },
   setCategories: (categories: VideoCategory[]) => {
     set({ categories });
@@ -76,6 +83,9 @@ const useVideoStore = create<Store>()((set, get) => ({
   },
   setSelectedFilter: (category: string) => {
     set({ selectedFilter: category });
+  },
+  clearSavedPlaylists: () => {
+    set({ savedPlaylists: [] });
   },
 }));
 

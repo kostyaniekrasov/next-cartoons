@@ -7,6 +7,7 @@ import {
   Box,
   CircularProgress,
   Collapse,
+  Icon,
   IconButton,
   Link,
   Typography,
@@ -72,12 +73,15 @@ function SignInForm({ onClose, showSignUp }: Readonly<Props>) {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        mx: 'auto',
+        // mx: 'auto',
       }}
     >
       <Box
         sx={{
-          marginBottom: '16px',
+          marginBottom: {
+            xs: '8px',
+            xl: '16px',
+          },
         }}
       >
         <CustomInput
@@ -124,19 +128,38 @@ function SignInForm({ onClose, showSignUp }: Readonly<Props>) {
                   orientation="horizontal"
                   timeout={200}
                   sx={{
-                    width: '24px',
-                    height: '24px',
+                    width: {
+                      xs: '18px',
+                      sm: '24px',
+                    },
+                    height: {
+                      xs: '18px',
+                      sm: '24px',
+                    },
                   }}
                 >
                   <IconButton
                     sx={{
                       backgroundColor: 'gray.100',
                       color: 'gray.900',
-                      padding: '4px',
+                      padding: {
+                        xs: 0,
+                        sm: '4px',
+                      },
                     }}
                     onClick={() => setValue('email', '')}
                   >
-                    <ClearIcon />
+                    <Icon
+                      sx={{
+                        width: '16px',
+                        height: '16px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <ClearIcon />
+                    </Icon>
                   </IconButton>
                 </Collapse>
               ),

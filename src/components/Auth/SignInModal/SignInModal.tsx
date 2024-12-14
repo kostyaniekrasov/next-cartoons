@@ -1,8 +1,8 @@
 'use client';
 
-import { CloseIcon } from '@/assets/icons';
+import { CloseIcon, LogoMenuIcon } from '@/assets/icons';
 import { SignInForm } from '@/components';
-import { Box, IconButton, Modal, Typography } from '@mui/material';
+import { Box, Icon, IconButton, Modal, Typography } from '@mui/material';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -54,6 +54,8 @@ function SignInModal() {
         <Box
           component="div"
           sx={{
+            display: 'flex',
+            flexDirection: 'column',
             width: {
               xs: '100%',
               sm: '435px',
@@ -85,23 +87,80 @@ function SignInModal() {
               alignItems: 'center',
               justifyContent: 'space-between',
               mb: '24px',
+              position: 'relative',
             }}
           >
-            <Typography textAlign="left" variant="h3Semibold" color="gray.900">
+            <Typography
+              textAlign="left"
+              variant="h3Semibold"
+              color="gray.900"
+              sx={{
+                display: {
+                  xs: 'none',
+                  xl: 'block',
+                },
+              }}
+            >
               Авторизація
             </Typography>
+
+            <Icon
+              sx={{
+                width: 'max-content',
+                height: 'max-content',
+                position: 'absolute',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                display: {
+                  xl: 'none',
+                },
+              }}
+            >
+              <LogoMenuIcon />
+            </Icon>
 
             <IconButton
               onClick={closeSignInModal}
               sx={{
                 color: 'gray.900',
                 padding: 0,
+                ml: {
+                  xs: 'auto',
+                  xl: 0,
+                },
               }}
             >
               <CloseIcon width={24} height={24} />
             </IconButton>
           </Box>
-          <SignInForm onClose={closeSignInModal} showSignUp={openSignUpModal} />
+
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              margin: 'auto',
+              width: '100%',
+              gap: '40px',
+            }}
+          >
+            <Typography
+              variant="mainText"
+              textAlign={'center'}
+              component={'p'}
+              sx={{
+                display: {
+                  xl: 'none',
+                },
+              }}
+            >
+              Ласкаво просимо назад
+            </Typography>
+
+            <SignInForm
+              onClose={closeSignInModal}
+              showSignUp={openSignUpModal}
+            />
+          </Box>
         </Box>
       </Box>
     </Modal>

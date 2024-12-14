@@ -4,7 +4,7 @@ import {
   BookmarkIcon,
   CloseIcon,
   LogOutIcon,
-  LogoMobileIcon,
+  LogoMenuIcon,
   SettingsIcon,
 } from '@/assets/icons';
 import useAuthStore from '@/store/useAuthStore';
@@ -13,6 +13,7 @@ import {
   Avatar,
   Box,
   Container,
+  Icon,
   IconButton,
   MenuItem,
   Typography,
@@ -69,15 +70,28 @@ const MobileMenu = ({ onClose, user, openSignIn }: Props) => {
             alignItems: 'center',
             py: '8px',
             mb: '24px',
+            position: 'relative',
+            width: '100%',
           }}
         >
-          <LogoMobileIcon />
+          <Icon
+            sx={{
+              width: 'max-content',
+              height: 'max-content',
+              position: 'absolute',
+              left: '50%',
+              transform: 'translateX(-50%)',
+            }}
+          >
+            <LogoMenuIcon />
+          </Icon>
 
           <IconButton
             onClick={onClose}
             sx={{
               padding: 0,
               color: 'gray.900',
+              ml: 'auto',
             }}
           >
             <CloseIcon width={24} height={24} />

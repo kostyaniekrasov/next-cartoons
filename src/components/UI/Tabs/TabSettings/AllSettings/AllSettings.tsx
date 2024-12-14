@@ -1,6 +1,7 @@
 'use client';
 
 import { removeAllVideosFromCW, removeAllVideosFromWatchLater } from '@/lib';
+import { useVideoStore } from '@/store';
 import useAuthStore from '@/store/useAuthStore';
 import { UpdateUserData } from '@/types';
 import { Box, Divider, Switch, Typography } from '@mui/material';
@@ -18,6 +19,7 @@ const AllSettings = React.forwardRef<HTMLDivElement, Props>(
     const { user, updateUserProfile } = useAuthStore();
     const router = useRouter();
     const [isOpenModal, setIsOpenModal] = useState('');
+    const { clearSavedPlaylists } = useVideoStore();
 
     const handleChangeSearchInput = async () => {
       if (!user) return;
@@ -41,7 +43,7 @@ const AllSettings = React.forwardRef<HTMLDivElement, Props>(
     const handleRemoveWatchLater = async () => {
       if (user) {
         await removeAllVideosFromWatchLater(user.id);
-        router.refresh();
+        clearSavedPlaylists();
       }
       setIsOpenModal('');
     };
