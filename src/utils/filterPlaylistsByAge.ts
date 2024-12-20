@@ -16,6 +16,8 @@ const filterPlaylistsByAge = (playlists: Playlist[], userAge?: number) =>
         if (userAge && userAge < 5) {
           return video.recommendedAge < 5;
         }
+
+        return video;
       }),
     }))
     .filter((playlist) => playlist.videos.length > 0);
