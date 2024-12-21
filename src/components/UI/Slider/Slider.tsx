@@ -195,26 +195,28 @@ const CartoonSlider = ({
                             )
                           }
                         />
-                        <Box
-                          sx={{
-                            position: 'absolute',
-                            bottom: '8px',
-                            right: '8px',
-                            background: 'rgba(242, 242, 247, 0.70)',
-                            borderRadius: '10px',
-                            display: 'flex',
-                            padding: '4px 8px',
-                            backdropFilter: 'blur(25px)',
-                          }}
-                        >
-                          <Typography
-                            variant="footnote"
-                            color="gray.900"
-                            lineHeight={'100%'}
+                        {playlist.videos.length > 1 && (
+                          <Box
+                            sx={{
+                              position: 'absolute',
+                              bottom: '8px',
+                              right: '8px',
+                              background: 'rgba(242, 242, 247, 0.70)',
+                              borderRadius: '10px',
+                              display: 'flex',
+                              padding: '4px 8px',
+                              backdropFilter: 'blur(25px)',
+                            }}
                           >
-                            {SeriesTitleCounter(playlist.videos.length)}
-                          </Typography>
-                        </Box>
+                            <Typography
+                              variant="footnote"
+                              color="gray.900"
+                              lineHeight={'100%'}
+                            >
+                              {SeriesTitleCounter(playlist.videos.length)}
+                            </Typography>
+                          </Box>
+                        )}
                       </Box>
 
                       <Collapse

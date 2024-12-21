@@ -218,7 +218,7 @@ const Header = ({ categories }: Props) => {
 
                   display: {
                     xs: 'none',
-                    lg: 'block',
+                    lg: 'flex',
                   },
                 }}
               >

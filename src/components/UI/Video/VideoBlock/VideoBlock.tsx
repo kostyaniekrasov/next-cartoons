@@ -38,6 +38,26 @@ const VideoBlock = React.memo(
     goToSignIn,
     isLoading,
   }: Props) => {
+    const getRecommendedAge = (age: number) => {
+      if (age <= 3) return '0+';
+      if (age <= 5) return '3+';
+      if (age <= 8) return '5+';
+      return '0+';
+    };
+
+    const getRecommendedAgeBackgroundColor = (age: number) => {
+      if (age <= 3) return 'rgba(62, 255, 45, 0.57)';
+      if (age <= 5) return 'rgba(255, 216, 45, 0.2)';
+      if (age <= 8) return 'rgba(255, 45, 85, 0.2)';
+      return 'rgba(255, 45, 85, 0.2)';
+    };
+    const getRecommendedAgeTextColor = (age: number) => {
+      if (age <= 3) return 'success';
+      if (age <= 5) return 'warning';
+      if (age <= 8) return 'accentPink';
+      return 'accentPink';
+    };
+
     return (
       <Box
         sx={{
@@ -139,7 +159,9 @@ const VideoBlock = React.memo(
               {currentVideo ? (
                 <Box
                   sx={{
-                    backgroundColor: 'rgba(255, 45, 85, 0.2)',
+                    backgroundColor: getRecommendedAgeBackgroundColor(
+                      currentVideo.recommendedAge,
+                    ),
                     width: {
                       xs: '26px',
                       sm: '39px',
@@ -155,7 +177,9 @@ const VideoBlock = React.memo(
                   }}
                 >
                   <Typography
-                    color="accentPink"
+                    color={getRecommendedAgeTextColor(
+                      currentVideo.recommendedAge,
+                    )}
                     sx={{
                       fontSize: {
                         xs: '13px',
@@ -163,7 +187,7 @@ const VideoBlock = React.memo(
                       },
                     }}
                   >
-                    {currentVideo?.recommendedAge >= 5 ? '5+' : '0+'}
+                    {getRecommendedAge(currentVideo.recommendedAge)}
                   </Typography>
                 </Box>
               ) : (
