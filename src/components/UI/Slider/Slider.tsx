@@ -289,7 +289,9 @@ const CartoonSlider = ({
                         },
                       }}
                     >
-                      {playlist.title.toLowerCase()}
+                      <div className="scrolling-text">
+                        {playlist.title.toLowerCase()}
+                      </div>
                     </Typography>
                     <Typography
                       variant="mainText"
