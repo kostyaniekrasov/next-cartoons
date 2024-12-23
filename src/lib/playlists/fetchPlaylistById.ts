@@ -16,7 +16,7 @@ const fetchPlaylistById = async (
       const playlistData = playlistDoc.data() as Playlist;
       return playlistData;
     } else {
-      console.log('Плейлист не знайдено');
+      console.log(`Плейлист з ID: ${playlistId} не знайдено`);
       return null;
     }
   } catch (error) {

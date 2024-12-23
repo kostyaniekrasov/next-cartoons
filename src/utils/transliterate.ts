@@ -73,7 +73,11 @@ function transliterate(text: string): string {
     .map((char) => cyrillicToLatinMap[char] || char)
     .join('');
 
-  result = result.replace(/ь/gi, '').replace(/\./g, '').replace(/\?/g, '');
+  result = result
+    .replace(/ь/gi, '')
+    .replace(/\./g, '')
+    .replace(/\?/g, '')
+    .replace(/,/g, '');
 
   return result;
 }
