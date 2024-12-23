@@ -16,7 +16,10 @@ import {
   Typography,
 } from '@mui/material';
 import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
+import {
+  // usePathname,
+  useRouter,
+} from 'next/navigation';
 import { useCallback, useState } from 'react';
 
 import { SliderMenu } from '../Slider';
@@ -41,7 +44,6 @@ const GridForList = ({
   playlistsType,
 }: Props) => {
   const router = useRouter();
-  const pathname = usePathname();
 
   const [hover, setHover] = useState<string | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -78,11 +80,7 @@ const GridForList = ({
     videoId: string,
     videoCategory?: string,
   ) => {
-    if (playlistsType === PlaylistsType.Saved) {
-      router.push(`/${videoCategory}/video-page/${playlistId}/${videoId}`);
-    } else {
-      router.push(`${pathname}/video-page/${playlistId}/${videoId}`);
-    }
+    router.push(`/${videoCategory}/video-page/${playlistId}/${videoId}`);
   };
 
   return (
@@ -173,26 +171,28 @@ const GridForList = ({
                           objectPosition: 'center',
                         }}
                       />
-                      <Box
-                        sx={{
-                          position: 'absolute',
-                          bottom: '8px',
-                          right: '8px',
-                          background: 'rgba(242, 242, 247, 0.70)',
-                          borderRadius: '10px',
-                          display: 'flex',
-                          padding: '4px 8px',
-                          backdropFilter: 'blur(25px)',
-                        }}
-                      >
-                        <Typography
-                          variant="footnote"
-                          color="gray.900"
-                          lineHeight={'100%'}
+                      {playlist.videos.length > 1 && (
+                        <Box
+                          sx={{
+                            position: 'absolute',
+                            bottom: '8px',
+                            right: '8px',
+                            background: 'rgba(242, 242, 247, 0.70)',
+                            borderRadius: '10px',
+                            display: 'flex',
+                            padding: '4px 8px',
+                            backdropFilter: 'blur(25px)',
+                          }}
                         >
-                          {SeriesTitleCounter(playlist.videos.length)}
-                        </Typography>
-                      </Box>
+                          <Typography
+                            variant="footnote"
+                            color="gray.900"
+                            lineHeight={'100%'}
+                          >
+                            {SeriesTitleCounter(playlist.videos.length)}
+                          </Typography>
+                        </Box>
+                      )}
                     </Box>
 
                     <Collapse

@@ -74,7 +74,7 @@ export const darkPalette = {
     400: '#4e4e55',
     300: '#3e3e45',
     200: '#2e2e35',
-    100: '#1e1e25',
+    100: '#26262b',
   },
   error: {
     main: '#ff453a',

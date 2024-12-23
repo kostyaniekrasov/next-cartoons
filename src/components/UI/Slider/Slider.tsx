@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import useEmblaCarousel from 'embla-carousel-react';
 import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useCallback, useState } from 'react';
 
 interface Props {
@@ -43,7 +43,6 @@ const CartoonSlider = ({
   playlistsType,
 }: Props) => {
   const router = useRouter();
-  const pathname = usePathname();
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: false,
     slidesToScroll: 1,
@@ -82,10 +81,10 @@ const CartoonSlider = ({
   }, []);
 
   const handleSlideClick = useCallback(
-    (playlistId: string, videoId: string) => {
-      router.push(`${pathname}/video-page/${playlistId}/${videoId}`);
+    (playlistId: string, videoId: string, videoCategory: string) => {
+      router.push(`/${videoCategory}/video-page/${playlistId}/${videoId}`);
     },
-    [router, pathname],
+    [router],
   );
 
   const handleImageLoadComplete = useCallback((naturalHeight: number) => {
@@ -145,7 +144,11 @@ const CartoonSlider = ({
                     onClick={() =>
                       slideClick
                         ? slideClick(playlist.id, selectedVideoId)
-                        : handleSlideClick(playlist.id, selectedVideoId)
+                        : handleSlideClick(
+                            playlist.id,
+                            selectedVideoId,
+                            playlist.category,
+                          )
                     }
                     sx={{ flex: '0 0 auto', width: 'auto' }}
                   >

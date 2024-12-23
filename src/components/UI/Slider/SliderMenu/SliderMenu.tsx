@@ -20,7 +20,7 @@ interface Props {
   slideClick: (
     playlistId: string,
     videoId: string,
-    playlistCategory?: string,
+    playlistCategory: string,
   ) => void;
   playlistsType: PlaylistsType;
 }
