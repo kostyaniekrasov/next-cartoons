@@ -18,10 +18,6 @@ function SignInModal() {
     router.replace(pathname);
   };
 
-  const openSignUpModal = () => {
-    router.push(`${pathname}?sign-up=true`);
-  };
-
   useEffect(() => {
     if (modalSignIn === 'true') {
       setOpen(true);
@@ -156,10 +152,7 @@ function SignInModal() {
               Ласкаво просимо назад
             </Typography>
 
-            <SignInForm
-              onClose={closeSignInModal}
-              showSignUp={openSignUpModal}
-            />
+            <SignInForm onClose={closeSignInModal} />
           </Box>
         </Box>
       </Box>

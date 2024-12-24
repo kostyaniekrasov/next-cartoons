@@ -4,14 +4,7 @@ import { ClearIcon, WarningIcon } from '@/assets/icons';
 import { CustomInput, PasswordInput, SelectArrowButton } from '@/components';
 import { ModalButton } from '@/components/UI/Buttons/ModalButton';
 import { auth, db } from '@/lib/database/firebase';
-import {
-  Box,
-  Collapse,
-  IconButton,
-  Link,
-  MenuItem,
-  Typography,
-} from '@mui/material';
+import { Box, Collapse, IconButton, MenuItem, Typography } from '@mui/material';
 import { FirebaseError } from 'firebase/app';
 import {
   UserCredential,
@@ -20,6 +13,7 @@ import {
   updateProfile,
 } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
+import Link from 'next/link';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -34,10 +28,9 @@ interface AuthFormData {
 type Props = {
   onClose: () => void;
   newTitle: (title: string) => void;
-  openSignIn: () => void;
 };
 
-function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
+function SignUpForm({ onClose, newTitle }: Readonly<Props>) {
   const [step, setStep] = useState(1);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [userCredential, setUserCredential] = useState<UserCredential | null>(
@@ -453,15 +446,20 @@ function SignUpForm({ onClose, newTitle, openSignIn }: Readonly<Props>) {
           <Typography variant="secondaryText" color="gray.600">
             Вже зареєстровані?
           </Typography>
+
           <Link
-            component="button"
-            onClick={openSignIn}
-            variant="secondaryText"
-            color="accentPink"
-            underline="none"
-            sx={{ cursor: 'pointer' }}
+            href={'?sign-in=true'}
+            passHref
+            prefetch={true}
+            style={{ textDecoration: 'none' }}
           >
-            Увійти
+            <Typography
+              variant="secondaryText"
+              color="accentPink"
+              sx={{ cursor: 'pointer' }}
+            >
+              Увійти
+            </Typography>
           </Link>
         </Box>
       )}

@@ -18,6 +18,7 @@ import {
   MenuItem,
   Typography,
 } from '@mui/material';
+import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
 import { SignInButton } from '../../Buttons';
@@ -26,10 +27,9 @@ import { ThemeSwitcher } from '../../Theme';
 interface Props {
   onClose: () => void;
   user: User | null;
-  openSignIn: () => void;
 }
 
-const MobileMenu = ({ onClose, user, openSignIn }: Props) => {
+const MobileMenu = ({ onClose, user }: Props) => {
   const { logout } = useAuthStore();
 
   const router = useRouter();
@@ -50,7 +50,6 @@ const MobileMenu = ({ onClose, user, openSignIn }: Props) => {
   };
 
   const goToSignIn = () => {
-    openSignIn();
     onClose();
   };
 
@@ -220,11 +219,18 @@ const MobileMenu = ({ onClose, user, openSignIn }: Props) => {
           )}
         </Box>
         {!user && (
-          <SignInButton onClick={goToSignIn} fullWidth>
-            <Typography variant="mainTextMedium" color="accentPink">
-              Увійти
-            </Typography>
-          </SignInButton>
+          <Link
+            href={'?sign-in=true'}
+            passHref
+            prefetch={true}
+            style={{ textDecoration: 'none' }}
+          >
+            <SignInButton onClick={goToSignIn} fullWidth>
+              <Typography variant="mainTextMedium" color="accentPink">
+                Увійти
+              </Typography>
+            </SignInButton>
+          </Link>
         )}
       </Container>
     </Box>

@@ -9,9 +9,9 @@ import {
   Collapse,
   Icon,
   IconButton,
-  Link,
   Typography,
 } from '@mui/material';
+import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -25,10 +25,9 @@ interface AuthFormData {
 
 type Props = {
   onClose: () => void;
-  showSignUp: () => void;
 };
 
-function SignInForm({ onClose, showSignUp }: Readonly<Props>) {
+function SignInForm({ onClose }: Readonly<Props>) {
   const {
     register,
     setValue,
@@ -259,18 +258,22 @@ function SignInForm({ onClose, showSignUp }: Readonly<Props>) {
         <Typography variant="secondaryText" color="gray.600">
           {`Не маєте облікового запису? `}
         </Typography>
+
         <Link
-          component="button"
-          onClick={(event) => {
-            event.preventDefault();
-            showSignUp();
-          }}
-          variant="secondaryText"
-          color="accentPink"
-          underline="none"
-          sx={{ cursor: 'pointer' }}
+          href={`?sign-up=true`}
+          passHref
+          prefetch={true}
+          style={{ textDecoration: 'none' }}
         >
-          Зареєструватися
+          <Typography
+            variant="secondaryText"
+            color="accentPink"
+            sx={{
+              cursor: 'pointer',
+            }}
+          >
+            Зареєструватися
+          </Typography>
         </Link>
       </Box>
     </Box>

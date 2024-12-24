@@ -96,10 +96,6 @@ const Header = ({ categories }: Props) => {
     setAnchorEl(null);
   }, []);
 
-  const openSignInModal = useCallback(() => {
-    router.push(`${pathname}?sign-in=true`);
-  }, [router, pathname]);
-
   const handleOpenMobileMenu = useCallback(() => {
     setIsOpenMobileMenu((prevState) => !prevState);
   }, []);
@@ -124,10 +120,6 @@ const Header = ({ categories }: Props) => {
     setValue('');
     setIsEmpty(true);
   }, []);
-
-  const handleClickSearch = useCallback(() => {
-    router.push(`/search?query=${value.trim()}`);
-  }, [router, value]);
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -295,22 +287,27 @@ const Header = ({ categories }: Props) => {
                           >
                             <CloseIcon width={24} height={24} />
                           </IconButton>
-                          <Button
-                            sx={{
-                              backgroundColor: 'accentPink.main',
-                              height: '48px',
-                              width: '72px',
-                              color: 'white',
-                              borderRadius: '9999px',
-                              transition: 'transform 300ms',
-                              '&:hover': {
-                                transform: 'scale(1.05)',
-                              },
-                            }}
-                            onClick={handleClickSearch}
+                          <Link
+                            href={`/search?query=${value.trim()}`}
+                            passHref
+                            style={{ textDecoration: 'none' }}
                           >
-                            <SearchIcon width={24} height={24} />
-                          </Button>
+                            <Button
+                              sx={{
+                                backgroundColor: 'accentPink.main',
+                                height: '48px',
+                                width: '72px',
+                                color: 'white',
+                                borderRadius: '9999px',
+                                transition: 'transform 300ms',
+                                '&:hover': {
+                                  transform: 'scale(1.05)',
+                                },
+                              }}
+                            >
+                              <SearchIcon width={24} height={24} />
+                            </Button>
+                          </Link>
                         </Box>
                       </Grow>
                     ),
@@ -387,19 +384,25 @@ const Header = ({ categories }: Props) => {
                 />
               </Box>
             ) : (
-              <SignInButton
-                onClick={openSignInModal}
-                sx={{
-                  display: {
-                    xs: 'none',
-                    sm: 'flex',
-                  },
-                }}
+              <Link
+                href={'?sign-in=true'}
+                passHref
+                prefetch={true}
+                style={{ textDecoration: 'none' }}
               >
-                <Typography variant="mainTextMedium" color="accentPink">
-                  Увійти
-                </Typography>
-              </SignInButton>
+                <SignInButton
+                  sx={{
+                    display: {
+                      xs: 'none',
+                      sm: 'flex',
+                    },
+                  }}
+                >
+                  <Typography variant="mainTextMedium" color="accentPink">
+                    Увійти
+                  </Typography>
+                </SignInButton>
+              </Link>
             )}
 
             <Box
@@ -489,11 +492,7 @@ const Header = ({ categories }: Props) => {
                   },
                 }}
               >
-                <MobileMenu
-                  onClose={handleOpenMobileMenu}
-                  openSignIn={openSignInModal}
-                  user={user}
-                />
+                <MobileMenu onClose={handleOpenMobileMenu} user={user} />
               </Drawer>
             </Box>
           </Box>

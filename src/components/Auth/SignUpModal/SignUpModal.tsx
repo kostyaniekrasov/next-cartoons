@@ -18,10 +18,6 @@ function SignUpModal() {
     router.replace(pathname);
   };
 
-  const openSignInModal = () => {
-    router.push(`${pathname}?sign-in=true`);
-  };
-
   const ChangeTitle = (newTitle: string) => {
     setTitle(newTitle);
   };
@@ -105,11 +101,7 @@ function SignUpModal() {
               <CloseIcon width={24} height={24} />
             </IconButton>
           </Box>
-          <SignUpForm
-            onClose={closeSignInModal}
-            newTitle={ChangeTitle}
-            openSignIn={openSignInModal}
-          />
+          <SignUpForm onClose={closeSignInModal} newTitle={ChangeTitle} />
         </Box>
       </Box>
     </Modal>
