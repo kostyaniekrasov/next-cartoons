@@ -3,10 +3,6 @@ import replaceStrings from './replaceStrings';
 const seriesTitle = (title: string, playlistTitle: string) => {
   let newTitle = replaceStrings(title, playlistTitle);
 
-  // if (!newTitle.length) {
-  //   newTitle.replaceAll(playlistTitle, '');
-  // }
-
   newTitle = newTitle
     .replace(/\./g, '')
     .replace(/\|.*/, '')

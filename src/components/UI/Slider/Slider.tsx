@@ -1,7 +1,7 @@
 'use client';
 
 import { MoreHorizontalIcon } from '@/assets/icons';
-import { SliderMenu, SliderNavigation } from '@/components';
+import { ScrollingText, SliderMenu, SliderNavigation } from '@/components';
 import { ContinueWatching, PlaylistsType, VideoCategory } from '@/types';
 import { Playlist } from '@/types/VideoData';
 import { SeriesTitleCounter, getCategoryName } from '@/utils';
@@ -9,7 +9,6 @@ import {
   Alert,
   Box,
   CircularProgress,
-  Collapse,
   Fade,
   IconButton,
   Snackbar,
@@ -222,12 +221,13 @@ const CartoonSlider = ({
                         )}
                       </Box>
 
-                      <Collapse
+                      <Fade
                         in={
                           continueWatchingList &&
                           hover === playlist.id &&
                           !isLoading
                         }
+                        unmountOnExit
                       >
                         <Box
                           sx={{
@@ -257,9 +257,9 @@ const CartoonSlider = ({
                             <MoreHorizontalIcon />
                           </IconButton>
                         </Box>
-                      </Collapse>
+                      </Fade>
 
-                      <Collapse
+                      <Fade
                         in={isLoading && removingPlaylistId === playlist.id}
                       >
                         <Box
@@ -276,23 +276,11 @@ const CartoonSlider = ({
                         >
                           <CircularProgress size={'60px'} />
                         </Box>
-                      </Collapse>
+                      </Fade>
                     </Box>
-                    <Typography
-                      variant="mainTextSemibold"
-                      color="gray.900"
-                      textTransform={'capitalize'}
-                      sx={{
-                        fontSize: {
-                          xs: '15px',
-                          sm: '17px',
-                        },
-                      }}
-                    >
-                      <div className="scrolling-text">
-                        {playlist.title.toLowerCase()}
-                      </div>
-                    </Typography>
+
+                    <ScrollingText playlistTitle={playlist.title} />
+
                     <Typography
                       variant="mainText"
                       color="gray.700"

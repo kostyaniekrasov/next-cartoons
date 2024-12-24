@@ -11,7 +11,8 @@ import {
   MenuItem,
   Typography,
 } from '@mui/material';
-import { usePathname, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 import { ThemeSwitcher } from '..';
@@ -26,21 +27,10 @@ interface Props {
 const MenuBlock = ({ anchorEl, open, handleClose, user }: Props) => {
   const { logout } = useAuthStore();
   const router = useRouter();
-  const pathname = usePathname();
 
   const handleLogout = async () => {
     await logout();
     router.refresh();
-  };
-
-  const goToAddVideo = () => {
-    router.push('admin/add-content');
-    handleClose();
-  };
-
-  const openProfileSettings = (currentTab: 'profile' | 'settings') => {
-    router.push(`${pathname}?settings=${currentTab}`);
-    handleClose();
   };
 
   return (
@@ -119,42 +109,62 @@ const MenuBlock = ({ anchorEl, open, handleClose, user }: Props) => {
           {user.email}
         </Typography>
       </Box>
-
-      <MenuItem
-        onClick={() => openProfileSettings('profile')}
-        sx={{
-          textTransform: 'none',
-          borderRadius: '999px',
-          justifyContent: 'center',
-          backgroundColor: 'gray.100',
-        }}
+      <Link
+        href={`?settings=profile`}
+        passHref
+        prefetch={true}
+        style={{ textDecoration: 'none' }}
       >
-        <Typography variant="secondaryTextSemibold">
-          Переглянути профіль
-        </Typography>
-      </MenuItem>
+        <MenuItem
+          sx={{
+            textTransform: 'none',
+            borderRadius: '999px',
+            justifyContent: 'center',
+            backgroundColor: 'gray.100',
+          }}
+        >
+          <Typography variant="secondaryTextSemibold">
+            Переглянути профіль
+          </Typography>
+        </MenuItem>
+      </Link>
 
       <Divider />
 
-      <MenuItem
-        onClick={() => openProfileSettings('settings')}
-        sx={{
-          gap: '4px',
-          color: 'gray.900',
-        }}
+      <Link
+        href={`?settings=settings`}
+        passHref
+        prefetch={true}
+        style={{ textDecoration: 'none' }}
       >
-        <SettingsIcon height={17} width={17} />
-        <Typography variant="secondaryText">Налаштування</Typography>
-      </MenuItem>
+        <MenuItem
+          sx={{
+            gap: '4px',
+            color: 'gray.900',
+          }}
+        >
+          <SettingsIcon height={17} width={17} />
+          <Typography variant="secondaryText">Налаштування</Typography>
+        </MenuItem>
+      </Link>
 
       <Divider />
 
       <ThemeSwitcher title />
 
       {user.role === 'admin' && (
-        <MenuItem onClick={goToAddVideo}>
-          <Typography variant="secondaryText">Адмін-панель(костиль)</Typography>
-        </MenuItem>
+        <Link
+          href={'admin/add-content'}
+          passHref
+          prefetch={true}
+          style={{ textDecoration: 'none' }}
+        >
+          <MenuItem>
+            <Typography variant="secondaryText">
+              Адмін-панель(костиль)
+            </Typography>
+          </MenuItem>
+        </Link>
       )}
 
       <MenuItem

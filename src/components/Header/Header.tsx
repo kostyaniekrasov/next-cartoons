@@ -337,18 +337,19 @@ const Header = ({ categories }: Props) => {
                   enterDelay={500}
                   leaveDelay={200}
                 >
-                  <IconButton
-                    onClick={() => router.push('/saved')}
-                    sx={{
-                      border: '1px solid',
-                      borderColor: 'gray.200',
-                      color: 'accentPink.main',
-                      height: 56,
-                      width: 56,
-                    }}
-                  >
-                    <BookmarkIcon width={24} height={24} />
-                  </IconButton>
+                  <Link href={'/saved'} passHref>
+                    <IconButton
+                      sx={{
+                        border: '1px solid',
+                        borderColor: 'gray.200',
+                        color: 'accentPink.main',
+                        height: 56,
+                        width: 56,
+                      }}
+                    >
+                      <BookmarkIcon width={24} height={24} />
+                    </IconButton>
+                  </Link>
                 </CustomTooltip>
 
                 <CustomTooltip
@@ -530,6 +531,7 @@ const Header = ({ categories }: Props) => {
                     href={`/${category.name}`}
                     key={category.name.toUpperCase()}
                     passHref
+                    prefetch={true}
                   >
                     <CustomToggleButton
                       value={category.name}

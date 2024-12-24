@@ -56,8 +56,8 @@ function transliterate(text: string): string {
     ю: 'yu',
     Я: 'Ya',
     я: 'ya',
-    Ь: '',
-    ь: '',
+    Ь: 'b',
+    ь: 'b',
     І: 'I',
     і: 'i',
     Є: 'Ye',
@@ -69,6 +69,7 @@ function transliterate(text: string): string {
   };
 
   let result = text
+    .replace(/[^a-zA-Zа-яА-ЯїЇєЄіІґҐ\s]/g, '')
     .split('')
     .map((char) => cyrillicToLatinMap[char] || char)
     .join('');

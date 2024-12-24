@@ -8,7 +8,6 @@ import {
   Alert,
   Box,
   CircularProgress,
-  Collapse,
   Fade,
   Grid2,
   IconButton,
@@ -22,6 +21,7 @@ import {
 } from 'next/navigation';
 import { useCallback, useState } from 'react';
 
+import { ScrollingText } from '../Inputs';
 import { SliderMenu } from '../Slider';
 
 interface Props {
@@ -195,7 +195,7 @@ const GridForList = ({
                       )}
                     </Box>
 
-                    <Collapse
+                    <Fade
                       in={hover === playlist.id && !isLoading}
                       unmountOnExit
                     >
@@ -234,9 +234,9 @@ const GridForList = ({
                           <MoreHorizontalIcon />
                         </IconButton>
                       </Box>
-                    </Collapse>
+                    </Fade>
 
-                    <Collapse
+                    <Fade
                       in={isLoading && removingPlaylistId === playlist.id}
                       unmountOnExit
                     >
@@ -254,22 +254,10 @@ const GridForList = ({
                       >
                         <CircularProgress size={'60px'} />
                       </Box>
-                    </Collapse>
+                    </Fade>
                   </Box>
 
-                  <Typography
-                    variant="mainTextSemibold"
-                    color="gray.900"
-                    textTransform={'capitalize'}
-                    sx={{
-                      fontSize: {
-                        xs: '15px',
-                        sm: '17px',
-                      },
-                    }}
-                  >
-                    {playlist.title.toLowerCase()}
-                  </Typography>
+                  <ScrollingText playlistTitle={playlist.title} />
                   <Typography
                     variant="mainText"
                     color="gray.700"
