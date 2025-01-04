@@ -42,6 +42,7 @@ npm run start
 - [typescript@5.6.3](https://www.npmjs.com/package/typescript)
 - [uuid@11.0.2](https://www.npmjs.com/package/uuid)
 - [zustand@5.0.0-rc.2](https://www.npmjs.com/package/zustand)
+- [Material UI](https://mui.com/material-ui/)
 
 ## Author
 
