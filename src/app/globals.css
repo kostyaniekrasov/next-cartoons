@@ -11,6 +11,12 @@ body {
   padding-bottom: 50px;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 /*  {
   border: 1px solid pink;
 } */

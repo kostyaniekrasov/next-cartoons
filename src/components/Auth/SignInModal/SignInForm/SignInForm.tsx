@@ -11,8 +11,7 @@ import {
   IconButton,
   Typography,
 } from '@mui/material';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -25,9 +24,12 @@ interface AuthFormData {
 
 type Props = {
   onClose: () => void;
+  openModal: (
+    modal: 'sign-in' | 'sign-up' | 'reset-password' | 'settings',
+  ) => void;
 };
 
-function SignInForm({ onClose }: Readonly<Props>) {
+function SignInForm({ onClose, openModal }: Readonly<Props>) {
   const {
     register,
     setValue,
@@ -39,11 +41,6 @@ function SignInForm({ onClose }: Readonly<Props>) {
   const { loginWithEmailAndPassword, loading } = useAuthStore();
   const [alert, setAlert] = useState('');
   const router = useRouter();
-  const pathname = usePathname();
-
-  const openResetPasswordModal = () => {
-    router.push(`${pathname}?reset-password=true`);
-  };
 
   const onSubmit: SubmitHandler<AuthFormData> = async (data) => {
     setAlert('');
@@ -72,7 +69,6 @@ function SignInForm({ onClose }: Readonly<Props>) {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        // mx: 'auto',
       }}
     >
       <Box
@@ -192,9 +188,13 @@ function SignInForm({ onClose }: Readonly<Props>) {
         variant="footnote"
         color="accentPink"
         mb={'16px'}
-        onClick={openResetPasswordModal}
+        onClick={() => openModal('reset-password')}
         sx={{
           cursor: 'pointer',
+          textAlign: {
+            xs: 'center',
+            xl: 'right',
+          },
         }}
       >
         Забули свій пароль?
@@ -259,22 +259,16 @@ function SignInForm({ onClose }: Readonly<Props>) {
           {`Не маєте облікового запису? `}
         </Typography>
 
-        <Link
-          href={`?sign-up=true`}
-          passHref
-          prefetch={true}
-          style={{ textDecoration: 'none' }}
+        <Typography
+          onClick={() => openModal('sign-up')}
+          variant="secondaryText"
+          color="accentPink"
+          sx={{
+            cursor: 'pointer',
+          }}
         >
-          <Typography
-            variant="secondaryText"
-            color="accentPink"
-            sx={{
-              cursor: 'pointer',
-            }}
-          >
-            Зареєструватися
-          </Typography>
-        </Link>
+          Зареєструватися
+        </Typography>
       </Box>
     </Box>
   );

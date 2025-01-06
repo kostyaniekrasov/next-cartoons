@@ -14,11 +14,17 @@ const CustomSearch = React.forwardRef<HTMLInputElement, TextFieldProps>(
 
           '& .MuiOutlinedInput-root': {
             color: 'gray.600',
-            padding: '0 4px 0 16px',
+            padding: {
+              xs: '8px',
+              sm: '0 4px 0 16px',
+            },
             borderRadius: '99px',
             backgroundColor: 'gray.100',
             transition: 'transform 0.3s ease',
-            height: '100%',
+            height: {
+              xs: '37px',
+              xl: '56px',
+            },
 
             '& fieldset': {
               borderColor: 'gray.200',
@@ -30,7 +36,10 @@ const CustomSearch = React.forwardRef<HTMLInputElement, TextFieldProps>(
             '&.Mui-focused, &.Mui-focused fieldset': {
               color: 'gray.900',
 
-              borderColor: 'gray.400',
+              borderColor: {
+                xs: 'gray.100',
+                xl: 'gray.400',
+              },
             },
 
             '& input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, :autofill':
@@ -42,6 +51,9 @@ const CustomSearch = React.forwardRef<HTMLInputElement, TextFieldProps>(
                 borderRadius: 0,
                 WebkitTextFillColor: theme.palette.gray[900],
               },
+            '& .MuiOutlinedInput-input': {
+              padding: 0,
+            },
           },
         }}
       />

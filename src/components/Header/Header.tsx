@@ -2,6 +2,7 @@
 
 import {
   BookmarkIcon,
+  BurgerIcon,
   CloseIcon,
   LogoDesktopIcon,
   LogoMobileIcon,
@@ -16,7 +17,10 @@ import {
   MenuBlock,
   MobileMenu,
   SignInButton,
+  SignInModal,
+  SignUpModal,
 } from '@/components';
+import { useModalStore } from '@/store';
 import useAuthStore from '@/store/useAuthStore';
 import { VideoCategory } from '@/types';
 import { getCurrentFilter } from '@/utils';
@@ -34,8 +38,6 @@ import {
   Grow,
   Icon,
   IconButton,
-  InputAdornment,
-  TextField,
   ToggleButtonGroup,
   Typography,
   Zoom,
@@ -52,6 +54,8 @@ import React, {
   useState,
 } from 'react';
 
+import { ResetPasswordModal } from '../Auth/ResetPasswordModal';
+import ProfileSettings from '../ProfileSettings/ProfileSettings';
 import { CookieConsent } from '../UI/CookieConsent';
 
 interface Props {
@@ -65,6 +69,8 @@ const Header = ({ categories }: Props) => {
   const query = searchParams.get('query');
   const user = useAuthStore((state) => state.user);
   const isInitialized = useAuthStore((state) => state.isInitialized);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { modals, openModal } = useModalStore();
 
   const [selectedFilter, setSelectedFilter] = useState(
     getCurrentFilter(pathname),
@@ -147,6 +153,30 @@ const Header = ({ categories }: Props) => {
     setSelectedFilter(getCurrentFilter(pathname));
   }, [pathname]);
 
+  useEffect(() => {
+    const isUrlLoginOpen = searchParams.get('sign-in') === 'true';
+    const isUrlSignUpOpen = searchParams.get('sign-up') === 'true';
+    const isUrlResetPasswordOpen =
+      searchParams.get('reset-password') === 'true';
+    const isUrlSettingsOpen = searchParams.get('settings') === 'true';
+
+    if (isUrlLoginOpen) {
+      openModal('sign-in');
+    }
+
+    if (isUrlSignUpOpen) {
+      openModal('sign-up');
+    }
+
+    if (isUrlResetPasswordOpen) {
+      openModal('reset-password');
+    }
+
+    if (isUrlSettingsOpen) {
+      openModal('settings');
+    }
+  }, [searchParams, openModal]);
+
   const memoizedAvatar = useMemo(
     () => (
       <Avatar
@@ -162,6 +192,11 @@ const Header = ({ categories }: Props) => {
     [user?.avatar],
   );
 
+  const handleOpenModal = (modal: keyof typeof modals) => {
+    router.push(`?${modal}=true`);
+    openModal(modal);
+  };
+
   return (
     <Fade in={isInitialized}>
       <AppBar
@@ -169,6 +204,7 @@ const Header = ({ categories }: Props) => {
         color="inherit"
         sx={{
           boxShadow: 'none',
+          marginBottom: '16px',
         }}
       >
         <CookieConsent />
@@ -183,10 +219,9 @@ const Header = ({ categories }: Props) => {
             borderColor: 'grey.200',
             paddingBottom: 2,
             paddingTop: {
-              xs: '8px',
+              xs: '16px',
               lg: '32px',
             },
-            marginBottom: '16px',
           }}
         >
           <Box
@@ -195,6 +230,14 @@ const Header = ({ categories }: Props) => {
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
+              height: {
+                xs: '37px',
+                xl: 'auto',
+              },
+              gap: {
+                xs: '20px',
+                sm: 0,
+              },
             }}
           >
             <IconButton
@@ -230,6 +273,7 @@ const Header = ({ categories }: Props) => {
                 <LogoMobileIcon />
               </Icon>
             </IconButton>
+
             {(!!user?.showSearch || !user) && (
               <CustomSearchField
                 id="search-bar"
@@ -381,28 +425,23 @@ const Header = ({ categories }: Props) => {
                   anchorEl={anchorEl}
                   open={open}
                   handleClose={handleClose}
+                  openModal={handleOpenModal}
                 />
               </Box>
             ) : (
-              <Link
-                href={'?sign-in=true'}
-                passHref
-                prefetch={true}
-                style={{ textDecoration: 'none' }}
+              <SignInButton
+                onClick={() => handleOpenModal('sign-in')}
+                sx={{
+                  display: {
+                    xs: 'none',
+                    sm: 'flex',
+                  },
+                }}
               >
-                <SignInButton
-                  sx={{
-                    display: {
-                      xs: 'none',
-                      sm: 'flex',
-                    },
-                  }}
-                >
-                  <Typography variant="mainTextMedium" color="accentPink">
-                    Увійти
-                  </Typography>
-                </SignInButton>
-              </Link>
+                <Typography variant="mainTextMedium" color="accentPink">
+                  Увійти
+                </Typography>
+              </SignInButton>
             )}
 
             <Box
@@ -411,8 +450,8 @@ const Header = ({ categories }: Props) => {
                   xs: 'flex',
                   sm: 'none',
                 },
-                alignItems: 'center',
-                gap: '20px',
+                width: '100%',
+                justifyContent: 'flex-end',
               }}
             >
               {(!!user?.showSearch || !user) && (
@@ -424,28 +463,24 @@ const Header = ({ categories }: Props) => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.3 }}
+                      style={{
+                        width: '100%',
+                      }}
                     >
-                      <TextField
+                      <CustomSearchField
+                        id="search-bar"
+                        sx={{
+                          width: '100%',
+                        }}
+                        fullWidth
                         type="text"
                         value={value}
-                        onChange={handleSearch}
-                        onKeyDown={handleKeyDown}
+                        placeholder="Пошук"
+                        variant="outlined"
                         autoFocus={showSearch}
                         onBlur={() => setShowSearch(false)}
-                        fullWidth
-                        variant="standard"
-                        sx={{
-                          height: '24px',
-                        }}
-                        slotProps={{
-                          input: {
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                <SearchIcon width={24} height={24} />
-                              </InputAdornment>
-                            ),
-                          },
-                        }}
+                        onChange={handleSearch}
+                        onKeyDown={handleKeyDown}
                       />
                     </motion.div>
                   ) : (
@@ -456,28 +491,66 @@ const Header = ({ categories }: Props) => {
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <IconButton
-                        onClick={() => setShowSearch(true)}
+                      <Box
                         sx={{
-                          color: 'gray.900',
-                          padding: 0,
+                          display: {
+                            xs: 'flex',
+                            sm: 'none',
+                          },
+                          alignItems: 'center',
+                          alignSelf: 'flex-end',
+                          gap: '20px',
+                          height: '37px',
                         }}
                       >
-                        <SearchIcon width={24} height={24} />
-                      </IconButton>
+                        <IconButton
+                          onClick={() => setShowSearch(true)}
+                          sx={{
+                            color: 'gray.900',
+                            padding: 0,
+                          }}
+                        >
+                          <SearchIcon width={24} height={24} />
+                        </IconButton>
+                      </Box>
                     </motion.div>
                   )}
                 </AnimatePresence>
               )}
+            </Box>
 
+            <Box
+              sx={{
+                display: {
+                  xl: 'none',
+                },
+              }}
+            >
               <IconButton
                 onClick={handleOpenMobileMenu}
                 sx={{
+                  boxSizing: 'border-box',
                   color: 'gray.900',
-                  padding: 0,
+                  border: '1px solid',
+                  borderColor: 'gray.200',
+                  borderRadius: '8px',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '8px',
+                  width: '32px',
+                  height: '32px',
                 }}
               >
-                <MenuDuoIcon width={24} height={24} />
+                <Icon
+                  sx={{
+                    width: '16px',
+                    height: '16px',
+                    display: 'flex',
+                    color: 'gray.900',
+                  }}
+                >
+                  <BurgerIcon />
+                </Icon>
               </IconButton>
 
               <Drawer
@@ -492,7 +565,11 @@ const Header = ({ categories }: Props) => {
                   },
                 }}
               >
-                <MobileMenu onClose={handleOpenMobileMenu} user={user} />
+                <MobileMenu
+                  onClose={handleOpenMobileMenu}
+                  user={user}
+                  openModal={handleOpenModal}
+                />
               </Drawer>
             </Box>
           </Box>
@@ -579,6 +656,11 @@ const Header = ({ categories }: Props) => {
             />
           </Fab>
         </Zoom>
+
+        <SignInModal openModal={handleOpenModal} />
+        <SignUpModal openModal={handleOpenModal} />
+        <ResetPasswordModal openModal={handleOpenModal} />
+        <ProfileSettings />
       </AppBar>
     </Fade>
   );

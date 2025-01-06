@@ -13,7 +13,10 @@ const ModalButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
           color: 'accentPink.main',
           textTransform: 'none',
           padding: '0 32px',
-          height: '56px',
+          height: {
+            xs: '45px',
+            xl: '56px',
+          },
           border: '1px solid',
           boxSizing: 'border-box',
           borderColor: 'transparent',

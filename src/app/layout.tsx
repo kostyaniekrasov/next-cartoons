@@ -1,7 +1,5 @@
-import { AuthInitializer, SignInModal, SignUpModal } from '@/components';
-import { ResetPasswordModal } from '@/components/Auth/ResetPasswordModal';
+import { AuthInitializer } from '@/components';
 import Header from '@/components/Header/Header';
-import ProfileSettings from '@/components/ProfileSettings/ProfileSettings';
 import { getCategories } from '@/lib';
 import { ThemeModeProvider } from '@/theme/ThemeContext';
 import { Box, CircularProgress, CssBaseline } from '@mui/material';
@@ -76,10 +74,10 @@ export default async function RootLayout({
             >
               <AuthInitializer />
               {categories && <Header categories={categories} />}
-              <SignInModal />
+              {/* <SignInModal />
               <SignUpModal />
               <ResetPasswordModal />
-              <ProfileSettings />
+              <ProfileSettings /> */}
               {children}
             </Suspense>
           </ThemeModeProvider>

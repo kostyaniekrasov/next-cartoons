@@ -13,7 +13,6 @@ import {
   updateProfile,
 } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import Link from 'next/link';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -28,9 +27,12 @@ interface AuthFormData {
 type Props = {
   onClose: () => void;
   newTitle: (title: string) => void;
+  openModal: (
+    modal: 'sign-in' | 'sign-up' | 'reset-password' | 'settings',
+  ) => void;
 };
 
-function SignUpForm({ onClose, newTitle }: Readonly<Props>) {
+function SignUpForm({ onClose, newTitle, openModal }: Readonly<Props>) {
   const [step, setStep] = useState(1);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [userCredential, setUserCredential] = useState<UserCredential | null>(
@@ -447,20 +449,14 @@ function SignUpForm({ onClose, newTitle }: Readonly<Props>) {
             Вже зареєстровані?
           </Typography>
 
-          <Link
-            href={'?sign-in=true'}
-            passHref
-            prefetch={true}
-            style={{ textDecoration: 'none' }}
+          <Typography
+            onClick={() => openModal('sign-in')}
+            variant="secondaryText"
+            color="accentPink"
+            sx={{ cursor: 'pointer' }}
           >
-            <Typography
-              variant="secondaryText"
-              color="accentPink"
-              sx={{ cursor: 'pointer' }}
-            >
-              Увійти
-            </Typography>
-          </Link>
+            Увійти
+          </Typography>
         </Box>
       )}
     </Box>

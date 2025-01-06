@@ -2,44 +2,33 @@
 
 import { LogOutIcon, SettingsIcon, UserIcon } from '@/assets/icons';
 import { TabProfile, TabSettings, a11yProps } from '@/components';
+import { useModalStore } from '@/store';
 import useAuthStore from '@/store/useAuthStore';
 import { Box, Modal, Tabs } from '@mui/material';
 import { AnimatePresence, motion } from 'framer-motion';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 import { SettingsTab, TabModal } from '../UI';
 
 const ProfileSettings = () => {
+  const { modals, closeModal } = useModalStore();
   const [value, setValue] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const { logout } = useAuthStore();
-  const [open, setOpen] = useState(false);
-  const settingsTab = searchParams.get('settings');
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
   const handleClose = () => {
-    router.replace(pathname);
+    router.push('?');
+    closeModal('settings');
   };
-
-  useEffect(() => {
-    if (settingsTab === 'profile') {
-      setOpen(true);
-      setValue(0);
-    } else if (settingsTab === 'settings') {
-      setOpen(true);
-      setValue(1);
-    } else setOpen(false);
-  }, [settingsTab]);
 
   return (
     <Modal
-      open={open}
+      open={modals['settings']}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"

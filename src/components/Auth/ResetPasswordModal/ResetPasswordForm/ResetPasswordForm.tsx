@@ -12,7 +12,6 @@ import {
   Typography,
 } from '@mui/material';
 import { sendPasswordResetEmail } from 'firebase/auth';
-import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -24,9 +23,15 @@ interface ResetPasswordData {
 
 interface Props {
   showBackToSignIn?: boolean;
+  openModal: (
+    modal: 'sign-in' | 'sign-up' | 'reset-password' | 'settings',
+  ) => void;
 }
 
-function ResetPasswordForm({ showBackToSignIn = true }: Readonly<Props>) {
+function ResetPasswordForm({
+  showBackToSignIn = true,
+  openModal,
+}: Readonly<Props>) {
   const {
     register,
     setValue,
@@ -37,12 +42,6 @@ function ResetPasswordForm({ showBackToSignIn = true }: Readonly<Props>) {
 
   const [alert, setAlert] = useState('');
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const pathname = usePathname();
-
-  const handleBackToSingIn = () => {
-    router.push(`${pathname}?sign-in=true`);
-  };
 
   const onSubmit: SubmitHandler<ResetPasswordData> = async (data) => {
     setAlert('');
@@ -174,7 +173,7 @@ function ResetPasswordForm({ showBackToSignIn = true }: Readonly<Props>) {
         <Typography
           variant="footnote"
           color="accentPink"
-          onClick={handleBackToSingIn}
+          onClick={() => openModal('sign-in')}
           textAlign={'center'}
           sx={{
             cursor: 'pointer',

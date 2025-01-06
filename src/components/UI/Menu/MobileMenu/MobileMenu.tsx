@@ -2,14 +2,15 @@
 
 import {
   BookmarkIcon,
-  CloseIcon,
   LogOutIcon,
-  LogoMenuIcon,
+  LogoMobileIcon,
   SettingsIcon,
+  XmarkIcon,
 } from '@/assets/icons';
 import useAuthStore from '@/store/useAuthStore';
 import { User } from '@/types';
 import {
+  AppBar,
   Avatar,
   Box,
   Container,
@@ -19,7 +20,7 @@ import {
   Typography,
 } from '@mui/material';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import { SignInButton } from '../../Buttons';
 import { ThemeSwitcher } from '../../Theme';
@@ -27,16 +28,18 @@ import { ThemeSwitcher } from '../../Theme';
 interface Props {
   onClose: () => void;
   user: User | null;
+  openModal: (
+    modal: 'sign-in' | 'sign-up' | 'reset-password' | 'settings',
+  ) => void;
 }
 
-const MobileMenu = ({ onClose, user }: Props) => {
+const MobileMenu = ({ onClose, user, openModal }: Props) => {
   const { logout } = useAuthStore();
 
   const router = useRouter();
-  const pathname = usePathname();
 
-  const openProfileSettings = (currentTab: 'profile' | 'settings') => {
-    router.push(`${pathname}?settings=${currentTab}`);
+  const handleOpenSettings = () => {
+    openModal('settings');
     onClose();
   };
 
@@ -50,6 +53,7 @@ const MobileMenu = ({ onClose, user }: Props) => {
   };
 
   const goToSignIn = () => {
+    openModal('sign-in');
     onClose();
   };
 
@@ -60,47 +64,94 @@ const MobileMenu = ({ onClose, user }: Props) => {
 
   return (
     <Box>
-      <Container disableGutters>
-        <Box
-          component={'header'}
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            py: '8px',
-            mb: '24px',
-            position: 'relative',
-            width: '100%',
-          }}
-        >
-          <Icon
-            sx={{
-              width: 'max-content',
-              height: 'max-content',
-              position: 'absolute',
-              left: '50%',
-              transform: 'translateX(-50%)',
-            }}
-          >
-            <LogoMenuIcon />
-          </Icon>
-
-          <IconButton
-            onClick={onClose}
-            sx={{
-              padding: 0,
-              color: 'gray.900',
-              ml: 'auto',
-            }}
-          >
-            <CloseIcon width={24} height={24} />
-          </IconButton>
-        </Box>
-        <Box
+      <AppBar
+        position="static"
+        color="inherit"
+        sx={{
+          boxShadow: 'none',
+          marginBottom: '16px',
+        }}
+      >
+        <Container
+          maxWidth="2xl"
+          disableGutters
           sx={{
             display: 'flex',
             flexDirection: 'column',
             gap: '16px',
+            borderBottom: '1px solid',
+            borderColor: 'grey.200',
+            padding: '16px',
+          }}
+        >
+          <Box
+            component="div"
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <IconButton
+              onClick={() => router.push('/')}
+              sx={{
+                padding: 0,
+              }}
+            >
+              <Icon
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                  display: {
+                    xs: 'block',
+                    lg: 'none',
+                  },
+                }}
+              >
+                <LogoMobileIcon />
+              </Icon>
+            </IconButton>
+
+            <Box
+              sx={{
+                display: {
+                  xs: 'flex',
+                  sm: 'none',
+                },
+                alignItems: 'center',
+                gap: '20px',
+              }}
+            >
+              <IconButton
+                onClick={onClose}
+                sx={{
+                  color: 'gray.900',
+                  boxSizing: 'border-box',
+                  border: '1px solid',
+                  borderColor: 'gray.200',
+                  borderRadius: '8px',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '8px',
+                  width: '32px',
+                  height: '32px',
+                }}
+              >
+                <Icon sx={{ width: '16px', height: '16px', display: 'flex' }}>
+                  <XmarkIcon />
+                </Icon>
+              </IconButton>
+            </Box>
+          </Box>
+        </Container>
+      </AppBar>
+
+      <Container disableGutters>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px',
           }}
         >
           {user && (
@@ -110,6 +161,11 @@ const MobileMenu = ({ onClose, user }: Props) => {
                   display: 'flex',
                   gap: '8px',
                   alignItems: 'center',
+                  backgroundColor: 'white',
+                  padding: '8px',
+                  border: '1px solid',
+                  borderColor: 'gray.200',
+                  borderRadius: '12px',
                 }}
               >
                 <Avatar
@@ -119,6 +175,7 @@ const MobileMenu = ({ onClose, user }: Props) => {
                     height: '48px',
                   }}
                 />
+
                 <Box
                   sx={{
                     display: 'flex',
@@ -134,19 +191,7 @@ const MobileMenu = ({ onClose, user }: Props) => {
                   </Typography>
                 </Box>
               </Box>
-              <MenuItem
-                onClick={() => openProfileSettings('profile')}
-                sx={{
-                  textTransform: 'none',
-                  borderRadius: '999px',
-                  justifyContent: 'center',
-                  backgroundColor: 'gray.100',
-                }}
-              >
-                <Typography variant="secondaryTextSemibold">
-                  Переглянути профіль
-                </Typography>
-              </MenuItem>
+
               <Box
                 sx={{
                   display: 'flex',
@@ -154,39 +199,73 @@ const MobileMenu = ({ onClose, user }: Props) => {
                   gap: '4px',
                 }}
               >
-                <ThemeSwitcher title />
+                <Box sx={{ display: 'flex', gap: '8px' }}>
+                  <MenuItem
+                    onClick={goToSaved}
+                    sx={{
+                      gap: '4px',
+                      color: 'gray.900',
+                      minHeight: '37px',
+                      backgroundColor: 'white',
+                      padding: '8px',
+                      border: '1px solid',
+                      borderColor: 'gray.200',
+                      borderRadius: '12px',
+                      justifyContent: 'center',
+                      flex: 1,
+                    }}
+                  >
+                    <BookmarkIcon height={17} width={17} />
+                    <Typography variant="secondaryText">Збережені</Typography>
+                  </MenuItem>
 
-                <MenuItem
-                  onClick={goToSaved}
+                  <MenuItem
+                    onClick={() => handleOpenSettings()}
+                    sx={{
+                      backgroundColor: 'white',
+                      padding: '8px',
+                      border: '1px solid',
+                      borderColor: 'gray.200',
+                      borderRadius: '12px',
+                      gap: '4px',
+                      justifyContent: 'center',
+                      color: 'gray.900',
+                      minHeight: '37px',
+                      flex: 1,
+                    }}
+                  >
+                    <SettingsIcon height={17} width={17} />
+
+                    <Typography variant="secondaryText">
+                      Налаштування
+                    </Typography>
+                  </MenuItem>
+                </Box>
+
+                <Box
                   sx={{
+                    backgroundColor: 'white',
                     padding: '8px',
-                    gap: '4px',
-                    color: 'gray.900',
-                    minHeight: '37px',
+                    border: '1px solid',
+                    borderColor: 'gray.200',
+                    borderRadius: '12px',
+                    justifyContent: 'space-between',
                   }}
                 >
-                  <BookmarkIcon height={17} width={17} />
-                  <Typography variant="secondaryText">Збережені</Typography>
-                </MenuItem>
+                  <ThemeSwitcher title />
+                </Box>
 
-                <MenuItem
-                  onClick={() => openProfileSettings('settings')}
-                  sx={{
-                    padding: '8px',
-                    gap: '4px',
-                    color: 'gray.900',
-                    minHeight: '37px',
-                  }}
-                >
-                  <SettingsIcon height={17} width={17} />
-                  <Typography variant="secondaryText">Налаштування</Typography>
-                </MenuItem>
                 {user.role === 'admin' && (
                   <MenuItem
                     onClick={goToAddVideo}
                     sx={{
-                      padding: '8px',
                       minHeight: '37px',
+                      backgroundColor: 'white',
+                      padding: '8px',
+                      border: '1px solid',
+                      borderColor: 'gray.200',
+                      borderRadius: '12px',
+                      justifyContent: 'center',
                     }}
                   >
                     <Typography variant="secondaryText">
@@ -194,12 +273,18 @@ const MobileMenu = ({ onClose, user }: Props) => {
                     </Typography>
                   </MenuItem>
                 )}
+
                 <MenuItem
                   onClick={handleLogout}
                   sx={{
                     gap: '4px',
-                    padding: '8px',
                     minHeight: '37px',
+                    backgroundColor: 'white',
+                    padding: '8px',
+                    border: '1px solid',
+                    borderColor: 'gray.200',
+                    borderRadius: '12px',
+                    justifyContent: 'center',
                   }}
                 >
                   <IconButton

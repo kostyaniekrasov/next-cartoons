@@ -7,7 +7,7 @@ export const lightPalette = {
   },
 
   background: {
-    default: '#fff',
+    default: '#f2f2f7',
     paper: '#fff',
   },
   text: {
@@ -57,7 +57,7 @@ export const darkPalette = {
     main: '#007aff',
   },
   background: {
-    default: '#181818',
+    default: '#26262b',
     paper: '#1a1a1a',
   },
   text: {

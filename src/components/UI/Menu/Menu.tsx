@@ -3,14 +3,7 @@
 import { LogOutIcon, SettingsIcon } from '@/assets/icons';
 import useAuthStore from '@/store/useAuthStore';
 import { User } from '@/types';
-import {
-  Box,
-  Divider,
-  IconButton,
-  Menu,
-  MenuItem,
-  Typography,
-} from '@mui/material';
+import { Box, Icon, Menu, MenuItem, Typography } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -22,15 +15,23 @@ interface Props {
   open: boolean;
   handleClose: () => void;
   user: User;
+  openModal: (
+    modal: 'sign-in' | 'sign-up' | 'reset-password' | 'settings',
+  ) => void;
 }
 
-const MenuBlock = ({ anchorEl, open, handleClose, user }: Props) => {
+const MenuBlock = ({ anchorEl, open, handleClose, user, openModal }: Props) => {
   const { logout } = useAuthStore();
   const router = useRouter();
 
   const handleLogout = async () => {
     await logout();
     router.refresh();
+  };
+
+  const handleOpenSettings = () => {
+    openModal('settings');
+    handleClose();
   };
 
   return (
@@ -52,7 +53,7 @@ const MenuBlock = ({ anchorEl, open, handleClose, user }: Props) => {
           elevation: 0,
           sx: {
             marginTop: '10px',
-            padding: '8px 8px',
+            padding: '4px',
             boxSizing: 'border-box',
             border: '1px solid',
             borderColor: 'gray.200',
@@ -64,24 +65,12 @@ const MenuBlock = ({ anchorEl, open, handleClose, user }: Props) => {
               flexDirection: 'column',
               padding: 0,
               gap: '8px',
-
-              '& .MuiDivider-root': {
-                margin: '0 0',
-                backgroundColor: 'gray.200',
-              },
             },
 
             '& .MuiMenuItem-root': {
               padding: '8px',
               color: 'gray.900',
-
-              '&:first-of-type': {
-                borderRadius: '999px',
-              },
-
-              '&:not(:first-of-type)': {
-                borderRadius: '8px',
-              },
+              borderRadius: '8px',
 
               '&:hover': {
                 backgroundColor: 'gray.200',
@@ -99,6 +88,11 @@ const MenuBlock = ({ anchorEl, open, handleClose, user }: Props) => {
           display: 'flex',
           flexDirection: 'column',
           gap: '4px',
+          borderBottom: '1px solid',
+          padding: '8px',
+          borderColor: 'gray.300',
+          backgroundColor: 'gray.100',
+          margin: '-4px',
         }}
       >
         <Typography variant="mainTextSemibold" color="black" paddingX="8px">
@@ -109,46 +103,17 @@ const MenuBlock = ({ anchorEl, open, handleClose, user }: Props) => {
           {user.email}
         </Typography>
       </Box>
-      <Link
-        href={`?settings=profile`}
-        passHref
-        prefetch={true}
-        style={{ textDecoration: 'none' }}
+
+      <MenuItem
+        onClick={() => handleOpenSettings()}
+        sx={{
+          gap: '4px',
+          color: 'gray.900',
+        }}
       >
-        <MenuItem
-          sx={{
-            textTransform: 'none',
-            borderRadius: '999px',
-            justifyContent: 'center',
-            backgroundColor: 'gray.100',
-          }}
-        >
-          <Typography variant="secondaryTextSemibold">
-            Переглянути профіль
-          </Typography>
-        </MenuItem>
-      </Link>
-
-      <Divider />
-
-      <Link
-        href={`?settings=settings`}
-        passHref
-        prefetch={true}
-        style={{ textDecoration: 'none' }}
-      >
-        <MenuItem
-          sx={{
-            gap: '4px',
-            color: 'gray.900',
-          }}
-        >
-          <SettingsIcon height={17} width={17} />
-          <Typography variant="secondaryText">Налаштування</Typography>
-        </MenuItem>
-      </Link>
-
-      <Divider />
+        <SettingsIcon height={17} width={17} />
+        <Typography variant="secondaryText">Налаштування</Typography>
+      </MenuItem>
 
       <ThemeSwitcher title />
 
@@ -167,19 +132,33 @@ const MenuBlock = ({ anchorEl, open, handleClose, user }: Props) => {
         </Link>
       )}
 
+      <Box
+        sx={{
+          height: '1px',
+          width: '100%',
+          backgroundColor: 'gray.100',
+        }}
+      />
+
       <MenuItem
         onClick={handleLogout}
         sx={{
           gap: '4px',
         }}
       >
-        <IconButton
+        <Icon
           sx={{
+            display: 'flex',
             color: 'error.main',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '17px',
+            height: '17px',
           }}
         >
-          <LogOutIcon />
-        </IconButton>
+          <LogOutIcon width={17} height={17} />
+        </Icon>
+
         <Typography variant="secondaryText" color="error">
           Вихід
         </Typography>
