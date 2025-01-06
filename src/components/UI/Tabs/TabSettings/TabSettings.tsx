@@ -3,9 +3,11 @@
 import { CloseIcon } from '@/assets/icons';
 import { ResetPasswordForm } from '@/components/Auth/ResetPasswordModal/ResetPasswordForm';
 import { SuccessAlert } from '@/components/UI';
+import { useModalStore } from '@/store';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { Box, Fade, IconButton, Snackbar, Typography } from '@mui/material';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { ChangePasswordScreen } from '../ChangePasswordScreen';
@@ -19,8 +21,16 @@ interface Props {
 }
 
 const TabSettings = ({ value, handleClose, index }: Props) => {
+  const router = useRouter();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { openModal, modals } = useModalStore();
   const [successChangeAlert, setSuccessChangeAlert] = useState(false);
   const [currentScreen, setCurrentScreen] = useState('all');
+
+  const handleOpenModal = (modal: keyof typeof modals) => {
+    router.push(`?${modal}=true`);
+    openModal(modal);
+  };
 
   const handleShowAlert = () => {
     setSuccessChangeAlert(true);
@@ -145,7 +155,10 @@ const TabSettings = ({ value, handleClose, index }: Props) => {
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3 }}
             >
-              <ResetPasswordForm showBackToSignIn={false} />
+              <ResetPasswordForm
+                showBackToSignIn={false}
+                openModal={handleOpenModal}
+              />
             </motion.div>
           )}
         </AnimatePresence>
