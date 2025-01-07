@@ -108,7 +108,7 @@ function SignUpForm({ onClose, newTitle, openModal }: Readonly<Props>) {
         }
 
         await updateProfile(userCredential.user, { displayName: data.name });
-        await setDoc(doc(db, 'users', data.email), {
+        await setDoc(doc(db, 'users', userCredential.user.uid), {
           name: data.name,
           age: data.age,
           email: data.email,
