@@ -10,7 +10,7 @@ import {
   signOut,
   updatePassword,
 } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import nookies from 'nookies';
 import { create } from 'zustand';
 
@@ -70,6 +70,7 @@ const useAuthStore = create<AuthState>()((set, get) => ({
       }
       get().setInitialized(true);
     } catch (err) {
+      console.error('Error during login:', err);
       handleLoginError(err, set);
     } finally {
       get().stopLoading();
@@ -151,10 +152,15 @@ const useAuthStore = create<AuthState>()((set, get) => ({
 }));
 
 const getUserDataFromFirebase = async (uid: string): Promise<User | null> => {
-  const userDocRef = doc(db, 'users', uid);
-  const userDocSnap = await getDoc(userDocRef);
-  if (!userDocSnap.exists()) return null;
+  const usersCollectionRef = collection(db, 'users');
+  const q = query(usersCollectionRef, where('uid', '==', uid));
+  const querySnapshot = await getDocs(q);
 
+  if (querySnapshot.empty) {
+    return null;
+  }
+
+  const userDocSnap = querySnapshot.docs[0];
   const userData = userDocSnap.data();
   return {
     id: uid,
@@ -173,8 +179,6 @@ const getUserDataFromFirebase = async (uid: string): Promise<User | null> => {
 
 const saveUserCookie = (user: User) => {
   const cookieUser = nookies.get(null).user_info;
-  console.log('Cookie before:', cookieUser);
-  console.log('User to save:', user);
 
   const updUser = {
     id: user.id,
@@ -198,9 +202,6 @@ const saveUserCookie = (user: User) => {
       sameSite: 'None',
       secure: true,
     });
-    console.log('Cookie updated:', JSON.stringify(updUser));
-  } else {
-    console.log('No cookie update needed');
   }
 };
 

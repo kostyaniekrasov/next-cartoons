@@ -44,18 +44,17 @@ function SignInForm({ onClose, openModal }: Readonly<Props>) {
 
   const onSubmit: SubmitHandler<AuthFormData> = async (data) => {
     setAlert('');
-    await loginWithEmailAndPassword(data.email, data.password)
-      .then(() => {
-        onClose();
-        router.refresh();
-      })
-      .catch((error) => {
-        if (error === 'Email not verified') {
-          setAlert('emailNotVerified');
-        } else if (error && error !== 'Email not verified') {
-          setAlert('wrongPasswordOrEmail');
-        }
-      });
+    try {
+      await loginWithEmailAndPassword(data.email, data.password);
+      onClose();
+      router.refresh();
+    } catch (error) {
+      if (error === 'Email not verified') {
+        setAlert('emailNotVerified');
+      } else {
+        setAlert('wrongPasswordOrEmail');
+      }
+    }
   };
 
   const watchEmail = watch('email');
