@@ -173,8 +173,6 @@ const getUserDataFromFirebase = async (uid: string): Promise<User | null> => {
 
 const saveUserCookie = (user: User) => {
   const cookieUser = nookies.get(null).user_info;
-  console.log('Cookie before:', cookieUser);
-  console.log('User to save:', user);
 
   const updUser = {
     id: user.id,
@@ -198,9 +196,6 @@ const saveUserCookie = (user: User) => {
       sameSite: 'None',
       secure: true,
     });
-    console.log('Cookie updated:', JSON.stringify(updUser));
-  } else {
-    console.log('No cookie update needed');
   }
 };
 
