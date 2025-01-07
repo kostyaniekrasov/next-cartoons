@@ -1,4 +1,4 @@
-import { AuthInitializer } from '@/components';
+import { AuthInitializer, Head } from '@/components';
 import Header from '@/components/Header/Header';
 import { getCategories } from '@/lib';
 import { ThemeModeProvider } from '@/theme/ThemeContext';
@@ -35,6 +35,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${inter.variable}`}>
       <head>
+        <Head />
         <link
           rel="icon"
           type="image/png"
