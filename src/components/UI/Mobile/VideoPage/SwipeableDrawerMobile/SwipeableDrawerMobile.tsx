@@ -44,7 +44,7 @@ const SwipeableDrawerMobile = ({
         sx: {
           width: '100vw',
           overflow: 'auto',
-          backgroundColor: 'background.default',
+          backgroundColor: 'white',
           top: videoHeight ? `${videoHeight}px` : '0',
         },
       }}
@@ -63,7 +63,7 @@ const SwipeableDrawerMobile = ({
           component={'button'}
           onClick={toggleDrawer(false)}
           sx={{
-            backgroundColor: 'white',
+            backgroundColor: 'transparent',
             width: '100%',
             display: 'flex',
             alignItems: 'center',

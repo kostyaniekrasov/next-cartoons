@@ -1,17 +1,10 @@
 'use client';
 
 import { Playlist, VideoData } from '@/types/VideoData';
-import convertYouTubeDuration from '@/utils/convertYotubeDuration';
 import getFirstParagraph from '@/utils/getFirstSentece';
 import seriesTitle from '@/utils/seriesTitle';
-import {
-  Box,
-  Divider,
-  List,
-  ListItem,
-  Skeleton,
-  Typography,
-} from '@mui/material';
+import { Box, List, ListItem, Skeleton, Typography } from '@mui/material';
+import Image from 'next/image';
 import React from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
@@ -27,19 +20,17 @@ const ListWithCustomScroll = React.memo(
     return playlist ? (
       <List
         sx={{
+          borderRadius: '12px',
+          padding: 0,
           height: {
-            '2xl': '584px',
+            '2xl': '645px',
             '3xl': '692px',
           },
           width: {
-            '2xl': '424px',
-            '3xl': '438px',
+            '2xl': '318px',
+            '3xl': '638px',
           },
           boxSizing: 'border-box',
-          border: '1px solid',
-          borderColor: 'gray.200',
-          borderRadius: '20px',
-          padding: '4px',
           backgroundColor: 'gray.100',
         }}
       >
@@ -53,104 +44,139 @@ const ListWithCustomScroll = React.memo(
           style={{
             maxHeight: '100%',
             height: '100%',
+            borderRadius: '12px',
           }}
         >
-          {playlist?.videos.map((video, index) => (
-            <React.Fragment key={video.id}>
-              <ListItem
-                sx={{
-                  padding: '16px',
-                  borderRadius: '20px',
-                  display: 'flex',
-                  gap: '16px',
-                  cursor: 'pointer',
-                  // maxHeight: '95px',
-                  backgroundColor:
-                    currentId === video.id ? 'gray.200' : 'inherit',
+          {playlist?.videos.map((video, index) => {
+            const imgUrl =
+              video.snippet.thumbnails.maxres?.url ||
+              video.snippet.thumbnails.standard?.url ||
+              video.snippet.thumbnails.high?.url ||
+              video.snippet.thumbnails.medium?.url ||
+              video.snippet.thumbnails.default?.url ||
+              'https://media.istockphoto.com/id/1396814518/vector/image-coming-soon-no-photo-no-thumbnail-image-available-vector-illustration.jpg?s=612x612&w=0&k=20&c=hnh2OZgQGhf0b46-J2z7aHbIWwq8HNlSDaNp2wn_iko=';
 
-                  '&:hover': {
-                    transition: 'all 0.3s ease-out',
-                    backgroundColor: 'gray.200',
-                  },
-                  '&:hover .MuiTypography-root:not(.no-hover-effect)': {
-                    color: 'accentPink.main',
-                  },
-                }}
-                onClick={() => ChangeVideo(video)}
-              >
-                <Box width={'35px'} height={'35px'}>
-                  <Typography
-                    variant="h1"
-                    color={currentId === video.id ? 'accentPink' : 'gray.900'}
-                    width={'35px'}
-                    lineHeight={'32px'}
-                    textAlign={'center'}
-                  >
-                    {index + 1}
-                  </Typography>
-                </Box>
-                <Box
+            return (
+              <React.Fragment key={video.id}>
+                <ListItem
                   sx={{
-                    width: '100%',
+                    padding: 0,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    cursor: 'pointer',
+                    borderRadius: '12px',
+                    mb: '16px',
+                    // backgroundColor:
+                    //   currentId === video.id ? 'gray.200' : 'inherit',
+                    '&:hover': {
+                      transition: 'all 0.3s ease-out',
+                      backgroundColor: 'gray.200',
+                    },
+                    '&:hover .MuiTypography-root:not(.no-hover-effect)': {
+                      color: 'accentPink.main',
+                    },
                   }}
+                  onClick={() => ChangeVideo(video)}
                 >
                   <Box
                     sx={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
+                      width: {
+                        '2xl': '318px',
+                        '3xl': '638px',
+                      },
+                      height: {
+                        '2xl': '164px',
+                        '3xl': '328px',
+                      },
+                      borderRadius: '12px',
+                      marginBottom: '8px',
+                    }}
+                  >
+                    <Image
+                      src={imgUrl}
+                      alt={video.snippet.title}
+                      width={318}
+                      height={164}
+                      style={{
+                        borderRadius: '12px',
+                        width: '100%',
+                        height: '100%',
+                      }}
+                    />
+                  </Box>
+
+                  <Typography
+                    variant="secondaryTextSemibold"
+                    color={currentId === video.id ? 'accentPink' : 'gray.700'}
+                    width={'100%'}
+                    mb={'4px'}
+                    sx={{
+                      textTransform: 'uppercase',
+                      fontSize: {
+                        xl: 10,
+                        '3xl': 12,
+                      },
+                    }}
+                  >
+                    {`серія ${index + 1}`}
+                  </Typography>
+
+                  <Typography
+                    variant="footnote"
+                    color="gray.90"
+                    sx={{
+                      fontSize: {
+                        xl: 13,
+                        '3xl': 15,
+                      },
+                    }}
+                    fontWeight={700}
+                    width={'100%'}
+                    mb={'2px'}
+                  >
+                    {seriesTitle(video.snippet.title, playlist.title)}
+                  </Typography>
+                  <Box
+                    sx={{
                       width: '100%',
                     }}
                   >
-                    <Typography
-                      variant="mainTextBold"
-                      component={'p'}
-                      color={currentId === video.id ? 'accentPink' : 'gray.900'}
+                    <PerfectScrollbar
+                      options={{
+                        suppressScrollX: true,
+                        wheelPropagation: false,
+                        swipeEasing: true,
+                        wheelSpeed: 0.1,
+                      }}
+                      style={{
+                        maxHeight: '32px',
+                        overflow: 'hidden',
+                      }}
                     >
-                      {seriesTitle(video.snippet.title, playlist.title)}
-                    </Typography>
-                    <Typography
-                      component={'p'}
-                      variant="mainTextBold"
-                      color={currentId === video.id ? 'accentPink' : 'gray.900'}
-                    >
-                      {convertYouTubeDuration(video.contentDetails.duration)} хв
-                    </Typography>
+                      <Typography
+                        variant="secondaryText"
+                        fontSize={10}
+                        sx={{
+                          fontSize: {
+                            xl: 10,
+                            '3xl': 12,
+                          },
+                        }}
+                        className="no-hover-effect"
+                        component={'p'}
+                        color="gray.700"
+                      >
+                        {getFirstParagraph(
+                          video.snippet.description,
+                          playlist.title,
+                        )}
+                      </Typography>
+                    </PerfectScrollbar>
                   </Box>
-                  <PerfectScrollbar
-                    options={{
-                      suppressScrollX: true,
-                      wheelPropagation: false,
-                      swipeEasing: true,
-                      wheelSpeed: 0.1,
-                    }}
-                    style={{
-                      maxHeight: '72px',
-                      overflow: 'hidden',
-                    }}
-                  >
-                    <Typography
-                      variant="secondaryText"
-                      className="no-hover-effect"
-                    >
-                      {getFirstParagraph(
-                        video.snippet.description,
-                        playlist.title,
-                      )}
-                    </Typography>
-                  </PerfectScrollbar>
-                </Box>
-              </ListItem>
-              {index !== playlist.videos.length - 1 && (
-                <Divider
-                  sx={{
-                    backgroundColor: 'gray.200',
-                    height: '1px',
-                    margin: '10px 0',
-                  }}
-                />
-              )}
-            </React.Fragment>
-          ))}
+                </ListItem>
+              </React.Fragment>
+            );
+          })}
         </PerfectScrollbar>
       </List>
     ) : (

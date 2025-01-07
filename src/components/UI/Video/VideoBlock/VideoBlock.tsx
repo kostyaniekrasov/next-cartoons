@@ -62,8 +62,8 @@ const VideoBlock = React.memo(
       <Box
         sx={{
           width: {
-            '2xl': 888,
-            '3xl': 1054,
+            '2xl': 1002,
+            '3xl': '100%',
           },
         }}
       >
@@ -96,7 +96,7 @@ const VideoBlock = React.memo(
             sx={{
               height: {
                 xs: '193px',
-                sm: '500px',
+                sm: '563.57px',
               },
               marginBottom: {
                 xs: '16px',

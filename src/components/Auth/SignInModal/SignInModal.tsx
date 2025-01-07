@@ -19,7 +19,7 @@ function SignInModal({ openModal }: Readonly<Props>) {
   const { modals, closeModal } = useModalStore();
   const [isVisible, setIsVisible] = useState(modals['sign-in']);
 
-  const closeSignInModal = () => {
+  const closeCurrentModal = () => {
     setIsVisible(false);
     setTimeout(() => {
       router.push('?');
@@ -39,7 +39,7 @@ function SignInModal({ openModal }: Readonly<Props>) {
   return (
     <Modal
       open={modals['sign-in']}
-      onClose={closeSignInModal}
+      onClose={closeCurrentModal}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
       slotProps={{
@@ -138,7 +138,7 @@ function SignInModal({ openModal }: Readonly<Props>) {
                   </Icon>
 
                   <IconButton
-                    onClick={closeSignInModal}
+                    onClick={closeCurrentModal}
                     sx={{
                       color: 'gray.900',
                       boxSizing: 'border-box',
@@ -157,7 +157,12 @@ function SignInModal({ openModal }: Readonly<Props>) {
                     }}
                   >
                     <Icon
-                      sx={{ width: '16px', height: '16px', display: 'flex' }}
+                      sx={{
+                        width: '16px',
+                        height: '16px',
+                        display: 'flex',
+                        color: 'gray.900',
+                      }}
                     >
                       <XmarkIcon />
                     </Icon>
@@ -187,7 +192,7 @@ function SignInModal({ openModal }: Readonly<Props>) {
                   </Typography>
 
                   <SignInForm
-                    onClose={closeSignInModal}
+                    onClose={closeCurrentModal}
                     openModal={handleOpenModal}
                   />
                 </Box>

@@ -1,9 +1,9 @@
 'use client';
 
-import { CloseIcon } from '@/assets/icons';
+import { LogoMenuIcon, XmarkIcon } from '@/assets/icons';
 import { SignUpForm } from '@/components';
 import { useModalStore } from '@/store';
-import { Box, IconButton, Modal, Typography } from '@mui/material';
+import { Box, Icon, IconButton, Modal, Typography } from '@mui/material';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -20,7 +20,7 @@ function SignUpModal({ openModal }: Readonly<Props>) {
   const [isVisible, setIsVisible] = useState(modals['sign-up']);
   const [title, setTitle] = useState('Реєстрація');
 
-  const closeSignInModal = () => {
+  const closeCurrentModal = () => {
     setIsVisible(false);
     setTimeout(() => {
       router.push('?');
@@ -44,7 +44,7 @@ function SignUpModal({ openModal }: Readonly<Props>) {
   return (
     <Modal
       open={modals['sign-up']}
-      onClose={closeSignInModal}
+      onClose={closeCurrentModal}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
       slotProps={{
@@ -77,6 +77,8 @@ function SignUpModal({ openModal }: Readonly<Props>) {
               <Box
                 component="div"
                 sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
                   width: {
                     xs: '100%',
                     sm: '435px',
@@ -90,7 +92,7 @@ function SignUpModal({ openModal }: Readonly<Props>) {
                     sm: 'auto',
                   },
                   padding: {
-                    xs: '8px 16px',
+                    xs: '16px',
                     sm: '32px',
                   },
                   border: `1px solid `,
@@ -108,31 +110,98 @@ function SignUpModal({ openModal }: Readonly<Props>) {
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     mb: '24px',
+                    position: 'relative',
                   }}
                 >
                   <Typography
                     textAlign="left"
                     variant="h3Semibold"
                     color="gray.900"
+                    sx={{
+                      display: {
+                        xs: 'none',
+                        xl: 'block',
+                      },
+                    }}
                   >
                     {title}
                   </Typography>
 
-                  <IconButton
-                    onClick={closeSignInModal}
+                  <Icon
                     sx={{
-                      color: 'gray.900',
-                      padding: 0,
+                      width: 'max-content',
+                      height: 'max-content',
+                      position: 'absolute',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      display: {
+                        xl: 'none',
+                      },
                     }}
                   >
-                    <CloseIcon width={24} height={24} />
+                    <LogoMenuIcon />
+                  </Icon>
+
+                  <IconButton
+                    onClick={closeCurrentModal}
+                    sx={{
+                      color: 'gray.900',
+                      boxSizing: 'border-box',
+                      border: '1px solid',
+                      borderColor: 'gray.200',
+                      borderRadius: '8px',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '8px',
+                      width: '32px',
+                      height: '32px',
+                      ml: {
+                        xs: 'auto',
+                        xl: 0,
+                      },
+                    }}
+                  >
+                    <Icon
+                      sx={{
+                        width: '16px',
+                        height: '16px',
+                        display: 'flex',
+                        color: 'gray.900',
+                      }}
+                    >
+                      <XmarkIcon />
+                    </Icon>
                   </IconButton>
                 </Box>
-                <SignUpForm
-                  onClose={closeSignInModal}
-                  newTitle={ChangeTitle}
-                  openModal={handleOpenModal}
-                />
+
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    margin: 'auto',
+                    width: '100%',
+                    gap: '40px',
+                  }}
+                >
+                  <Typography
+                    variant="mainText"
+                    textAlign={'center'}
+                    component={'p'}
+                    sx={{
+                      display: {
+                        xl: 'none',
+                      },
+                    }}
+                  >
+                    {title}
+                  </Typography>
+
+                  <SignUpForm
+                    onClose={closeCurrentModal}
+                    newTitle={ChangeTitle}
+                    openModal={handleOpenModal}
+                  />
+                </Box>
               </Box>
             </motion.div>
           )}

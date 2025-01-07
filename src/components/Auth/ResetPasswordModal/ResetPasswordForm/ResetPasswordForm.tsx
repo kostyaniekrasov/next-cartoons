@@ -75,7 +75,6 @@ function ResetPasswordForm({
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        mx: 'auto',
       }}
     >
       <Box

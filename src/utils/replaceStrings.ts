@@ -10,7 +10,14 @@ const replaceStrings = (inStr: string, playlistTitle: string) => {
     'Мультик Для Дітей',
   ];
 
-  const removeSenteceWithStr = ['Підпишись', 'https'];
+  const removeSenteceWithStr = [
+    'Підпишись',
+    'https',
+    '- Розвиваючі Мультики ',
+    '- Розвиваючі Мультики Українською Мовою ',
+    '- Веселі Дитячі',
+    '- Pозвиваючі Mультики Для Дітей',
+  ];
 
   let newStr = inStr;
 
@@ -19,16 +26,16 @@ const replaceStrings = (inStr: string, playlistTitle: string) => {
     newStr = newStr.replace(regex, '').trim();
   });
 
-  let sentences = newStr.split(/(?<=[.!?])\s+/);
+  removeSenteceWithStr.forEach((str) => {
+    const regex = new RegExp(`${str}.*`, 'gi');
+    newStr = newStr.replace(regex, '').trim();
+  });
 
-  sentences = sentences.filter(
-    (sentence) =>
-      !removeSenteceWithStr.some((str) =>
-        sentence.toLowerCase().includes(str.toLowerCase()),
-      ),
-  );
+  const sentences = newStr.split(/(?<=[.!?])\s+/);
 
   newStr = sentences.join(' ');
+
+  newStr = newStr.replace(new RegExp(playlistTitle, 'gi'), '').trim();
 
   if (!newStr.length) {
     newStr = playlistTitle;

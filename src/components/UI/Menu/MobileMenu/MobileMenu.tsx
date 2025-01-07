@@ -137,7 +137,14 @@ const MobileMenu = ({ onClose, user, openModal }: Props) => {
                   height: '32px',
                 }}
               >
-                <Icon sx={{ width: '16px', height: '16px', display: 'flex' }}>
+                <Icon
+                  sx={{
+                    width: '16px',
+                    height: '16px',
+                    display: 'flex',
+                    color: 'gray.900',
+                  }}
+                >
                   <XmarkIcon />
                 </Icon>
               </IconButton>

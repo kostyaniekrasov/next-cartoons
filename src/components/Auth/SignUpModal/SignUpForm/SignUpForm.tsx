@@ -143,7 +143,7 @@ function SignUpForm({ onClose, newTitle, openModal }: Readonly<Props>) {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        mx: 'auto',
+        // mx: 'auto',
         gap: '16px',
       }}
     >
