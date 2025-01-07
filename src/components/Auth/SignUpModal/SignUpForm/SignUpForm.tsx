@@ -257,6 +257,9 @@ function SignUpForm({ onClose, newTitle, openModal }: Readonly<Props>) {
                   'Пароль має містити хоча б один спец-символ',
                 hasDigit: (value) =>
                   /\d/.test(value) || 'Пароль має містити хоча б одну цифру',
+                hasLowerCase: (value) =>
+                  /[a-z]/.test(value) ||
+                  'Пароль повинен містити принаймні одну маленьку літеру',
                 hasUpperCase: (value) =>
                   /[A-Z]/.test(value) ||
                   'Пароль повинен містити принаймні одну велику літеру',
