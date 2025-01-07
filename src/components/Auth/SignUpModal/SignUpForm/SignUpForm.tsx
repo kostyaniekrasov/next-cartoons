@@ -4,7 +4,14 @@ import { ClearIcon, WarningIcon } from '@/assets/icons';
 import { CustomInput, PasswordInput, SelectArrowButton } from '@/components';
 import { ModalButton } from '@/components/UI/Buttons/ModalButton';
 import { auth, db } from '@/lib/database/firebase';
-import { Box, Collapse, IconButton, MenuItem, Typography } from '@mui/material';
+import {
+  Box,
+  Collapse,
+  Icon,
+  IconButton,
+  MenuItem,
+  Typography,
+} from '@mui/material';
 import { FirebaseError } from 'firebase/app';
 import {
   UserCredential,
@@ -159,8 +166,8 @@ function SignUpForm({ onClose, newTitle, openModal }: Readonly<Props>) {
                     display: 'flex',
                     gap: '4px',
                     alignItems: 'center',
-                    color: 'warning.main',
                     paddingTop: '8px',
+                    color: 'warning.main',
                   }}
                 >
                   <WarningIcon width={14} height={14} />
@@ -190,19 +197,38 @@ function SignUpForm({ onClose, newTitle, openModal }: Readonly<Props>) {
                     orientation="horizontal"
                     timeout={200}
                     sx={{
-                      width: '24px',
-                      height: '24px',
+                      width: {
+                        xs: '18px',
+                        sm: '24px',
+                      },
+                      height: {
+                        xs: '18px',
+                        sm: '24px',
+                      },
                     }}
                   >
                     <IconButton
                       sx={{
                         backgroundColor: 'gray.100',
                         color: 'gray.900',
-                        padding: '4px',
+                        padding: {
+                          xs: 0,
+                          sm: '4px',
+                        },
                       }}
                       onClick={() => setValue('email', '')}
                     >
-                      <ClearIcon />
+                      <Icon
+                        sx={{
+                          width: '16px',
+                          height: '16px',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <ClearIcon />
+                      </Icon>
                     </IconButton>
                   </Collapse>
                 ),
