@@ -23,6 +23,7 @@ import {
   Box,
   CircularProgress,
   Collapse,
+  Icon,
   IconButton,
   MenuItem,
   Typography,
@@ -254,11 +255,24 @@ const TabProfile = ({ value, handleClose, index }: Props) => {
                     sx={{
                       backgroundColor: 'gray.100',
                       color: 'gray.900',
-                      padding: '4px',
+                      padding: {
+                        xs: 0,
+                        sm: '4px',
+                      },
                     }}
                     onClick={() => setValue('name', '')}
                   >
-                    <ClearIcon />
+                    <Icon
+                      sx={{
+                        width: '16px',
+                        height: '16px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <ClearIcon />
+                    </Icon>
                   </IconButton>
                 </Collapse>
               ),
@@ -271,7 +285,6 @@ const TabProfile = ({ value, handleClose, index }: Props) => {
         />
 
         <CustomInput
-          title="age"
           select
           label="Вік"
           value={watchAge}

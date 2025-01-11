@@ -18,6 +18,7 @@ export const lightPalette = {
   white: '#fff',
   gray: {
     900: '#181818',
+    800: '#626265',
     700: '#8d8d8e',
     600: '#8e8e93',
     500: '#aeaeb2',
@@ -68,6 +69,7 @@ export const darkPalette = {
   white: '#000',
   gray: {
     900: '#f2f2f7',
+    800: '#2e2e33',
     700: '#aeaeb2',
     600: '#8e8e93',
     500: '#6e6e73',

@@ -51,12 +51,12 @@ const VideoPage = ({
   const [open, setOpen] = useState(false);
   const [currentVideo, setCurrentVideo] = useState<VideoData>();
   const [isSaved, setIsSaved] = useState(false);
+  const [videoHeight, setVideoHeight] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const theme = useTheme();
   const isMobileScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const [videoHeight, setVideoHeight] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   const initialized = useRef(false);
   const videoRef = useRef<HTMLDivElement>(null);
@@ -291,7 +291,7 @@ const VideoPage = ({
           </Box>
         </Box>
 
-        {playlistTitle && (
+        {playlistTitle && playlist.videos.length > 1 && (
           <SwipeableDrawerOpenButton
             toggleDrawer={toggleDrawer}
             nextVideoTitle={nextVideo?.snippet.title}

@@ -25,7 +25,6 @@ const CustomSearch = React.forwardRef<HTMLInputElement, TextFieldProps>(
               xs: '37px',
               xl: '56px',
             },
-
             '& fieldset': {
               borderColor: 'gray.200',
             },
@@ -33,9 +32,9 @@ const CustomSearch = React.forwardRef<HTMLInputElement, TextFieldProps>(
               borderColor: 'gray.400',
               color: 'gray.900',
             },
-            '&.Mui-focused, &.Mui-focused fieldset': {
+            '&.Mui-focused fieldset': {
+              border: '1px solid',
               color: 'gray.900',
-
               borderColor: {
                 xs: 'gray.100',
                 xl: 'gray.400',

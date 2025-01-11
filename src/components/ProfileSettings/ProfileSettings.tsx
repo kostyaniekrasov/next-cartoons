@@ -1,6 +1,10 @@
 'use client';
 
-import { LogOutIcon, SettingsIcon, UserIcon } from '@/assets/icons';
+import {
+  ExitProfileIcon,
+  SettingsProfileIcon,
+  UserProfileIcon,
+} from '@/assets/icons';
 import { TabProfile, TabSettings, a11yProps } from '@/components';
 import { useModalStore } from '@/store';
 import useAuthStore from '@/store/useAuthStore';
@@ -24,6 +28,11 @@ const ProfileSettings = () => {
   const handleClose = () => {
     router.push('?');
     closeModal('settings');
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setValue(0);
   };
 
   return (
@@ -95,19 +104,19 @@ const ProfileSettings = () => {
             }}
           >
             <SettingsTab
-              customIcon={<UserIcon width={24} height={24} />}
+              customIcon={<UserProfileIcon />}
               customLabel="Профіль"
               {...a11yProps(0)}
             />
 
             <SettingsTab
-              customIcon={<SettingsIcon width={24} height={24} />}
+              customIcon={<SettingsProfileIcon />}
               customLabel="Налаштування"
               {...a11yProps(1)}
             />
 
             <SettingsTab
-              customIcon={<LogOutIcon width={24} height={24} />}
+              customIcon={<ExitProfileIcon />}
               customLabel="Вихід"
               onClick={() => setShowModal(true)}
             />
@@ -152,7 +161,7 @@ const ProfileSettings = () => {
           <TabModal
             title="Вийти з системи?"
             open={showModal}
-            closeModal={() => setShowModal(false)}
+            closeModal={handleCloseModal}
             someFunction={logout}
           />
         </Box>

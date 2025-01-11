@@ -26,10 +26,6 @@ const CustomToggleButton = React.forwardRef<
           color: 'white',
           borderColor: 'accentPink.main',
         },
-        '&:hover': {
-          border: '1px solid',
-          borderColor: 'gray.100',
-        },
       }}
     />
   );

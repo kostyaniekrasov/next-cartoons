@@ -14,14 +14,31 @@ const ThemeSwitcher = ({ title }: Props) => {
     <MenuItem
       onClick={toggleTheme}
       sx={{
-        padding: '8px',
+        px: '8px',
+        py: '3px',
         justifyContent: 'space-between',
         '&:hover': {
           backgroundColor: 'transparent !important',
         },
       }}
     >
-      {title && <Typography variant="secondaryText">Тема</Typography>}
+      {title && (
+        <Typography
+          variant="secondaryText"
+          sx={{
+            fontSize: {
+              xl: '13px',
+              '3xl': '15px',
+            },
+            lineHeight: {
+              xl: '13px',
+              '3xl': '15px',
+            },
+          }}
+        >
+          Тема
+        </Typography>
+      )}
 
       <ThemeSwitch checked={isDarkMode} />
     </MenuItem>

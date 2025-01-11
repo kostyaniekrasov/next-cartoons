@@ -14,7 +14,7 @@ const CustomInput = React.forwardRef<HTMLInputElement, TextFieldProps>(
           color: 'gray.600',
           fontFamily: 'var(--font-inter), sans-serif',
           '& .MuiOutlinedInput-root': {
-            color: 'gray.600',
+            color: 'gray.900',
             padding: '16px',
             borderRadius: '12px',
             transition: 'transform 0.3s ease',

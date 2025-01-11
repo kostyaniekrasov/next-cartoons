@@ -28,6 +28,7 @@ interface Props {
   CWlinks?: ContinueWatching[];
   playlistsType: PlaylistsType;
   user: User | null;
+  borderBottom: boolean;
 }
 
 const ToggleSliderToGrid = ({
@@ -38,6 +39,7 @@ const ToggleSliderToGrid = ({
   categories,
   playlistsType,
   user,
+  borderBottom,
 }: Props) => {
   const [isGrid, setIsGrid] = useState(false);
   const [filterOrder, setFilterOrder] = useState('updatedTime');
@@ -344,11 +346,11 @@ const ToggleSliderToGrid = ({
       {!!playlists.length && (
         <Box
           sx={{
-            borderBottom: '1px solid',
+            borderBottom: borderBottom ? '1px solid' : 'none',
             borderColor: 'gray.200',
             paddingBottom: {
               xs: '16px',
-              sm: '30px',
+              sm: '32px',
             },
           }}
         >

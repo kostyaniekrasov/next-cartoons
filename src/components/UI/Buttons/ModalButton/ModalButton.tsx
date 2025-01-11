@@ -29,8 +29,7 @@ const ModalButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
           },
 
           '&.Mui-selected, &.Mui-selected:hover, &:hover': {
-            backgroundColor: 'white',
-            color: 'accentPink.main',
+            backgroundColor: 'accentPink.dark',
             borderColor: 'gray.200',
           },
 

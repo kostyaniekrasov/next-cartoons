@@ -210,11 +210,12 @@ const MobileMenu = ({ onClose, user, openModal }: Props) => {
                   <MenuItem
                     onClick={goToSaved}
                     sx={{
+                      boxSizing: 'border-box',
+                      height: '46px',
                       gap: '4px',
                       color: 'gray.900',
-                      minHeight: '37px',
                       backgroundColor: 'white',
-                      padding: '8px',
+                      // padding: '12px',
                       border: '1px solid',
                       borderColor: 'gray.200',
                       borderRadius: '12px',
@@ -229,15 +230,16 @@ const MobileMenu = ({ onClose, user, openModal }: Props) => {
                   <MenuItem
                     onClick={() => handleOpenSettings()}
                     sx={{
+                      boxSizing: 'border-box',
+                      height: '46px',
                       backgroundColor: 'white',
-                      padding: '8px',
+                      // padding: '12px',
                       border: '1px solid',
                       borderColor: 'gray.200',
                       borderRadius: '12px',
                       gap: '4px',
                       justifyContent: 'center',
                       color: 'gray.900',
-                      minHeight: '37px',
                       flex: 1,
                     }}
                   >
@@ -251,6 +253,7 @@ const MobileMenu = ({ onClose, user, openModal }: Props) => {
 
                 <Box
                   sx={{
+                    boxSizing: 'border-box',
                     backgroundColor: 'white',
                     padding: '8px',
                     border: '1px solid',
@@ -266,9 +269,10 @@ const MobileMenu = ({ onClose, user, openModal }: Props) => {
                   <MenuItem
                     onClick={goToAddVideo}
                     sx={{
-                      minHeight: '37px',
+                      boxSizing: 'border-box',
+                      height: '46px',
                       backgroundColor: 'white',
-                      padding: '8px',
+                      // padding: '12px',
                       border: '1px solid',
                       borderColor: 'gray.200',
                       borderRadius: '12px',
@@ -284,10 +288,10 @@ const MobileMenu = ({ onClose, user, openModal }: Props) => {
                 <MenuItem
                   onClick={handleLogout}
                   sx={{
+                    boxSizing: 'border-box',
+                    height: '46px',
                     gap: '4px',
-                    minHeight: '37px',
                     backgroundColor: 'white',
-                    padding: '8px',
                     border: '1px solid',
                     borderColor: 'gray.200',
                     borderRadius: '12px',
@@ -300,7 +304,7 @@ const MobileMenu = ({ onClose, user, openModal }: Props) => {
                       color: 'error.main',
                     }}
                   >
-                    <LogOutIcon />
+                    <LogOutIcon width={17} height={17} />
                   </IconButton>
                   <Typography variant="secondaryText" color="error">
                     Вихід

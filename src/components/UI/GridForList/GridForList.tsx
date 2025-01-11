@@ -218,6 +218,7 @@ const GridForList = ({
                         }}
                       >
                         <IconButton
+                          disableRipple
                           onClick={(event) => {
                             event.stopPropagation();
                             handleClick(event, playlist, selectedVideoId);

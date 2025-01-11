@@ -42,7 +42,12 @@ const SwipeableDrawerOpenButton = ({
           alignItems: 'center',
         }}
       >
-        <Icon>
+        <Icon
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
           <ListUnorderedIcon />
         </Icon>
         <Box

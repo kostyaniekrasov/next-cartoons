@@ -7,3 +7,6 @@ export { default as SettingsIcon } from './Settings.svg';
 export { default as Slider01Icon } from './Slider_01.svg';
 export { default as SearchInputIcon } from './SearchInput.svg';
 export { default as ClearIcon } from './Clear.svg';
+export { default as SettingsProfileIcon } from './SettingsProfile.svg';
+export { default as UserProfileIcon } from './UserProfile.svg';
+export { default as ExitProfileIcon } from './ExitProfile.svg';

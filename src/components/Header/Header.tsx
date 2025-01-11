@@ -182,7 +182,7 @@ const Header = ({ categories }: Props) => {
     () => (
       <Avatar
         alt="Avatar"
-        src={user?.avatar ? user.avatar.url : ''}
+        src={user?.avatar ? user.avatar.url : '/default-avatar.png'}
         sx={{
           width: '48px',
           height: '48px',
@@ -206,6 +206,8 @@ const Header = ({ categories }: Props) => {
         sx={{
           boxShadow: 'none',
           marginBottom: '16px',
+          borderBottom: '1px solid',
+          borderColor: 'grey.200',
         }}
       >
         <CookieConsent />
@@ -216,8 +218,6 @@ const Header = ({ categories }: Props) => {
             display: 'flex',
             flexDirection: 'column',
             gap: '16px',
-            borderBottom: '1px solid',
-            borderColor: 'grey.200',
             paddingBottom: 2,
             paddingTop: {
               xs: '16px',
@@ -243,6 +243,7 @@ const Header = ({ categories }: Props) => {
           >
             <IconButton
               onClick={() => router.push('/')}
+              disableRipple
               sx={{
                 padding: 0,
               }}
@@ -373,12 +374,7 @@ const Header = ({ categories }: Props) => {
                   gap: 3,
                 }}
               >
-                <CustomTooltip
-                  title="Збережені"
-                  placement="bottom"
-                  enterDelay={500}
-                  leaveDelay={200}
-                >
+                <CustomTooltip title="Збережені" placement="bottom">
                   <Link href={'/saved'} passHref>
                     <IconButton
                       sx={{

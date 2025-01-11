@@ -53,7 +53,7 @@ const MenuBlock = ({ anchorEl, open, handleClose, user, openModal }: Props) => {
           elevation: 0,
           sx: {
             marginTop: '10px',
-            padding: '4px',
+            padding: '0px',
             boxSizing: 'border-box',
             border: '1px solid',
             borderColor: 'gray.200',
@@ -64,11 +64,10 @@ const MenuBlock = ({ anchorEl, open, handleClose, user, openModal }: Props) => {
               display: 'flex',
               flexDirection: 'column',
               padding: 0,
-              gap: '8px',
+              gap: '4px',
             },
 
             '& .MuiMenuItem-root': {
-              padding: '8px',
               color: 'gray.900',
               borderRadius: '8px',
 
@@ -89,80 +88,133 @@ const MenuBlock = ({ anchorEl, open, handleClose, user, openModal }: Props) => {
           flexDirection: 'column',
           gap: '4px',
           borderBottom: '1px solid',
-          padding: '8px',
           borderColor: 'gray.300',
           backgroundColor: 'gray.100',
-          margin: '-4px',
+          padding: '8px',
         }}
       >
-        <Typography variant="mainTextSemibold" color="black" paddingX="8px">
+        <Typography variant="mainTextSemibold" color="gray.900">
           {user.name}
         </Typography>
 
-        <Typography variant="secondaryText" color="black" paddingX="8px">
+        <Typography variant="secondaryText" color="gray.800">
           {user.email}
         </Typography>
       </Box>
 
-      <MenuItem
-        onClick={() => handleOpenSettings()}
-        sx={{
-          gap: '4px',
-          color: 'gray.900',
-        }}
-      >
-        <SettingsIcon height={17} width={17} />
-        <Typography variant="secondaryText">Налаштування</Typography>
-      </MenuItem>
-
-      <ThemeSwitcher title />
-
-      {user.role === 'admin' && (
-        <Link
-          href={'admin/add-content'}
-          passHref
-          prefetch={true}
-          style={{ textDecoration: 'none' }}
-        >
-          <MenuItem>
-            <Typography variant="secondaryText">
-              Адмін-панель(костиль)
-            </Typography>
-          </MenuItem>
-        </Link>
-      )}
-
       <Box
         sx={{
-          height: '1px',
-          width: '100%',
-          backgroundColor: 'gray.100',
-        }}
-      />
-
-      <MenuItem
-        onClick={handleLogout}
-        sx={{
+          padding: '4px',
+          display: 'flex',
+          flexDirection: 'column',
           gap: '4px',
         }}
       >
-        <Icon
+        <MenuItem
+          onClick={() => handleOpenSettings()}
           sx={{
-            display: 'flex',
-            color: 'error.main',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '17px',
-            height: '17px',
+            gap: '4px',
+            color: 'gray.900',
+            padding: '8px',
           }}
         >
-          <LogOutIcon width={17} height={17} />
-        </Icon>
+          <SettingsIcon height={17} width={17} />
+          <Typography
+            variant="secondaryText"
+            sx={{
+              fontSize: {
+                xl: '13px',
+                '3xl': '15px',
+              },
+              lineHeight: {
+                xl: '13px',
+                '3xl': '15px',
+              },
+            }}
+          >
+            Налаштування
+          </Typography>
+        </MenuItem>
 
-        <Typography variant="secondaryText" color="error">
-          Вихід
-        </Typography>
-      </MenuItem>
+        <ThemeSwitcher title />
+
+        {user.role === 'admin' && (
+          <Link
+            href={'admin/add-content'}
+            passHref
+            prefetch={true}
+            style={{ textDecoration: 'none' }}
+          >
+            <MenuItem
+              sx={{
+                padding: '8px',
+              }}
+            >
+              <Typography
+                variant="secondaryText"
+                sx={{
+                  fontSize: {
+                    xl: '13px',
+                    '3xl': '15px',
+                  },
+                  lineHeight: {
+                    xl: '13px',
+                    '3xl': '15px',
+                  },
+                }}
+              >
+                Адмін-панель(костиль)
+              </Typography>
+            </MenuItem>
+          </Link>
+        )}
+
+        <Box
+          sx={{
+            height: '1px',
+            width: '100%',
+            backgroundColor: 'gray.100',
+          }}
+        />
+
+        <MenuItem
+          onClick={handleLogout}
+          sx={{
+            gap: '4px',
+            padding: '8px',
+          }}
+        >
+          <Icon
+            sx={{
+              display: 'flex',
+              color: 'error.main',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '17px',
+              height: '17px',
+            }}
+          >
+            <LogOutIcon width={17} height={17} />
+          </Icon>
+
+          <Typography
+            variant="secondaryText"
+            color="error"
+            sx={{
+              fontSize: {
+                xl: '13px',
+                '3xl': '15px',
+              },
+              lineHeight: {
+                xl: '13px',
+                '3xl': '15px',
+              },
+            }}
+          >
+            Вихід
+          </Typography>
+        </MenuItem>
+      </Box>
     </Menu>
   );
 };

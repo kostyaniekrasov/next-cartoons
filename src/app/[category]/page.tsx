@@ -47,6 +47,7 @@ const CategoryPage = async ({ params }: { params: { category: string } }) => {
             category={currentCategory}
             playlists={videosByAgeCategory}
             playlistsType={PlaylistsType.ByCategory}
+            borderBottom={true}
           />
         </Collapse>
 
@@ -58,6 +59,7 @@ const CategoryPage = async ({ params }: { params: { category: string } }) => {
             playlists={continueWatchingPlaylists}
             CWlinks={continueWatchingLinks}
             playlistsType={PlaylistsType.ContinueWatching}
+            borderBottom={false}
           />
         )}
       </Box>

@@ -8,6 +8,7 @@ import {
   Box,
   CircularProgress,
   Collapse,
+  Icon,
   IconButton,
   Typography,
 } from '@mui/material';
@@ -133,11 +134,24 @@ function ResetPasswordForm({
                     sx={{
                       backgroundColor: 'gray.100',
                       color: 'gray.900',
-                      padding: '4px',
+                      padding: {
+                        xs: 0,
+                        sm: '4px',
+                      },
                     }}
                     onClick={() => setValue('email', '')}
                   >
-                    <ClearIcon />
+                    <Icon
+                      sx={{
+                        width: '16px',
+                        height: '16px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <ClearIcon />
+                    </Icon>
                   </IconButton>
                 </Collapse>
               ),
