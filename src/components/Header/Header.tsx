@@ -70,6 +70,7 @@ const Header = ({ categories }: Props) => {
   const user = useAuthStore((state) => state.user);
   const isInitialized = useAuthStore((state) => state.isInitialized);
   const isVideoPage = pathname.includes('/video-page');
+  const isSavedPage = pathname.includes('/saved');
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { modals, openModal } = useModalStore();
 
@@ -571,66 +572,67 @@ const Header = ({ categories }: Props) => {
             </Box>
           </Box>
 
-          {!isVideoPage && (
-            <ToggleButtonGroup
-              value={selectedFilter}
-              exclusive
-              onChange={handleFilterChange}
-              aria-label="filter"
-              sx={{
-                mr: {
-                  xs: '-16px',
-                  sm: 0,
-                },
-              }}
-            >
-              <Box
-                ref={emblaRef}
+          {!isVideoPage ||
+            (!isSavedPage && (
+              <ToggleButtonGroup
+                value={selectedFilter}
+                exclusive
+                onChange={handleFilterChange}
+                aria-label="filter"
                 sx={{
-                  overflow: 'hidden',
-                  width: '100%',
+                  mr: {
+                    xs: '-16px',
+                    sm: 0,
+                  },
                 }}
               >
                 <Box
+                  ref={emblaRef}
                   sx={{
-                    display: 'flex',
-                    gap: {
-                      xs: '4px',
-                      sm: '8px',
-                    },
+                    overflow: 'hidden',
+                    width: '100%',
                   }}
                 >
-                  {categories?.map((category) => (
-                    <Link
-                      href={`/${category.name}`}
-                      key={category.name.toUpperCase()}
-                      passHref
-                      prefetch={true}
-                    >
-                      <CustomToggleButton
-                        value={category.name}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      gap: {
+                        xs: '4px',
+                        sm: '8px',
+                      },
+                    }}
+                  >
+                    {categories?.map((category) => (
+                      <Link
+                        href={`/${category.name}`}
                         key={category.name.toUpperCase()}
-                        sx={{ flex: '0 0 auto', width: 'auto' }}
+                        passHref
+                        prefetch={true}
                       >
-                        <Typography
-                          variant="mainText"
-                          sx={{
-                            width: 'max-content',
-                            fontSize: {
-                              xs: '12px',
-                              sm: '17px',
-                            },
-                          }}
+                        <CustomToggleButton
+                          value={category.name}
+                          key={category.name.toUpperCase()}
+                          sx={{ flex: '0 0 auto', width: 'auto' }}
                         >
-                          {category.title}
-                        </Typography>
-                      </CustomToggleButton>
-                    </Link>
-                  ))}
+                          <Typography
+                            variant="mainText"
+                            sx={{
+                              width: 'max-content',
+                              fontSize: {
+                                xs: '12px',
+                                sm: '17px',
+                              },
+                            }}
+                          >
+                            {category.title}
+                          </Typography>
+                        </CustomToggleButton>
+                      </Link>
+                    ))}
+                  </Box>
                 </Box>
-              </Box>
-            </ToggleButtonGroup>
-          )}
+              </ToggleButtonGroup>
+            ))}
         </Container>
         <Zoom in={showButton}>
           <Fab

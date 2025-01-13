@@ -6,7 +6,15 @@ import { getUserLists } from '@/lib/playlists/savedVideos';
 import useAuthStore from '@/store/useAuthStore';
 import useVideoStore from '@/store/useVideoStore';
 import { PlaylistsType } from '@/types';
-import { Alert, Box, Container, IconButton, Typography } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Button,
+  Container,
+  Icon,
+  IconButton,
+  Typography,
+} from '@mui/material';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -102,13 +110,50 @@ const SavedVideos = () => {
         playlists={savedPlaylists}
         playlistsType={PlaylistsType.Saved}
         categories={categories}
+        borderBottom={false}
+        showOnly="grid"
       />
     );
   } else if (!savedPlaylists.length) {
     content = (
-      <Typography variant="h5" color="gray.600">
-        У вас немає збережених відео.
-      </Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center',
+          position: 'absolute',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          left: 0,
+          right: 0,
+          // inset: 0,
+        }}
+      >
+        <Typography variant="h2" color="gray.600" marginBottom={'8px'}>
+          Додайте до своєї бібліотеки
+        </Typography>
+
+        <Typography variant="caption" color="gray.700" marginBottom={'4px'}>
+          Відкривайте мультфільми та музику, все в одному місці. Ваші улюблені
+          збережені матеріали завжди тут.
+        </Typography>
+
+        <Button
+          onClick={() => router.back()}
+          sx={{
+            textTransform: 'none',
+            backgroundColor: 'gray.200',
+            borderRadius: '8px',
+            padding: '8px 16px',
+          }}
+        >
+          <Typography variant="footnote" color="accentPink">
+            Відкрити більше
+          </Typography>
+        </Button>
+      </Box>
     );
   }
 
@@ -116,19 +161,32 @@ const SavedVideos = () => {
     <Box>
       <Container disableGutters>
         <IconButton
-          onClick={() => router.push('/all')}
+          onClick={() => router.back()}
           sx={{
             alignItems: 'center',
-            marginBottom: '16px',
+            marginBottom: {
+              xs: '8px',
+              xl: '16px',
+            },
             padding: '0 10px 0 0',
             borderRadius: '12px',
           }}
         >
-          <ChevronLeftIcon width={17} height={17} />
-          <Typography variant="mainTextSemibold" color="gray.700">
+          <Icon
+            color="accentPink"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              width: 'max-content',
+            }}
+          >
+            <ChevronLeftIcon width={15} height={15} />
+          </Icon>
+          <Typography variant="caption" color="accentPink">
             Повернутися
           </Typography>
         </IconButton>
+
         {content}
       </Container>
     </Box>

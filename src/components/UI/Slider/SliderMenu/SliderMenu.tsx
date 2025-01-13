@@ -104,15 +104,20 @@ const SliderMenu = ({
             '& .MuiList-root': {
               display: 'flex',
               flexDirection: 'column',
-              width: '180px',
+              width: 'max-content',
               padding: 0,
               gap: '4px',
             },
 
             '& .MuiMenuItem-root': {
+              display: 'flex',
               padding: '4px',
               borderRadius: '8px',
               color: 'gray.900',
+              minHeight: {
+                xs: '21px',
+                xl: '48px',
+              },
 
               '&:hover': {
                 backgroundColor: 'gray.200',
@@ -127,10 +132,39 @@ const SliderMenu = ({
           slideClick(playlist.id, selectedVideoId, playlist.category)
         }
       >
-        <Typography variant="secondaryText">Перейти до перегляду</Typography>
+        <Typography
+          variant="secondaryText"
+          sx={{
+            lineHeight: {
+              xs: '13px',
+              xl: '21px',
+            },
+            fontSize: {
+              xs: '13px',
+              xl: '15px',
+            },
+          }}
+        >
+          Перейти до перегляду
+        </Typography>
       </MenuItem>
+
       <MenuItem onClick={handleShareClick}>
-        <Typography variant="secondaryText">Поділитися</Typography>
+        <Typography
+          variant="secondaryText"
+          sx={{
+            lineHeight: {
+              xs: '13px',
+              xl: '21px',
+            },
+            fontSize: {
+              xs: '13px',
+              xl: '15px',
+            },
+          }}
+        >
+          Поділитися
+        </Typography>
       </MenuItem>
       {user && (
         <MenuItem
@@ -140,7 +174,21 @@ const SliderMenu = ({
             position: 'relative',
           }}
         >
-          <Typography variant="secondaryText">Зберегти</Typography>
+          <Typography
+            variant="secondaryText"
+            sx={{
+              lineHeight: {
+                xs: '13px',
+                xl: '21px',
+              },
+              fontSize: {
+                xs: '13px',
+                xl: '15px',
+              },
+            }}
+          >
+            Зберегти
+          </Typography>
           {isLoading && (
             <CircularProgress
               size={'30px'}
@@ -155,7 +203,20 @@ const SliderMenu = ({
       )}
       {showRemoveButton && user && (
         <MenuItem onClick={handleRemove}>
-          <Typography variant="secondaryText" color="error">
+          <Typography
+            variant="secondaryText"
+            color="error"
+            sx={{
+              lineHeight: {
+                xs: '13px',
+                xl: '21px',
+              },
+              fontSize: {
+                xs: '13px',
+                xl: '15px',
+              },
+            }}
+          >
             Видалити
           </Typography>
         </MenuItem>

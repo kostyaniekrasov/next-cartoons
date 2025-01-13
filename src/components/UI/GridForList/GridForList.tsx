@@ -96,8 +96,8 @@ const GridForList = ({
       >
         <Grid2
           container
-          spacing={4}
-          columnSpacing={3}
+          spacing={{ xs: 2, md: 4 }}
+          columnSpacing={{ xs: 1, md: 3 }}
           columns={{ xs: 4, sm: 8, md: 8, lg: 12 }}
         >
           {playlists.map((playlist) => {
@@ -124,7 +124,7 @@ const GridForList = ({
 
             return (
               <Grid2
-                size={{ xs: 4, sm: 4, md: 4, lg: 4, xl: 3 }}
+                size={{ xs: 2, sm: 4, md: 4, lg: 4, xl: 3 }}
                 key={playlist.id}
               >
                 <>

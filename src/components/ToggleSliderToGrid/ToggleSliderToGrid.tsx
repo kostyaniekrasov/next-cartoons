@@ -29,6 +29,7 @@ interface Props {
   playlistsType: PlaylistsType;
   user: User | null;
   borderBottom: boolean;
+  showOnly?: 'slider' | 'grid';
 }
 
 const ToggleSliderToGrid = ({
@@ -40,6 +41,7 @@ const ToggleSliderToGrid = ({
   playlistsType,
   user,
   borderBottom,
+  showOnly,
 }: Props) => {
   const [isGrid, setIsGrid] = useState(false);
   const [filterOrder, setFilterOrder] = useState('updatedTime');
@@ -175,7 +177,7 @@ const ToggleSliderToGrid = ({
               padding: '5px',
             }}
           >
-            {title && (
+            {title && playlistsType !== PlaylistsType.Saved && (
               <Typography
                 variant="categoryTitle"
                 color="gray.900"
@@ -186,6 +188,11 @@ const ToggleSliderToGrid = ({
                   },
                 }}
               >
+                {title}
+              </Typography>
+            )}
+            {title && playlistsType === PlaylistsType.Saved && (
+              <Typography variant="h1" color="gray.900" sx={{}}>
                 {title}
               </Typography>
             )}
@@ -203,15 +210,20 @@ const ToggleSliderToGrid = ({
                 {category.title}
               </Typography>
             )}
-            <Box
-              sx={{
-                display: 'flex',
-                transition: 'transform 0.3s ease',
-                transform: isGrid ? 'rotate(90deg)' : 'rotate(0deg)',
-              }}
-            >
-              <ChevronRightIcon />
-            </Box>
+            {playlistsType !== PlaylistsType.Saved && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  transition: 'transform 0.3s ease',
+                  transform:
+                    isGrid && showOnly !== 'grid'
+                      ? 'rotate(90deg)'
+                      : 'rotate(0deg)',
+                }}
+              >
+                <ChevronRightIcon />
+              </Box>
+            )}
           </IconButton>
 
           {category && (
@@ -244,6 +256,7 @@ const ToggleSliderToGrid = ({
                 <Typography variant="footnote" color="gray.600" component={'p'}>
                   Показано
                 </Typography>
+
                 <Typography
                   variant="secondaryText"
                   color="gray.900"
@@ -355,7 +368,7 @@ const ToggleSliderToGrid = ({
           }}
         >
           <AnimatePresence mode="wait">
-            {!isGrid ? (
+            {!isGrid && showOnly !== 'grid' ? (
               <Box
                 sx={{
                   mr: {

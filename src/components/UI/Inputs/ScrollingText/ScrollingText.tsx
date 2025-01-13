@@ -27,7 +27,7 @@ const ScrollingText = ({ playlistTitle }: Props) => {
       ref={containerRef}
       sx={{
         width: {
-          xs: '255px',
+          xs: '100%',
           sm: '318px',
           '3xl': '416px',
           overflow: 'hidden',
@@ -58,7 +58,7 @@ const ScrollingText = ({ playlistTitle }: Props) => {
           sx={{
             display: 'block',
             width: {
-              xs: '255px',
+              xs: '100%',
               sm: '318px',
               '3xl': '416px',
             },

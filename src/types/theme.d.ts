@@ -102,3 +102,9 @@ declare module '@mui/material/styles' {
     '3xl': true;
   }
 }
+
+declare module '@mui/material/Icon' {
+  interface IconPropsColorOverrides {
+    accentPink: true;
+  }
+}

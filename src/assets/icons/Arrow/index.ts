@@ -5,3 +5,4 @@ export { default as ChevronRightIcon } from './Chevron_Right.svg';
 export { default as DownIcon } from './Down.svg';
 export { default as ReloadIcon } from './Reload.svg';
 export { default as ChevronRightSliderIcon } from './Chevron_Right_Slider.svg';
+export { default as ArrowUpRightSMIcon } from './ArrowUpRightSM.svg';

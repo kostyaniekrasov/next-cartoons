@@ -1,6 +1,6 @@
 'use client';
 
-import { ClearIcon, WarningIcon } from '@/assets/icons';
+import { ArrowUpRightSMIcon, ClearIcon, WarningIcon } from '@/assets/icons';
 import { ModalButton } from '@/components/UI/Buttons/ModalButton';
 import useAuthStore from '@/store/useAuthStore';
 import {
@@ -183,22 +183,6 @@ function SignInForm({ onClose, openModal }: Readonly<Props>) {
         />
       </Box>
 
-      <Typography
-        variant="footnote"
-        color="accentPink"
-        mb={'16px'}
-        onClick={() => openModal('reset-password')}
-        sx={{
-          cursor: 'pointer',
-          textAlign: {
-            xs: 'center',
-            xl: 'right',
-          },
-        }}
-      >
-        Забули свій пароль?
-      </Typography>
-
       <Box
         sx={{
           marginBottom: '16px',
@@ -249,25 +233,64 @@ function SignInForm({ onClose, openModal }: Readonly<Props>) {
       <Box
         sx={{
           display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: '4px',
+          flexDirection: 'column',
+          gap: '16px',
+          position: {
+            xs: 'absolute',
+            sm: 'static',
+          },
+
+          bottom: '32px',
+          left: 0,
+          right: 0,
         }}
       >
-        <Typography variant="secondaryText" color="gray.600">
-          {`Не маєте облікового запису? `}
-        </Typography>
-
-        <Typography
-          onClick={() => openModal('sign-up')}
-          variant="secondaryText"
-          color="accentPink"
+        <Box
           sx={{
-            cursor: 'pointer',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '5px',
           }}
         >
-          Зареєструватися
-        </Typography>
+          <Typography
+            variant="footnote"
+            color="accentPink"
+            onClick={() => openModal('reset-password')}
+            sx={{
+              cursor: 'pointer',
+              textAlign: 'center',
+            }}
+          >
+            Забули свій пароль?
+          </Typography>
+
+          <ArrowUpRightSMIcon />
+        </Box>
+
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '4px',
+          }}
+        >
+          <Typography variant="secondaryText" color="gray.600">
+            {`Не маєте облікового запису? `}
+          </Typography>
+
+          <Typography
+            onClick={() => openModal('sign-up')}
+            variant="secondaryText"
+            color="accentPink"
+            sx={{
+              cursor: 'pointer',
+            }}
+          >
+            Зареєструватися
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );
