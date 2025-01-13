@@ -42,6 +42,7 @@ const NotAuthenticatedCartoons = ({ playlists, categories }: Props) => {
           playlists={playlistsForLittleKids}
           categories={categories}
           playlistsType={PlaylistsType.ByCategory}
+          borderBottom={true}
         />
       )}
       {!!playlistsForBiggerKids.length && (
@@ -51,6 +52,7 @@ const NotAuthenticatedCartoons = ({ playlists, categories }: Props) => {
           playlists={playlistsForBiggerKids}
           categories={categories}
           playlistsType={PlaylistsType.ByCategory}
+          borderBottom={false}
         />
       )}
     </Box>
