@@ -572,67 +572,65 @@ const Header = ({ categories }: Props) => {
             </Box>
           </Box>
 
-          {!isVideoPage ||
-            (!isSavedPage && (
-              <ToggleButtonGroup
-                value={selectedFilter}
-                exclusive
-                onChange={handleFilterChange}
-                aria-label="filter"
+          <ToggleButtonGroup
+            value={selectedFilter}
+            exclusive
+            onChange={handleFilterChange}
+            aria-label="filter"
+            sx={{
+              mr: {
+                xs: '-16px',
+                sm: 0,
+              },
+              display: isVideoPage || isSavedPage ? 'none' : 'flex',
+            }}
+          >
+            <Box
+              ref={emblaRef}
+              sx={{
+                overflow: 'hidden',
+                width: '100%',
+              }}
+            >
+              <Box
                 sx={{
-                  mr: {
-                    xs: '-16px',
-                    sm: 0,
+                  display: 'flex',
+                  gap: {
+                    xs: '4px',
+                    sm: '8px',
                   },
                 }}
               >
-                <Box
-                  ref={emblaRef}
-                  sx={{
-                    overflow: 'hidden',
-                    width: '100%',
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      gap: {
-                        xs: '4px',
-                        sm: '8px',
-                      },
-                    }}
+                {categories?.map((category) => (
+                  <Link
+                    href={`/${category.name}`}
+                    key={category.name.toUpperCase()}
+                    passHref
+                    prefetch={true}
                   >
-                    {categories?.map((category) => (
-                      <Link
-                        href={`/${category.name}`}
-                        key={category.name.toUpperCase()}
-                        passHref
-                        prefetch={true}
+                    <CustomToggleButton
+                      value={category.name}
+                      key={category.name.toUpperCase()}
+                      sx={{ flex: '0 0 auto', width: 'auto' }}
+                    >
+                      <Typography
+                        variant="mainText"
+                        sx={{
+                          width: 'max-content',
+                          fontSize: {
+                            xs: '12px',
+                            sm: '17px',
+                          },
+                        }}
                       >
-                        <CustomToggleButton
-                          value={category.name}
-                          key={category.name.toUpperCase()}
-                          sx={{ flex: '0 0 auto', width: 'auto' }}
-                        >
-                          <Typography
-                            variant="mainText"
-                            sx={{
-                              width: 'max-content',
-                              fontSize: {
-                                xs: '12px',
-                                sm: '17px',
-                              },
-                            }}
-                          >
-                            {category.title}
-                          </Typography>
-                        </CustomToggleButton>
-                      </Link>
-                    ))}
-                  </Box>
-                </Box>
-              </ToggleButtonGroup>
-            ))}
+                        {category.title}
+                      </Typography>
+                    </CustomToggleButton>
+                  </Link>
+                ))}
+              </Box>
+            </Box>
+          </ToggleButtonGroup>
         </Container>
         <Zoom in={showButton}>
           <Fab
